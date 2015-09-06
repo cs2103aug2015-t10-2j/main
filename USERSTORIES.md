@@ -24,6 +24,6 @@
 3. As a user, I can add tasks to existing categories.
 4. As a user, I want an auto-correct feature for keywords.
 
-## **Highlight Feature**
+## **Advanced Feature**
 1. As a user, I want a GUI in the form of a pin board to track my tasks so that I can get a clear overview of my past entries.
 
