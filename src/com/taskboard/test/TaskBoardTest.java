@@ -30,6 +30,14 @@ public class TaskBoardTest {
 		expected2.add(new Parameter(ParameterType.NAME, "Hello Again"));
 		expected2.add(new Parameter(ParameterType.DESCRIPTION, "This is the second Hello"));
 		assertParameters(expected2, "add Hello Again; This is the second Hello");
+		
+		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
+		expected3.add(new Parameter(ParameterType.NAME, "Meeting with Chris"));
+		expected3.add(new Parameter(ParameterType.START_DATE, "27/09/2015"));
+		expected3.add(new Parameter(ParameterType.START_TIME, "19:00"));
+		expected3.add(new Parameter(ParameterType.END_DATE, "27/09/2015"));
+		expected3.add(new Parameter(ParameterType.END_TIME, "21:00"));
+		assertParameters(expected3, "add Meeting with Chris; from 7pm To 9pm");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {
