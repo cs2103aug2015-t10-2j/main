@@ -1,9 +1,14 @@
 package com.taskboard.test;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.taskboard.main.Command;
 import com.taskboard.main.CommandType;
@@ -33,11 +38,14 @@ public class TaskBoardTest {
 		
 		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
 		expected3.add(new Parameter(ParameterType.NAME, "Meeting with Chris"));
-		expected3.add(new Parameter(ParameterType.START_DATE, "27/09/2015"));
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date today = new Date();
+		Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+		expected3.add(new Parameter(ParameterType.START_DATE, dateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.START_TIME, "19:00"));
-		expected3.add(new Parameter(ParameterType.END_DATE, "27/09/2015"));
+		expected3.add(new Parameter(ParameterType.END_DATE, dateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.END_TIME, "21:00"));
-		assertParameters(expected3, "add Meeting with Chris; from 7pm To 9pm");
+		assertParameters(expected3, "add Meeting with Chris; from tomorrow 7pm To tomorrow 9pm");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {

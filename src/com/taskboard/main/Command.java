@@ -2,6 +2,10 @@ package com.taskboard.main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Command {
 	
@@ -74,9 +78,9 @@ public class Command {
 		// remove the commandType token (add, edit, delete, etc.)
 		commandString = commandString.substring(commandString.indexOf(' ') + 1, commandString.length());
 		
-		ArrayList<String> parameterString = new ArrayList<String>(Arrays.asList(commandString.split("\\s*;\\s*")));
+		ArrayList<String> parameterStrings = new ArrayList<String>(Arrays.asList(commandString.split("\\s*;\\s*")));
 		
-		return parameterString;
+		return parameterStrings;
 	}
 	
 	public static String removeSemicolon(String str) {
@@ -87,49 +91,62 @@ public class Command {
 		}
 	}
 	
-	public static ArrayList<Parameter> extractParameters(ArrayList<String> parameterString) {
+	// TBD: extract methods from here
+	public static ArrayList<Parameter> extractParameters(ArrayList<String> parameterStrings) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		boolean isNameFound = false;
 		boolean isDescFound = false;
 		
-		for (int i = 0; i < parameterString.size(); i++) {
-			DelimiterType delimiter = extractDelimiterType(parameterString.get(i));
+		for (int i = 0; i < parameterStrings.size(); i++) {
+			DelimiterType delimiter = extractDelimiterType(parameterStrings.get(i));
+			String unparsedParameterString = parameterStrings.get(i);
+			
 			switch (delimiter) {
+				case FROM_TO:
+					String startDate = extractNextDate(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.START_DATE, startDate));
+					String startTime = extractNextTime(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.START_TIME, startTime));
+					
+					// TBD: case insensitive search to be implemented in indexOf
+					unparsedParameterString = unparsedParameterString.substring(unparsedParameterString.indexOf("To"), unparsedParameterString.length());
+					String endDate = extractNextDate(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.END_DATE, endDate));
+					String endTime = extractNextTime(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.END_TIME, endTime));
+					
+					break;
 				case FROM:
-					parameters.add(new Parameter(ParameterType.START_DATE, parameterString.get(i)));
-					parameters.add(new Parameter(ParameterType.START_TIME, parameterString.get(i)));
-					// TBD: remove FROM from the parameter string, split date and time
+					startDate = extractNextDate(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.START_DATE, startDate));
+					startTime = extractNextTime(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.START_TIME, startTime));
 					break;
 				case TO:
-					parameters.add(new Parameter(ParameterType.END_DATE, parameterString.get(i)));
-					parameters.add(new Parameter(ParameterType.END_TIME, parameterString.get(i)));
-					// TBD: remove TO from the parameter string, split date and time
-					break;
-				case FROM_TO:
-					parameters.add(new Parameter(ParameterType.START_DATE, parameterString.get(i)));
-					parameters.add(new Parameter(ParameterType.START_TIME, parameterString.get(i)));
-					// TBD: remove FROM from the parameter string, split date and time
-					parameters.add(new Parameter(ParameterType.END_DATE, parameterString.get(i)));
-					parameters.add(new Parameter(ParameterType.END_TIME, parameterString.get(i)));
-					// TBD: remove TO from the parameter string, split date and time
+					endDate = extractNextDate(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.END_DATE, endDate));
+					endTime = extractNextTime(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.END_TIME, endTime));
 					break;
 				case BY:
-					parameters.add(new Parameter(ParameterType.DATE, parameterString.get(i)));
-					parameters.add(new Parameter(ParameterType.TIME, parameterString.get(i)));
-					// TBD: remove BY from the parameter string, split date and time
+					String date = extractNextDate(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.DATE, date));
+					String time = extractNextTime(unparsedParameterString);
+					parameters.add(new Parameter(ParameterType.TIME, time));
 					break;
 				case NONE:
 					if (!isNameFound) {
-						parameters.add(new Parameter(ParameterType.NAME, parameterString.get(i)));
+						parameters.add(new Parameter(ParameterType.NAME, unparsedParameterString));
 						isNameFound = true;
 					} else if (!isDescFound) {
-						parameters.add(new Parameter(ParameterType.DESCRIPTION, parameterString.get(i)));
+						parameters.add(new Parameter(ParameterType.DESCRIPTION, unparsedParameterString));
 						isDescFound = true;
 					} else {
-						System.out.println("Unrecognized parameter: " + parameterString.get(i) + "\n");
+						// TBD: throw unrecognized parameter exception here
 					}
 					break;
 				default:
+					// TBD: throw delimiter unrecognized exception here
 			}
 		}
 		
@@ -149,6 +166,93 @@ public class Command {
 		} else {
 			return DelimiterType.NONE;
 		}
+	}
+	
+	public static String extractNextDate(String stringToParse) {
+		String[] tokens = stringToParse.split(" ");
+		for (int i = 0; i < tokens.length; i++) {
+			if (isValidDateFormat(tokens[i])) {
+				return toDefaultDateFormat(tokens[i]);
+			}
+		}
+		// TBD: throw no valid date format exception here
+		return null;
+	}
+	
+	public static String extractNextTime(String stringToParse) {
+		String[] tokens = stringToParse.split(" ");
+		for (int i = 0; i < tokens.length; i++) {
+			if (isValidTimeFormat(tokens[i])) {
+				return toDefaultTimeFormat(tokens[i]);
+			}
+		}
+		// TBD: throw no valid time format exception here
+		return null;
+	}
+	
+	public static boolean isValidDateFormat(String token) {
+		token = token.toLowerCase();
+		switch (token) {
+			case "today":
+			case "tomorrow":
+			case "monday":
+			case "tuesday":
+			case "wednesday":
+			case "thursday":
+			case "friday":
+			case "saturday":
+			case "sunday":
+				return true;
+			default:
+				return false;
+		}
+	}
+	
+	// TBD: cover more cases
+	public static String toDefaultDateFormat(String token) {
+		token = token.toLowerCase();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date today = new Date();
+		switch (token) {
+			case "today":
+				return dateFormat.format(today);
+			case "tomorrow":
+				// TBD: put numbers below to constant
+				Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+				return dateFormat.format(tomorrow);
+			case "monday":
+			case "tuesday":
+			case "wednesday":
+			case "thursday":
+			case "friday":
+			case "saturday":
+			case "sunday":
+			default:
+				return null;
+		}
+	}
+	
+	public static boolean isValidTimeFormat(String token) {
+		token = token.toLowerCase();
+		if (token.indexOf("am") != -1 || token.indexOf("pm") != -1 || token.indexOf(':') != -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// TBD: cover more cases
+	public static String toDefaultTimeFormat(String token) {
+		String hh = new String();
+		String mm = new String();
+		if (token.indexOf("am") != -1) {
+			hh = token.substring(0, token.indexOf("am"));
+			mm = "00";
+		} else if (token.indexOf("pm") != -1) {
+			hh = Integer.toString(Integer.parseInt(token.substring(0, token.indexOf("pm"))) + 12);
+			mm = "00";
+		}
+		return hh + ":" + mm;
 	}
 	
 }
