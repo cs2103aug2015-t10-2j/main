@@ -19,7 +19,7 @@ public class Command {
 	public Command(String commandString) {
 		_commandType = extractCommandType(commandString);
 		_parameters = new ArrayList<Parameter>();
-		_parameters = extractParameter(extractParameterString(commandString));
+		_parameters = extractParameters(extractParameterStrings(commandString));
 	}
 	
 	// accessors
@@ -38,7 +38,7 @@ public class Command {
 		_commandType = newCommandType;
 	}
 	
-	public void setParameter(ArrayList<Parameter> newParameters) {
+	public void setParameters(ArrayList<Parameter> newParameters) {
 		_parameters = newParameters;
 	}
 	
@@ -70,7 +70,7 @@ public class Command {
 		}
 	}
 	
-	public static ArrayList<String> extractParameterString(String commandString) {
+	public static ArrayList<String> extractParameterStrings(String commandString) {
 		// remove the commandType token (add, edit, delete, etc.)
 		commandString = commandString.substring(commandString.indexOf(' ') + 1, commandString.length());
 		
@@ -87,7 +87,7 @@ public class Command {
 		}
 	}
 	
-	public static ArrayList<Parameter> extractParameter(ArrayList<String> parameterString) {
+	public static ArrayList<Parameter> extractParameters(ArrayList<String> parameterString) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		boolean isNameFound = false;
 		boolean isDescFound = false;

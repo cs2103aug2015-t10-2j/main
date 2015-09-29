@@ -45,10 +45,10 @@ public class TaskBoardTest {
 	}
 	
 	private void assertParameters(ArrayList<Parameter> expected, String command) {
-		assertEquals(toParameterString(expected), toParameterString(new Command(command).getParameters()));
+		assertEquals(toString(expected), toString(new Command(command).getParameters()));
 	}
 	
-	private static String toParameterString(ArrayList<Parameter> parameters) {
+	private static String toString(ArrayList<Parameter> parameters) {
 		String resultString = new String();
 		
 		for (int i = 0; i < parameters.size(); i++) {
