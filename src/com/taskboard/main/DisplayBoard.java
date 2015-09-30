@@ -38,4 +38,11 @@ public class DisplayBoard {
 		_tables.set(id, newTable);
 	}
 	
+	public void printDisplayBoard() {
+		for (int i = 0; i < _tables.size(); i++) {
+			_tables.get(i).printTable();
+		}
+		System.out.println();
+	}
+	
 }

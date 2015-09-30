@@ -50,4 +50,13 @@ public class Row {
 		_cells.set(id, newCell);
 	}
 	
+	// functionalities
+	
+	public void printRow() {
+		for (int i = 0; i < _cells.size(); i++) {
+			_cells.get(i).printCell();
+		}
+		System.out.println();
+	}
+	
 }

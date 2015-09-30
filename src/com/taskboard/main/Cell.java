@@ -28,4 +28,10 @@ public class Cell {
 		_content = newContent;
 	}
 	
+	// functionalities
+	
+	public void printCell() {
+		System.out.print(_content + " | ");
+	}
+	
 }

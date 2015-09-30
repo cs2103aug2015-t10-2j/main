@@ -62,4 +62,11 @@ public class Table {
 		_rows.set(id, newRow);
 	}
 	
+	public void printTable() {
+		for (int i = 0; i < _rows.size(); i++) {
+			_rows.get(i).printRow();
+		}
+		System.out.println();
+	}
+	
 }
