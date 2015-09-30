@@ -4,10 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class Command {
+	
+	// constants
+	
+	public static final int SECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+	public static final int DAY_INDEX_MONDAY = 1;
+	public static final int DAY_INDEX_TUESDAY = 2;
+	public static final int DAY_INDEX_WEDNESDAY = 3;
+	public static final int DAY_INDEX_THURSDAY = 4;
+	public static final int DAY_INDEX_FRIDAY = 5;
+	public static final int DAY_INDEX_SATURDAY = 6;
+	public static final int DAY_INDEX_SUNDAY = 7;
 	
 	// attributes
 	
@@ -179,17 +189,6 @@ public class Command {
 		return null;
 	}
 	
-	public static String extractNextTime(String stringToParse) {
-		String[] tokens = stringToParse.split(" ");
-		for (int i = 0; i < tokens.length; i++) {
-			if (isValidTimeFormat(tokens[i])) {
-				return toDefaultTimeFormat(tokens[i]);
-			}
-		}
-		// TBD: throw no valid time format exception here
-		return null;
-	}
-	
 	public static boolean isValidDateFormat(String token) {
 		token = token.toLowerCase();
 		switch (token) {
@@ -211,25 +210,100 @@ public class Command {
 	// TBD: cover more cases
 	public static String toDefaultDateFormat(String token) {
 		token = token.toLowerCase();
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
 		Date today = new Date();
+		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		switch (token) {
 			case "today":
-				return dateFormat.format(today);
+				return defaultDateFormat.format(today);
 			case "tomorrow":
-				// TBD: put numbers below to constant
-				Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
-				return dateFormat.format(tomorrow);
+				Date tomorrow = new Date(today.getTime() + SECONDS_PER_DAY);
+				return defaultDateFormat.format(tomorrow);
 			case "monday":
+				if (todayDayIndex < DAY_INDEX_MONDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_MONDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_MONDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			case "tuesday":
+				if (todayDayIndex < DAY_INDEX_TUESDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_TUESDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_TUESDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			case "wednesday":
+				if (todayDayIndex < DAY_INDEX_WEDNESDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_WEDNESDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_WEDNESDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			case "thursday":
+				if (todayDayIndex < DAY_INDEX_THURSDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_THURSDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_THURSDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			case "friday":
+				if (todayDayIndex < DAY_INDEX_FRIDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_FRIDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_FRIDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			case "saturday":
+				if (todayDayIndex < DAY_INDEX_SATURDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_SATURDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_SATURDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			case "sunday":
+				if (todayDayIndex < DAY_INDEX_SUNDAY) {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+								  (DAY_INDEX_SUNDAY - todayDayIndex));
+					return defaultDateFormat.format(monday);
+				} else {
+					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+							  	  (DAY_INDEX_SUNDAY - todayDayIndex + 7));
+					return defaultDateFormat.format(monday);
+				}
 			default:
 				return null;
 		}
+	}
+	
+	public static String extractNextTime(String stringToParse) {
+		String[] tokens = stringToParse.split(" ");
+		for (int i = 0; i < tokens.length; i++) {
+			if (isValidTimeFormat(tokens[i])) {
+				return toDefaultTimeFormat(tokens[i]);
+			}
+		}
+		// TBD: throw no valid time format exception here
+		return null;
 	}
 	
 	public static boolean isValidTimeFormat(String token) {
@@ -251,6 +325,8 @@ public class Command {
 		} else if (token.indexOf("pm") != -1) {
 			hh = Integer.toString(Integer.parseInt(token.substring(0, token.indexOf("pm"))) + 12);
 			mm = "00";
+		} else if (token.indexOf(":") == 2 && token.length() == 5) {
+			return token;
 		}
 		return hh + ":" + mm;
 	}

@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import com.taskboard.main.Command;
@@ -38,14 +36,25 @@ public class TaskBoardTest {
 		
 		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
 		expected3.add(new Parameter(ParameterType.NAME, "Meeting with Chris"));
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date today = new Date();
 		Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
-		expected3.add(new Parameter(ParameterType.START_DATE, dateFormat.format(tomorrow)));
+		expected3.add(new Parameter(ParameterType.START_DATE, defaultDateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.START_TIME, "19:00"));
-		expected3.add(new Parameter(ParameterType.END_DATE, dateFormat.format(tomorrow)));
+		expected3.add(new Parameter(ParameterType.END_DATE, defaultDateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.END_TIME, "21:00"));
 		assertParameters(expected3, "add Meeting with Chris; from tomorrow 7pm To tomorrow 9pm");
+		
+		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
+		expected4.add(new Parameter(ParameterType.NAME, "Submit paperwork"));
+		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
+		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
+		Date monday = new Date(today.getTime() + Command.SECONDS_PER_DAY * 
+					  (Command.DAY_INDEX_MONDAY - todayDayIndex + 
+					  ((todayDayIndex < Command.DAY_INDEX_MONDAY) ? 0 : 7)));
+		expected4.add(new Parameter(ParameterType.DATE, defaultDateFormat.format(monday)));
+		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
+		assertParameters(expected4, "add Submit paperwork; by monday 23:59");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {
