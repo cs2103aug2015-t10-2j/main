@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Executor {
 		
-	private Command _commandInput;
+	private Storage targetStorage;
 
-	public Executor(String userInput) {
-		_commandInput = new Command(userInput);
-		processCommand();
+	public Executor(String fileName) {
+		targetStorage = new Storage(fileName);
 	}
 		
-	public void processCommand() {
-		CommandType commandType = _commandInput.getCommandType();
+	public void processCommand(String userInput) {
+		Command commandInput = new Command(userInput);
+		CommandType commandType = commandInput.getCommandType();
 			
 		switch (commandType) {
 			case ADD:
-				executeAddCommand();
+				executeAddCommand(commandInput);
 				break;
 			case EDIT:
 				executeEditCommand();
@@ -29,12 +29,12 @@ public class Executor {
 		}
 			
 	}
-		
-	public void executeAddCommand() {
-		ArrayList<Parameter> parameters = _commandInput.getParameters();
+	
+	public void executeAddCommand(Command commandInput) {
+		ArrayList<Parameter> parameters = commandInput.getParameters();
 		if (parameters.size() == 1) {
 			addFloatingTask();
-		} 
+		}
 	}
 		
 	public void addFloatingTask() {
