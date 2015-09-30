@@ -16,4 +16,8 @@ public class UserInterface {
 		return _commandReader;
 	}
 	
+	public DisplayBoard getDisplayBoard() {
+		return _displayBoard;
+	}
+	
 }
