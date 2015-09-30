@@ -77,6 +77,9 @@ public class Command {
 			case "n":
 			case "new":
 				return CommandType.NEW;
+			case "esc":
+			case "exit":
+				return CommandType.EXIT;
 			default:
 				return CommandType.UNKNOWN;
 		}
