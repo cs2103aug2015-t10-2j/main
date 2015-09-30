@@ -211,9 +211,7 @@ public class Command {
 	public static String toDefaultDateFormat(String token) {
 		token = token.toLowerCase();
 		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
 		Date today = new Date();
-		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		switch (token) {
 			case "today":
 				return defaultDateFormat.format(today);
@@ -221,75 +219,19 @@ public class Command {
 				Date tomorrow = new Date(today.getTime() + SECONDS_PER_DAY);
 				return defaultDateFormat.format(tomorrow);
 			case "monday":
-				if (todayDayIndex < DAY_INDEX_MONDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_MONDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_MONDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_MONDAY));
 			case "tuesday":
-				if (todayDayIndex < DAY_INDEX_TUESDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_TUESDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_TUESDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_TUESDAY));
 			case "wednesday":
-				if (todayDayIndex < DAY_INDEX_WEDNESDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_WEDNESDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_WEDNESDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_WEDNESDAY));
 			case "thursday":
-				if (todayDayIndex < DAY_INDEX_THURSDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_THURSDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_THURSDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_THURSDAY));
 			case "friday":
-				if (todayDayIndex < DAY_INDEX_FRIDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_FRIDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_FRIDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_FRIDAY));
 			case "saturday":
-				if (todayDayIndex < DAY_INDEX_SATURDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_SATURDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_SATURDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SATURDAY));
 			case "sunday":
-				if (todayDayIndex < DAY_INDEX_SUNDAY) {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-								  (DAY_INDEX_SUNDAY - todayDayIndex));
-					return defaultDateFormat.format(monday);
-				} else {
-					Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
-							  	  (DAY_INDEX_SUNDAY - todayDayIndex + 7));
-					return defaultDateFormat.format(monday);
-				}
+				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SUNDAY));
 			default:
 				return null;
 		}
@@ -329,6 +271,22 @@ public class Command {
 			return token;
 		}
 		return hh + ":" + mm;
+	}
+	
+	public static Date getNextOccurenceDate(int dayIndex) {
+		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
+		Date today = new Date();
+		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
+		
+		if (todayDayIndex < dayIndex) {
+			Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+						  (dayIndex - todayDayIndex));
+			return monday;
+		} else {
+			Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+					  	  (dayIndex - todayDayIndex + 7));
+			return monday;
+		}
 	}
 	
 }
