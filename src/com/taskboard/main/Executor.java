@@ -38,6 +38,8 @@ public class Executor {
 			case DELETE:
 				responseForOperations = executeDeleteCommand(commandInput);
 				break;
+			case EXIT:
+				System.exit(0);
 			case UNKNOWN:
 				responseForOperations = failToRecogniseCommand();
 				break;
@@ -82,14 +84,32 @@ public class Executor {
 		return responseForAdd;
 	}
 		
-	private Response addFloatingTask(ArrayList<Parameter> parameters) {
-		String userFeedback = getFeedbackForAdd(parameters);
+	private Response addFloatingTask(ArrayList<Parameter> parameters) {		
+		ArrayList<String> formattedDetailsForStorage = getFormattedDetailsForStorage(parameters);
 		
 		Response responseForAddFloating = new Response();
-		responseForAddFloating.setIsSuccess(true);
-		responseForAddFloating.setFeedback(userFeedback);
+		
+		if (_targetStorage.isAddToFileSuccessful(formattedDetailsForStorage)) {
+			responseForAddFloating.setIsSuccess(true);
+			String userFeedback = getFeedbackForAdd(parameters);
+			responseForAddFloating.setFeedback(userFeedback);
+		} else {
+			responseForAddFloating.setIsSuccess(false);
+			IOException exobj = new IOException("The entry could not be added to the file.");
+			responseForAddFloating.setException(exobj);
+		}
 		
 		return responseForAddFloating;
+	}
+	
+	private ArrayList<String> getFormattedDetailsForStorage(ArrayList<Parameter> parameters) {
+		String taskName = parameters.get(PARAM_POSITION_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
+		String formattedTaskName = "Name: " + taskName;
+		
+		ArrayList<String> formattedDetailsForStorage = new ArrayList<String>();
+		formattedDetailsForStorage.add(formattedTaskName);
+		
+		return formattedDetailsForStorage;
 	}
 	
 	private String getFeedbackForAdd(ArrayList<Parameter> parameters) {
@@ -113,6 +133,12 @@ public class Executor {
 		return responseForDelete;
 	}
 	
+	public String retrieveEntries() {
+		String entriesList = _targetStorage.retrieveEntriesInFile();
+		
+		return entriesList;
+	}
+	
 	private Response failToRecogniseCommand() {
 		Response responseForInvalidCommand = new Response();
 		responseForInvalidCommand.setIsSuccess(false);
@@ -121,4 +147,6 @@ public class Executor {
 		
 		return responseForInvalidCommand;
 	}
+	
+	
 }
