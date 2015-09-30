@@ -63,6 +63,9 @@ public class Table {
 	}
 	
 	public void printTable() {
+		if (!_name.isEmpty()){
+			System.out.println(_name);
+		}
 		for (int i = 0; i < _rows.size(); i++) {
 			_rows.get(i).printRow();
 		}
