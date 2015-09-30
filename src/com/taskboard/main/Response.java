@@ -6,7 +6,7 @@ public class Response {
 	
 	private boolean _isSuccess;
 	private String _feedback;
-	private IllegalArgumentException _exobj;
+	private Exception _exobj;
 	
 	// constructor
 	
@@ -24,7 +24,7 @@ public class Response {
 		return _feedback;
 	}
 	
-	public IllegalArgumentException getIllegalArgumentException() {
+	public Exception getException() {
 		return _exobj;
 	}
 	
@@ -38,7 +38,7 @@ public class Response {
 		_feedback = feedback;
 	}
 	
-	public void setIllegalArgumentException(IllegalArgumentException exobj) {
+	public void setException(Exception exobj) {
 		_exobj = exobj;
 	}
 }

@@ -2,14 +2,21 @@
 
 import java.util.ArrayList;
 
+import java.io.IOException;
+
 public class Executor {
 		
-	private static final int PARAM_POSITION_TASKNAME_FOR_ADD_FLOATING = 0;
+	private static final int PARAM_POSITION_OF_TASKNAME_FOR_ADD_FLOATING = 0;
+	private static final int PARAM_POSITION_OF_FILENAME = 0;
 	
-	private Storage targetStorage;
-
-	public Executor(String fileName) {
-		targetStorage = new Storage(fileName);
+	// attribute
+	
+	private Storage _targetStorage;
+	
+	// constructor
+	
+	public Executor() {
+		
 	}
 		
 	public Response processCommand(String userInput) {
@@ -19,6 +26,9 @@ public class Executor {
 		Response responseForOperations = new Response();
 		
 		switch (commandType) {
+			case NEW: case OPEN:
+				responseForOperations = executeLaunchCommand(commandInput);
+				break;
 			case ADD:
 				responseForOperations = executeAddCommand(commandInput);
 				break;
@@ -34,6 +44,30 @@ public class Executor {
 		}
 		
 		return responseForOperations; 
+	}
+	
+	private Response executeLaunchCommand(Command commandInput) {
+		ArrayList<Parameter> parameters = commandInput.getParameters();
+		String fileName = parameters.get(PARAM_POSITION_OF_FILENAME).getParameterValue();
+		
+		return getResponseForLaunch(fileName);
+	}
+	
+	private Response getResponseForLaunch(String fileName) {
+		_targetStorage = new Storage();
+		
+		Response responseForLaunch = new Response();
+		
+		if (_targetStorage.isSetUpSuccessful(fileName)) {
+			responseForLaunch.setIsSuccess(true);
+			responseForLaunch.setFeedback("Welcome to TASKBOARD!");
+		} else {
+			responseForLaunch.setIsSuccess(false);
+			IOException exobj = new IOException("Failed to create new scheduler.");
+			responseForLaunch.setException(exobj);
+		}	
+		
+		return responseForLaunch;
 	}
 	
 	private Response executeAddCommand(Command commandInput) {
@@ -59,7 +93,7 @@ public class Executor {
 	}
 	
 	private String getFeedbackForAdd(ArrayList<Parameter> parameters) {
-		String taskName = parameters.get(PARAM_POSITION_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
+		String taskName = parameters.get(PARAM_POSITION_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
 		String userFeedback = taskName.concat(" added!");
 		
 		return userFeedback;
@@ -83,7 +117,7 @@ public class Executor {
 		Response responseForInvalidCommand = new Response();
 		responseForInvalidCommand.setIsSuccess(false);
 		IllegalArgumentException exobj = new IllegalArgumentException("Invalid command type provided.");
-		responseForInvalidCommand.setIllegalArgumentException(exobj);
+		responseForInvalidCommand.setException(exobj);
 		
 		return responseForInvalidCommand;
 	}

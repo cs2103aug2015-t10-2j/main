@@ -1,3 +1,4 @@
+
 package com.taskboard.main;
 
 import java.io.File;
@@ -11,22 +12,25 @@ public class Storage {
 	
 	// constructor
 	
-	public Storage(String fileName) {
-		setUpStorage(fileName);
+	public Storage() {
+		
 	}
 	
-	private void setUpStorage(String fileName) {
+	public boolean isSetUpSuccessful(String fileName) {
 		original = new File(fileName);
-		testFileValidity(original);
+		
+		return isFileValid(original);
 	}
 	
-	private void testFileValidity(File fileToCheck) {
+	private boolean isFileValid(File fileToCheck) {
 		if (!fileToCheck.exists()) {
 			try {
 				fileToCheck.createNewFile();
-			} catch (IOException e) {
-				System.exit(0);
+			} catch (IOException exobj) {
+				return false;
 			}
 		}
+		
+		return true;
 	}
 }
