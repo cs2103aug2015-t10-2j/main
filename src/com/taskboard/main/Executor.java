@@ -147,6 +147,4 @@ public class Executor {
 		
 		return responseForInvalidCommand;
 	}
-	
-	
 }
