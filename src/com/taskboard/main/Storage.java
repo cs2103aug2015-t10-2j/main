@@ -5,7 +5,11 @@ import java.io.IOException;
 
 public class Storage {
 	
+	// attribute
+	
 	private File original;
+	
+	// constructor
 	
 	public Storage(String fileName) {
 		setUpStorage(fileName);
