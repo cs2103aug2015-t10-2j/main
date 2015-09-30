@@ -1,5 +1,5 @@
 package com.taskboard.main;
 
 public enum CommandType {
-	ADD, EDIT, DELETE, UNKNOWN;
+	ADD, EDIT, DELETE, OPEN, NEW, UNKNOWN;
 }

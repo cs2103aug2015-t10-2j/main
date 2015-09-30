@@ -71,6 +71,12 @@ public class Command {
 			case "d":
 			case "delete":
 				return CommandType.DELETE;
+			case "o":
+			case "open":
+				return CommandType.OPEN;
+			case "n":
+			case "new":
+				return CommandType.NEW;
 			default:
 				return CommandType.UNKNOWN;
 		}
