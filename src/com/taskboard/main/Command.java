@@ -31,9 +31,10 @@ public class Command {
 	}
 	
 	public Command(String commandString) {
-		_commandType = extractCommandType(commandString);
+		String trimmedCommandString = commandString.trim();
+		_commandType = extractCommandType(trimmedCommandString);
 		_parameters = new ArrayList<Parameter>();
-		_parameters = extractParameters(extractParameterStrings(commandString));
+		_parameters = extractParameters(extractParameterStrings(trimmedCommandString));
 	}
 	
 	// accessors
