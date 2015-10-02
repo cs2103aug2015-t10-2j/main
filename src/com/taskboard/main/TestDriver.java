@@ -3,7 +3,7 @@ package com.taskboard.main;
 public class TestDriver {
 	public static void main(String[] args) {
 		UserInterface _userInterface = new UserInterface();
-		Executor _executor = new Executor();
+		Logic _executor = new Logic();
 		
 		String currentCommand = _userInterface.getCommandReader().getNextCommand();
 		while (!currentCommand.toLowerCase().equals("exit")) {
