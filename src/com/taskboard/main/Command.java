@@ -33,7 +33,6 @@ public class Command {
 	public Command(String commandString) {
 		String trimmedCommandString = commandString.trim();
 		_commandType = extractCommandType(trimmedCommandString);
-		_parameters = new ArrayList<Parameter>();
 		_parameters = extractParameters(extractParameterStrings(trimmedCommandString));
 	}
 	
@@ -175,13 +174,13 @@ public class Command {
 	
 	public static DelimiterType extractDelimiterType(String parameterString) {
 		parameterString = parameterString.toLowerCase();
-		if (parameterString.indexOf("from") != -1 && parameterString.indexOf("to") != -1) {
+		if (parameterString.indexOf("from ") != -1 && parameterString.indexOf("to ") != -1) {
 			return DelimiterType.FROM_TO;
-		} else if (parameterString.indexOf("from") != -1) {
+		} else if (parameterString.indexOf("from ") != -1) {
 			return DelimiterType.FROM;
-		} else if (parameterString.indexOf("to") != -1) {
+		} else if (parameterString.indexOf("to ") != -1) {
 			return DelimiterType.TO;
-		} else if (parameterString.indexOf("by") != -1) {
+		} else if (parameterString.indexOf("by ") != -1) {
 			return DelimiterType.BY;
 		} else {
 			return DelimiterType.NONE;
