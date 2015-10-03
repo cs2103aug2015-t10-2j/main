@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class StorageHandler {
 	
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
+	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	
 	// attributes
 	
@@ -66,7 +67,7 @@ public class StorageHandler {
 			}
 			
 			if (!_entries.isEmpty()) {
-				_entries.remove(0);
+				_entries.remove(INDEX_OF_EMPTY_ENTRY);
 			}
 			
 			scanFileToCopy.close();
