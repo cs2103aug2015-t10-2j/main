@@ -70,8 +70,7 @@ public class StorageHandler {
 				_entries.remove(INDEX_OF_EMPTY_ENTRY);
 			}
 			
-			scanFileToCopy.close();
-			
+			scanFileToCopy.close();	
 		} catch (FileNotFoundException e) {
 			return;
 		}
