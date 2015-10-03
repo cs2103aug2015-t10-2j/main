@@ -10,12 +10,12 @@ import java.util.Scanner;
 
 public class StorageHandler {
 	
-	private static final int PARAM_POSITION_OF_FIRST_DETAIL_IN_TEMP_STORAGE = 0; 
+	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
 	
 	// attributes
 	
-	private File original;
-	private ArrayList<String> details;
+	private File _original;
+	private ArrayList<Entry> _entries;
 	
 	// constructor
 	
@@ -24,16 +24,16 @@ public class StorageHandler {
 	}
 	
 	public boolean isSetUpSuccessful(String fileName) {
-		original = new File(fileName);
+		_original = new File(fileName);
 		
-		boolean isFileValid = isFileValid(original);
+		boolean isFileCreationSuccessful = isFileValid(_original);
 		
-		if (isFileValid) {
-			details = new ArrayList<String>();
-			copyExistingTextFromFile();
+		if (isFileCreationSuccessful) {
+			_entries = new ArrayList<Entry>();
+			copyExistingEntriesFromFile();
 		}
 		
-		return isFileValid;
+		return isFileCreationSuccessful;
 	}
 	
 	private boolean isFileValid(File fileToCheck) {
@@ -48,13 +48,25 @@ public class StorageHandler {
 		return true;
 	}
 	
-	private void copyExistingTextFromFile() {
+	private void copyExistingEntriesFromFile() {
 		try {
-			Scanner scanFileToCopy = new Scanner(original);
+			Scanner scanFileToCopy = new Scanner(_original);
+			
+			Entry entry = new Entry();
 			
 			while (scanFileToCopy.hasNext()) {
-				String line = scanFileToCopy.nextLine();
-				details.add(line);
+				String detail = scanFileToCopy.nextLine();
+				
+				if (detail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
+					_entries.add(entry);
+					entry = new Entry();	
+				}
+				
+				entry.addToDetails(detail);
+			}
+			
+			if (!_entries.isEmpty()) {
+				_entries.remove(0);
 			}
 			
 			scanFileToCopy.close();
@@ -64,13 +76,15 @@ public class StorageHandler {
 		}
 	}
 	
-	public boolean isAddToFileSuccessful(ArrayList<String> formattedDetailsForStorage) {
+	public boolean isAddToFileSuccessful(Entry entry) {
 		try {
-			FileWriter fileToAdd = new FileWriter(original, true);
+			FileWriter fileToAdd = new FileWriter(_original, true);
+			_entries.add(entry);
+			
+			ArrayList<String> details = entry.getDetails();
 		
-			for (int i = 0; i < formattedDetailsForStorage.size(); i++) {
-				String detail = formattedDetailsForStorage.get(i);
-				details.add(detail);
+			for (int i = 0; i < details.size(); i++) {
+				String detail = details.get(i);
 				fileToAdd.write(detail);
 				fileToAdd.write("\n");
 				fileToAdd.flush();
@@ -85,17 +99,12 @@ public class StorageHandler {
 	}
 	
 	public String retrieveEntriesInFile() {
-		String detail;
 		String entriesList = "";
 		
-		if (!details.isEmpty()) {
-			detail = details.get(PARAM_POSITION_OF_FIRST_DETAIL_IN_TEMP_STORAGE);
-			entriesList = detail;
-		}
-		
-		for (int i = 1; i < details.size(); i++) {
-			detail = details.get(i);
-			entriesList = entriesList.concat("\n").concat(detail);
+		for (int i = 0; i < _entries.size(); i++) {
+			Entry entry = _entries.get(i);
+			String entryDetails = entry.toString();
+			entriesList = entriesList.concat(entryDetails);
 		}
 		
 		return entriesList;

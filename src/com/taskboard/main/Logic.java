@@ -1,4 +1,4 @@
- package com.taskboard.main;
+package com.taskboard.main;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 public class Logic {
 		
-	private static final int PARAM_POSITION_OF_TASKNAME_FOR_ADD_FLOATING = 0;
-	private static final int PARAM_POSITION_OF_FILENAME = 0;
+	private static final int INDEX_OF_TASKNAME_FOR_ADD_FLOATING = 0;
+	private static final int INDEX_OF_FILENAME = 0;
 	
 	// attribute
 	
@@ -50,7 +50,7 @@ public class Logic {
 	
 	private Response executeLaunchCommand(Command commandInput) {
 		ArrayList<Parameter> parameters = commandInput.getParameters();
-		String fileName = parameters.get(PARAM_POSITION_OF_FILENAME).getParameterValue();
+		String fileName = parameters.get(INDEX_OF_FILENAME).getParameterValue();
 		
 		return getResponseForLaunch(fileName);
 	}
@@ -85,11 +85,11 @@ public class Logic {
 	}
 		
 	private Response addFloatingTask(ArrayList<Parameter> parameters) {		
-		ArrayList<String> formattedDetailsForStorage = getFormattedDetailsForStorage(parameters);
+		Entry floatingTask = formatFloatingTaskForStorage(parameters);
 		
 		Response responseForAddFloating = new Response();
 		
-		if (_storageHandler.isAddToFileSuccessful(formattedDetailsForStorage)) {
+		if (_storageHandler.isAddToFileSuccessful(floatingTask)) {
 			responseForAddFloating.setIsSuccess(true);
 			String userFeedback = getFeedbackForAdd(parameters);
 			responseForAddFloating.setFeedback(userFeedback);
@@ -102,18 +102,19 @@ public class Logic {
 		return responseForAddFloating;
 	}
 	
-	private ArrayList<String> getFormattedDetailsForStorage(ArrayList<Parameter> parameters) {
-		String taskName = parameters.get(PARAM_POSITION_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
+	private Entry formatFloatingTaskForStorage(ArrayList<Parameter> parameters) {
+		String taskName = parameters.get(INDEX_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
 		String formattedTaskName = "Name: " + taskName;
 		
-		ArrayList<String> formattedDetailsForStorage = new ArrayList<String>();
-		formattedDetailsForStorage.add(formattedTaskName);
+		Entry floatingTask = new Entry();
+		floatingTask.addToDetails(formattedTaskName);
+		floatingTask.addToDetails("\n");
 		
-		return formattedDetailsForStorage;
+		return floatingTask;
 	}
 	
 	private String getFeedbackForAdd(ArrayList<Parameter> parameters) {
-		String taskName = parameters.get(PARAM_POSITION_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
+		String taskName = parameters.get(INDEX_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
 		String userFeedback = "\"".concat(taskName).concat("\"").concat(" added!");
 		
 		return userFeedback;
