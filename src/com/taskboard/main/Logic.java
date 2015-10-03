@@ -108,7 +108,7 @@ public class Logic {
 		
 		Entry floatingTask = new Entry();
 		floatingTask.addToDetails(formattedTaskName);
-		floatingTask.addToDetails("\n");
+		//floatingTask.addToDetails("\n");
 		
 		return floatingTask;
 	}

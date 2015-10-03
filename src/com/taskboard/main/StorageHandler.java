@@ -63,10 +63,13 @@ public class StorageHandler {
 					entry = new Entry();	
 				}
 				
-				entry.addToDetails(detail);
+				if (!detail.isEmpty()) {
+					entry.addToDetails(detail);
+				}
 			}
 			
 			if (!_entries.isEmpty()) {
+				_entries.add(entry);
 				_entries.remove(INDEX_OF_EMPTY_ENTRY);
 			}
 			
@@ -90,6 +93,8 @@ public class StorageHandler {
 				fileToAdd.flush();
 			}
 			
+			fileToAdd.write("\n");
+			fileToAdd.flush();
 			fileToAdd.close();
 		} catch (IOException e) {
 			return false;
@@ -104,7 +109,12 @@ public class StorageHandler {
 		for (int i = 0; i < _entries.size(); i++) {
 			Entry entry = _entries.get(i);
 			String entryDetails = entry.toString();
-			entriesList = entriesList.concat(entryDetails);
+			
+			if (i == _entries.size() - 1) {
+				entriesList = entriesList.concat(entryDetails);
+			} else {
+				entriesList = entriesList.concat(entryDetails).concat("\n");
+			}
 		}
 		
 		return entriesList;

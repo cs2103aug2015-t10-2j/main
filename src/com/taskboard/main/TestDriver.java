@@ -10,6 +10,7 @@ public class TestDriver {
 			Response currentResponse = _executor.processCommand(currentCommand);
 			if (currentResponse.getIsSuccess()) {
 				System.out.println(currentResponse.getFeedback());
+				System.out.println(_executor.retrieveEntries());
 			} else {
 				System.out.println(currentResponse.getException().getMessage());
 			}
