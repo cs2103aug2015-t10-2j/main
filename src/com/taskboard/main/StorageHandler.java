@@ -84,14 +84,15 @@ public class StorageHandler {
 			FileWriter fileToAdd = new FileWriter(_original, true);
 			_entries.add(entry);
 			
-			ArrayList<String> details = entry.getDetails();
+			/*ArrayList<String> details = entry.getDetails();
 		
 			for (int i = 0; i < details.size(); i++) {
 				String detail = details.get(i);
 				fileToAdd.write(detail);
 				fileToAdd.write("\n");
 				fileToAdd.flush();
-			}
+			}*/
+			addSingleEntryToFile(fileToAdd, entry);
 			
 			fileToAdd.write("\n");
 			fileToAdd.flush();
@@ -118,5 +119,57 @@ public class StorageHandler {
 		}
 		
 		return entriesList;
+	}
+	
+	public boolean isEditingEntriesSuccessful(ArrayList<String> newContent) {
+		try {
+			File tempStorage = new File("_temp");
+			FileWriter fileToAdd = new FileWriter(tempStorage, true);
+			ArrayList<String> detailsToBeEdited = new ArrayList<String>();
+			
+			for (int i = 0; i < _entries.size(); i++) {
+				Entry tempEntry = _entries.get(i);
+				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
+				replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited);
+				addSingleEntryToFile(fileToAdd, tempEntry);
+			}
+			
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) {
+		try {
+			ArrayList<String> details = entry.getDetails();
+		
+			for (int i = 0; i < details.size(); i++) {
+				String detail = details.get(i);
+				fileToAdd.write(detail);
+				fileToAdd.write("\n");
+				fileToAdd.flush();
+			}
+		} catch (IOException e) {
+			return;
+		}
+	}
+	
+	public void replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
+		if ((oldDetails.get(0)).equals((newDetails).get(0))) {
+			for (int j = 1; j < newDetails.size(); j += 2) {
+				for (int k = 1; k < oldDetails.size(); k++) {
+					if ((newDetails.get(j)).equals(oldDetails.get(k))) {
+						oldDetails.set(k+1, newDetails.get(j));
+						break;
+					}
+
+				}
+			}
+		}
+	}
+	
+	public boolean isDeletingSuccessful(String nameOfEntryToBeDeleted) {
+		return true;
 	}
 }
