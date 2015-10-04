@@ -22,9 +22,14 @@ public class Entry {
 	
 	// mutator
 	
+	public void setDetails(ArrayList<String> details) {
+		_details = details;
+	}
+	 
 	public void addToDetails(String detail) {
 		_details.add(detail);
 	}
+	
 	
 	// overriding method
 	
