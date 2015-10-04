@@ -84,14 +84,6 @@ public class StorageHandler {
 			FileWriter fileToAdd = new FileWriter(_original, true);
 			_entries.add(entry);
 			
-			/*ArrayList<String> details = entry.getDetails();
-		
-			for (int i = 0; i < details.size(); i++) {
-				String detail = details.get(i);
-				fileToAdd.write(detail);
-				fileToAdd.write("\n");
-				fileToAdd.flush();
-			}*/
 			addSingleEntryToFile(fileToAdd, entry);
 			
 			fileToAdd.write("\n");
@@ -133,7 +125,11 @@ public class StorageHandler {
 				replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited);
 				addSingleEntryToFile(fileToAdd, tempEntry);
 			}
-			
+			fileToAdd.write("\n");
+			fileToAdd.flush();
+			fileToAdd.close();
+			_original.delete();
+			tempStorage.renameTo(_original);
 		} catch (IOException e) {
 			return false;
 		}
@@ -170,6 +166,27 @@ public class StorageHandler {
 	}
 	
 	public boolean isDeletingSuccessful(String nameOfEntryToBeDeleted) {
+		try {
+			File tempStorage = new File("_temp");
+			FileWriter fileToAdd = new FileWriter(tempStorage, true);
+			
+			for (int i = 0; i < _entries.size(); i++) {
+				Entry tempEntry = _entries.get(i);
+				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
+				if (tempEntryDetails.get(0).equals(nameOfEntryToBeDeleted)) {
+					_entries.remove(i);
+					continue;
+				}
+				addSingleEntryToFile(fileToAdd, tempEntry);
+			}
+			fileToAdd.write("\n");
+			fileToAdd.flush();
+			fileToAdd.close();
+			_original.delete();
+			tempStorage.renameTo(_original);			
+		} catch (IOException e) {
+			return false;
+		}		
 		return true;
 	}
 }
