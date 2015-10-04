@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 public class Logic {
-		
+	
+	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!"; 
+	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
+	private static final String MESSAGE_AFTER_DELETE = "\"%1$s\" deleted!";
+	
 	private static final int INDEX_OF_TASKNAME_FOR_ADD_FLOATING = 0;
-	private static final int INDEX_OF_FILENAME = 0;
+	private static final int INDEX_OF_FILENAME_FOR_LAUNCH = 0;
 	
 	// attribute
 	
@@ -50,7 +54,8 @@ public class Logic {
 	
 	private Response executeLaunchCommand(Command commandInput) {
 		ArrayList<Parameter> parameters = commandInput.getParameters();
-		String fileName = parameters.get(INDEX_OF_FILENAME).getParameterValue();
+		Parameter fileNameParameter = parameters.get(INDEX_OF_FILENAME_FOR_LAUNCH); 
+		String fileName = fileNameParameter.getParameterValue();
 		
 		return getResponseForLaunch(fileName);
 	}
@@ -62,14 +67,19 @@ public class Logic {
 		
 		if (_storageHandler.isSetUpSuccessful(fileName)) {
 			responseForLaunch.setIsSuccess(true);
-			responseForLaunch.setFeedback("Welcome to TASKBOARD!");
+			String userFeedback = getFeedbackForUser(MESSAGE_WELCOME, fileName);
+			responseForLaunch.setFeedback(userFeedback);
 		} else {
 			responseForLaunch.setIsSuccess(false);
-			IOException exobj = new IOException("Failed to create new scheduler.");
+			IOException exobj = new IOException("Fail to create new scheduler.");
 			responseForLaunch.setException(exobj);
 		}	
 		
 		return responseForLaunch;
+	}
+	
+	private String getFeedbackForUser(String feedbackMessage, String details) {
+		return String.format(feedbackMessage, details);
 	}
 	
 	private Response executeAddCommand(Command commandInput) {
@@ -78,20 +88,22 @@ public class Logic {
 		Response responseForAdd = new Response();
 		
 		if (parameters.size() == 1) {
-			responseForAdd = addFloatingTask(parameters);
+			Parameter taskNameParameter = parameters.get(INDEX_OF_TASKNAME_FOR_ADD_FLOATING);
+			String taskName = taskNameParameter.getParameterValue();
+			responseForAdd = addFloatingTask(taskName);
 		}
 		
 		return responseForAdd;
 	}
 		
-	private Response addFloatingTask(ArrayList<Parameter> parameters) {		
-		Entry floatingTask = formatFloatingTaskForStorage(parameters);
+	private Response addFloatingTask(String taskName) {		
+		Entry floatingTask = formatFloatingTaskForStorage(taskName);
 		
 		Response responseForAddFloating = new Response();
 		
 		if (_storageHandler.isAddToFileSuccessful(floatingTask)) {
 			responseForAddFloating.setIsSuccess(true);
-			String userFeedback = getFeedbackForAdd(parameters);
+			String userFeedback = getFeedbackForUser(MESSAGE_AFTER_ADD, taskName);
 			responseForAddFloating.setFeedback(userFeedback);
 		} else {
 			responseForAddFloating.setIsSuccess(false);
@@ -102,8 +114,7 @@ public class Logic {
 		return responseForAddFloating;
 	}
 	
-	private Entry formatFloatingTaskForStorage(ArrayList<Parameter> parameters) {
-		String taskName = parameters.get(INDEX_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
+	private Entry formatFloatingTaskForStorage(String taskName) {
 		String formattedTaskName = "Name: " + taskName;
 		
 		Entry floatingTask = new Entry();
@@ -111,13 +122,6 @@ public class Logic {
 		//floatingTask.addToDetails("\n");
 		
 		return floatingTask;
-	}
-	
-	private String getFeedbackForAdd(ArrayList<Parameter> parameters) {
-		String taskName = parameters.get(INDEX_OF_TASKNAME_FOR_ADD_FLOATING).getParameterValue();
-		String userFeedback = "\"".concat(taskName).concat("\"").concat(" added!");
-		
-		return userFeedback;
 	}
 	
 	private Response executeEditCommand(Command commandInput) {
@@ -128,10 +132,38 @@ public class Logic {
 	}
 
 	private Response executeDeleteCommand(Command commandInput) {
-		// STUB
+		ArrayList<Parameter> parameters = commandInput.getParameters();
+		
 		Response responseForDelete = new Response();
 		
+		for (int i = 0; i < parameters.size(); i++) {
+			Parameter parameter = parameters.get(i);
+			ParameterType parameterType = parameter.getParameterType();
+			
+			if (parameterType == ParameterType.NAME) {
+				responseForDelete = deleteByName(parameter);
+			}
+		}
+		
 		return responseForDelete;
+	}
+	
+	private Response deleteByName(Parameter parameter) {
+		Response responseForDeleteByName = new Response();
+		
+		String taskName = parameter.getParameterValue();
+		
+		if (_storageHandler.isDeletingSuccessful(taskName)) {
+			responseForDeleteByName.setIsSuccess(true);
+			String userFeedback = getFeedbackForUser(MESSAGE_AFTER_DELETE, taskName);
+			responseForDeleteByName.setFeedback(userFeedback);
+		} else {
+			responseForDeleteByName.setIsSuccess(false);
+			IOException exobj = new IOException("The entry could not be deleted from the file.");
+			responseForDeleteByName.setException(exobj);
+		}
+		
+		return responseForDeleteByName;
 	}
 	
 	public String retrieveEntries() {
