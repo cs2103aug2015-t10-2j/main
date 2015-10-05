@@ -115,8 +115,8 @@ public class StorageHandler {
 	
 	public boolean isEditingEntriesSuccessful(ArrayList<String> newContent) {
 		try {
-			File tempStorage = new File("_temp");
-			FileWriter fileToAdd = new FileWriter(tempStorage, true);
+			//File tempStorage = new File("_temp");
+			FileWriter fileToAdd = new FileWriter(_original);
 			ArrayList<String> detailsToBeEdited = new ArrayList<String>();
 			
 			for (int i = 0; i < _entries.size(); i++) {
@@ -128,8 +128,8 @@ public class StorageHandler {
 			fileToAdd.write("\n");
 			fileToAdd.flush();
 			fileToAdd.close();
-			_original.delete();
-			tempStorage.renameTo(_original);
+//			_original.delete();
+//			tempStorage.renameTo(_original);
 		} catch (IOException e) {
 			return false;
 		}
@@ -167,8 +167,8 @@ public class StorageHandler {
 	
 	public boolean isDeletingSuccessful(String nameOfEntryToBeDeleted) {
 		try {
-			File tempStorage = new File("_temp");
-			FileWriter fileToAdd = new FileWriter(tempStorage, true);
+//			File tempStorage = new File("_temp");
+			FileWriter fileToAdd = new FileWriter(_original);
 			
 			for (int i = 0; i < _entries.size(); i++) {
 				Entry tempEntry = _entries.get(i);
@@ -182,8 +182,8 @@ public class StorageHandler {
 			fileToAdd.write("\n");
 			fileToAdd.flush();
 			fileToAdd.close();
-			_original.delete();
-			tempStorage.renameTo(_original);			
+//			_original.delete();
+//			tempStorage.renameTo(_original);			
 		} catch (IOException e) {
 			return false;
 		}		
