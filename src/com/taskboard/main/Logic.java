@@ -51,6 +51,9 @@ public class Logic {
 			case ADD:
 				responseForOperations = executeAddCommand(commandInput);
 				break;
+			case VIEW:
+				responseForOperations = executeViewCommand();
+				break;
 			case EDIT:
 				responseForOperations = executeEditCommand(commandInput);
 				break;
@@ -299,6 +302,22 @@ public class Logic {
 		response.setException(exobj);
 	}
 	
+	private Response executeViewCommand() {
+		Response responseForView = new Response();
+		
+		responseForView.setIsSuccess(true);
+		String userFeedback = retrieveEntries();
+		responseForView.setFeedback(userFeedback);
+		
+		return responseForView;
+	}
+	
+	private String retrieveEntries() {
+		String entriesList = _storageHandler.retrieveEntriesInFile();
+		
+		return entriesList;
+	}
+	
 	private Response executeEditCommand(Command commandInput) {
 		// STUB
 		Response responseForEdit = new Response();
@@ -347,12 +366,6 @@ public class Logic {
 		response.setIsSuccess(false);
 		IOException exobj = new IOException(MESSAGE_ERROR_FOR_DELETE);
 		response.setException(exobj);
-	}
-	
-	public String retrieveEntries() {
-		String entriesList = _storageHandler.retrieveEntriesInFile();
-		
-		return entriesList;
 	}
 	
 	private Response failToRecogniseCommand() {
