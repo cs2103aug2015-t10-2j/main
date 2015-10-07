@@ -328,7 +328,7 @@ public class Logic {
 		
 		String taskName = parameter.getParameterValue();
 		
-		if (_storageHandler.isDeletingSuccessful(taskName)) {
+		if (_storageHandler.isDeleteFromFileSuccessful(taskName)) {
 			setSuccessResponseForDeleteByName(responseForDeleteByName, taskName);
 		} else {
 			setFailureResponseForDeleteByName(responseForDeleteByName);
