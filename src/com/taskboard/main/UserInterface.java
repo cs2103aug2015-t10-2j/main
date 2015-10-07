@@ -15,16 +15,18 @@ public class UserInterface {
 	}
 	
 	public static void main(String[] args){
-		String userInput;
-		String feedback;
-		
 		UserInterface _userInterface = new UserInterface();
-		userInput = _userInterface.getCommandReader().getNextCommand();	
 		
-		_userInterface.getLogic().processCommand(userInput);
-		
-		feedback = _userInterface.getResponse().getFeedback();
-		_userInterface.getCommandReader().showToUser(feedback);
+		String userInput = _userInterface.getCommandReader().getNextCommand();	
+		while (!userInput.toLowerCase().equals("exit")) {
+			Response currentResponse = _userInterface.getLogic().processCommand(userInput);
+			if (currentResponse.getIsSuccess()) {
+				System.out.println(currentResponse.getFeedback());
+			} else {
+				System.out.println(currentResponse.getException().getMessage());
+			}
+			userInput = _userInterface.getCommandReader().getNextCommand();
+		}
 	}
 	
 	// accessors
