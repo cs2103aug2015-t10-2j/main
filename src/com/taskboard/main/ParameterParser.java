@@ -9,7 +9,7 @@ public class ParameterParser {
 
 	// constants
 	
-	public static final int SECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+	public static final int MILLISECONDS_PER_DAY = 86400000;
 	public static final int DAY_INDEX_MONDAY = 1;
 	public static final int DAY_INDEX_TUESDAY = 2;
 	public static final int DAY_INDEX_WEDNESDAY = 3;
@@ -178,7 +178,7 @@ public class ParameterParser {
 			case "today":
 				return defaultDateFormat.format(today);
 			case "tomorrow":
-				Date tomorrow = new Date(today.getTime() + SECONDS_PER_DAY);
+				Date tomorrow = new Date(today.getTime() + MILLISECONDS_PER_DAY);
 				return defaultDateFormat.format(tomorrow);
 			case "monday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_MONDAY));
@@ -229,11 +229,11 @@ public class ParameterParser {
 		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		
 		if (todayDayIndex < dayIndex) {
-			Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+			Date monday = new Date(today.getTime() + MILLISECONDS_PER_DAY * 
 						  (dayIndex - todayDayIndex));
 			return monday;
 		} else {
-			Date monday = new Date(today.getTime() + SECONDS_PER_DAY * 
+			Date monday = new Date(today.getTime() + MILLISECONDS_PER_DAY * 
 					  	  (dayIndex - todayDayIndex + 7));
 			return monday;
 		}
