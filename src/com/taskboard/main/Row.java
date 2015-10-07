@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Row {
 	
-	private static final String LINES = "______________________";
+	private static final String LINE = "__________________________________________________________________________________";
 
 	// attributes
 	
@@ -59,7 +59,7 @@ public class Row {
 			_cells.get(i).printCell();
 		}
 		System.out.println();
-		System.out.println(LINES);
+		System.out.println(LINE);
 	}
 	
 }

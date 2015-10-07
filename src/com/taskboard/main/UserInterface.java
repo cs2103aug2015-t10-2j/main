@@ -16,15 +16,26 @@ public class UserInterface {
 	
 	public static void main(String[] args){
 		UserInterface _userInterface = new UserInterface();
+		_userInterface.initializeDisplayBoard();
 		
 		String userInput = _userInterface.getCommandReader().getNextCommand();	
 		while (!userInput.toLowerCase().equals("exit")) {
 			Response currentResponse = _userInterface.getLogic().processCommand(userInput);
 			if (currentResponse.getIsSuccess()) {
-				System.out.println(currentResponse.getFeedback());
+				String feedback = currentResponse.getFeedback();
+				if (userInput.toLowerCase().equals("view")) {
+					_userInterface.getDisplayBoard().getTable(0).getRow(0).getCell(0).setContent(feedback);
+					_userInterface.getDisplayBoard().getTable(1).getRow(0).getCell(0).setContent("Successfully displayed all entries.");
+				} else {
+					_userInterface.getDisplayBoard().getTable(0).getRow(0).getCell(0).setContent("No entry to display.");
+					_userInterface.getDisplayBoard().getTable(1).getRow(0).getCell(0).setContent(feedback);
+				}
 			} else {
-				System.out.println(currentResponse.getException().getMessage());
+				String exception = currentResponse.getException().getMessage();
+				_userInterface.getDisplayBoard().getTable(1).getRow(0).getCell(0).setContent(exception);
 			}
+			_userInterface.getDisplayBoard().printDisplayBoard();
+			
 			userInput = _userInterface.getCommandReader().getNextCommand();
 		}
 	}
@@ -45,6 +56,25 @@ public class UserInterface {
 	
 	public DisplayBoard getDisplayBoard() {
 		return _displayBoard;
+	}
+	
+	// functionalities
+	
+	public void initializeDisplayBoard() {
+		Cell displayCell = new Cell();
+		Row displayRow = new Row();
+		displayRow.addCell(displayCell);
+		Table displayTable = new Table();
+		displayTable.addRow(displayRow);
+		
+		Cell responseCell = new Cell();
+		Row responseRow = new Row();
+		responseRow.addCell(responseCell);
+		Table responseTable = new Table();
+		responseTable.addRow(responseRow);
+		
+		_displayBoard.addTable(displayTable);
+		_displayBoard.addTable(responseTable);
 	}
 	
 }

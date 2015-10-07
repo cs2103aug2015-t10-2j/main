@@ -31,7 +31,7 @@ public class Cell {
 	// functionalities
 	
 	public void printCell() {
-		System.out.print(_content + " | ");
+		System.out.print(_content);
 	}
 	
 }
