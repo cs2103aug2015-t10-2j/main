@@ -164,7 +164,11 @@ public class ParameterParser {
 			case "sunday":
 				return true;
 			default:
-				return false;
+				if (token.length() == 10 && token.indexOf('/') == 2 && token.lastIndexOf('/') == 5) {
+					return true;
+				} else {
+					return false;
+				}
 		}
 	}
 	
@@ -178,22 +182,33 @@ public class ParameterParser {
 			case "tomorrow":
 				Date tomorrow = new Date(today.getTime() + MILLISECONDS_PER_DAY);
 				return defaultDateFormat.format(tomorrow);
+			case "mon":
 			case "monday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_MONDAY));
+			case "tue":
 			case "tuesday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_TUESDAY));
+			case "wed":
 			case "wednesday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_WEDNESDAY));
+			case "thu":
 			case "thursday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_THURSDAY));
+			case "fri":
 			case "friday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_FRIDAY));
+			case "sat":
 			case "saturday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SATURDAY));
+			case "sun":
 			case "sunday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SUNDAY));
 			default:
-				return null;
+				if (token.length() == 10 && token.indexOf('/') == 2 && token.lastIndexOf('/') == 5) {
+					return token;
+				} else {
+					return null;
+				}
 		}
 	}
 	
