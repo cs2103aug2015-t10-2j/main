@@ -12,6 +12,7 @@ public class StorageHandler {
 	
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
+	private static final int INDEX_OF_NAME = 0;
 	
 	// attributes
 	
@@ -86,8 +87,6 @@ public class StorageHandler {
 			
 			addSingleEntryToFile(fileToAdd, entry);
 			
-			fileToAdd.write("\n");
-			fileToAdd.flush();
 			fileToAdd.close();
 		} catch (IOException e) {
 			return false;
@@ -113,7 +112,7 @@ public class StorageHandler {
 		return entriesList;
 	}
 	
-	public boolean isEditingEntriesSuccessful(ArrayList<String> newContent) {
+	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
 		try {
 			//File tempStorage = new File("_temp");
 			FileWriter fileToAdd = new FileWriter(_original);
@@ -136,15 +135,27 @@ public class StorageHandler {
 		return true;
 	}
 	
-	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) {
-		try {
-			ArrayList<String> details = entry.getDetails();
+	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
+//		try {
+		ArrayList<String> details = entry.getDetails();
 		
-			for (int i = 0; i < details.size(); i++) {
-				String detail = details.get(i);
-				fileToAdd.write(detail);
-				fileToAdd.write("\n");
-				fileToAdd.flush();
+		for (int i = 0; i < details.size(); i++) {
+			String detail = details.get(i);
+			fileToAdd.write(detail);
+			fileToAdd.write("\n");
+			fileToAdd.flush();
+		}
+		fileToAdd.write("\n");
+		fileToAdd.flush();
+//		} catch (IOException e) {
+//			return;
+//		}
+	}
+	
+	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> _entries) {
+		try {
+			for (int i = 0; i < _entries.size(); i++) {
+				addSingleEntryToFile(fileToAdd, _entries.get(i));
 			}
 		} catch (IOException e) {
 			return;
@@ -152,7 +163,7 @@ public class StorageHandler {
 	}
 	
 	public void replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
-		if ((oldDetails.get(0)).equals((newDetails).get(0))) {
+		if ((oldDetails.get(INDEX_OF_NAME)).equals((newDetails).get(INDEX_OF_NAME))) {
 			for (int j = 1; j < newDetails.size(); j += 2) {
 				for (int k = 1; k < oldDetails.size(); k++) {
 					if ((newDetails.get(j)).equals(oldDetails.get(k))) {
@@ -165,7 +176,7 @@ public class StorageHandler {
 		}
 	}
 	
-	public boolean isDeletingSuccessful(String nameOfEntryToBeDeleted) {
+	public boolean isDeleteFromFileSuccessful(String nameOfEntryToBeDeleted) {
 		try {
 //			File tempStorage = new File("_temp");
 			FileWriter fileToAdd = new FileWriter(_original);
@@ -173,20 +184,17 @@ public class StorageHandler {
 			for (int i = 0; i < _entries.size(); i++) {
 				Entry tempEntry = _entries.get(i);
 				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-				if (tempEntryDetails.get(0).equals(nameOfEntryToBeDeleted)) {
+				if (tempEntryDetails.get(INDEX_OF_NAME).contains(nameOfEntryToBeDeleted)) {
 					_entries.remove(i);
-					continue;
+					break;
 				}
-				addSingleEntryToFile(fileToAdd, tempEntry);
 			}
-			fileToAdd.write("\n");
-			fileToAdd.flush();
-			fileToAdd.close();
-//			_original.delete();
-//			tempStorage.renameTo(_original);			
+			copyAllEntriesToFile(fileToAdd, _entries);
+			fileToAdd.close();		
 		} catch (IOException e) {
 			return false;
 		}		
 		return true;
 	}
 }
+
