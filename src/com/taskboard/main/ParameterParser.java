@@ -50,8 +50,6 @@ public class ParameterParser {
 				String temporaryString = new String();
 				for (String currentParameterToken : currentParameterString.split(" ")) {
 					if (currentParameterToken.toLowerCase().equals(expectedDelimiterName)) {
-						System.out.println(expectedDelimiterType);
-						System.out.println(temporaryString);
 						if (!temporaryString.isEmpty()) {
 							parameters.addAll(convertToParameters(temporaryString, currentDelimiterType));
 							temporaryString = new String();
