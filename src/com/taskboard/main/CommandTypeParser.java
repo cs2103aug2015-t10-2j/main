@@ -19,6 +19,9 @@ public class CommandTypeParser {
 			case "d":
 			case "delete":
 				return CommandType.DELETE;
+			case "v":
+			case "view":
+				return CommandType.VIEW;
 			case "o":
 			case "open":
 				return CommandType.OPEN;
