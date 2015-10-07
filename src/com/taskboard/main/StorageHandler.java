@@ -114,28 +114,69 @@ public class StorageHandler {
 	
 	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
 		try {
-			//File tempStorage = new File("_temp");
-			FileWriter fileToAdd = new FileWriter(_original);
-			ArrayList<String> detailsToBeEdited = new ArrayList<String>();
+			FileWriter fileToEdit = new FileWriter(_original);
+			
+			String nameOfEditedTask = newContent.get(INDEX_OF_NAME);
 			
 			for (int i = 0; i < _entries.size(); i++) {
-				Entry tempEntry = _entries.get(i);
-				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-				if (replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited)) {
-					break;
-				}
+				Entry entry = _entries.get(i);
+				ArrayList<String> entryDetails = entry.getDetails();
+				String taskName = entryDetails.get(INDEX_OF_NAME);
+				
+				if (taskName.contains(nameOfEditedTask)) {
+					replaceWithNewContent(entryDetails, newContent);
+					entry.setDetails(entryDetails);
+					_entries.set(i, entry);
+				}				
 			}
-			copyAllEntriesToFile(fileToAdd, _entries);
-			fileToAdd.write("\n");
-			fileToAdd.flush();
-			fileToAdd.close();
-//			_original.delete();
-//			tempStorage.renameTo(_original);
+			
+			copyAllEntriesToFile(fileToEdit, _entries);
+			fileToEdit.close();
+			
+			return true;
 		} catch (IOException e) {
 			return false;
 		}
-		return true;
 	}
+
+	private void replaceWithNewContent(ArrayList<String> entryDetails, ArrayList<String> newContent) {
+		for (int i = 1; i < newContent.size(); i++) {
+			String detail = newContent.get(i);
+			String[] splitDetails = detail.split(":");
+			
+			for (int j = 0; j < entryDetails.size(); j++) {
+				String existingDetail = entryDetails.get(j);
+				
+				if (existingDetail.contains(splitDetails[0])) {
+					entryDetails.set(j, detail);
+				}
+			}
+		}
+	}
+//	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
+//		try {
+//			//File tempStorage = new File("_temp");
+//			FileWriter fileToEdit = new FileWriter(_original);
+//			ArrayList<String> detailsToBeEdited = new ArrayList<String>();
+//			
+//			for (int i = 0; i < _entries.size(); i++) {
+//				Entry tempEntry = _entries.get(i);
+//				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
+//				if (replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited)) {
+//					break;
+//				}
+//			}
+//			copyAllEntriesToFile(fileToAdd, _entries);
+//			fileToAdd.write("\n");
+//			fileToAdd.flush();
+//			fileToAdd.close();
+//			_original.delete();
+//			tempStorage.renameTo(_original);
+//		} catch (IOException e) {
+//			return false;
+//		}
+//		return true;
+//	}
 	
 	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
 //		try {
@@ -164,8 +205,8 @@ public class StorageHandler {
 		}
 	}
 	
-	public boolean replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
-		if ((oldDetails.get(INDEX_OF_NAME)).contains((newDetails).get(INDEX_OF_NAME))) {
+//	public boolean replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
+//		if ((oldDetails.get(INDEX_OF_NAME)).contains((newDetails).get(INDEX_OF_NAME))) {
 //			for (int j = 1; j < newDetails.size(); j += 2) {
 //				for (int k = 1; k < oldDetails.size(); k++) {
 //					if ((newDetails.get(j)).equals(oldDetails.get(k))) {
@@ -175,13 +216,13 @@ public class StorageHandler {
 //
 //				}
 //			}
-			oldDetails.set(1, newDetails.get(1));
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
+//			oldDetails.set(1, newDetails.get(1));
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+
 	public boolean isDeleteFromFileSuccessful(String nameOfEntryToBeDeleted) {
 		try {
 //			File tempStorage = new File("_temp");
