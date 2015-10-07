@@ -1,6 +1,11 @@
 package com.taskboard.main;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 import java.io.IOException;
 
@@ -11,16 +16,20 @@ public class Logic {
 	private static final String MESSAGE_AFTER_DELETE = "\"%1$s\" deleted!";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH = "Fail to create new scheduler.";
-	private static final String MESSAGE_ERROR_INVALID_TIME = "Invalid time provided.";
+	private static final String MESSAGE_ERROR_INVALID_DATE_TIME = "Invalid date time provided.";
+	private static final String MESSAGE_ERROR_PAST_DATE_TIME = "Past date time provided.";
 	private static final String MESSAGE_ERROR_FOR_DELETE = "The entry could not be deleted from the file.";
 	private static final String MESSAGE_ERROR_INVALID_COMMAND = "Invalid command type provided.";
+	private static final String DATE_FORMAT = "dd/MM/yyyy'T'HH:mm";
+	private static final String DEFAULT_TIME_FORMAT = "00:00";
 	
 	private static final int INDEX_OF_TASKNAME_FOR_ADD_FLOATING = 0;
 	private static final int INDEX_OF_FILENAME_FOR_LAUNCH = 0;
 	private static final int INDEX_OF_FIRST_CHAR_IN_TIME = 0;
 	
-	// attribute
+	// attributes
 	
+	private CommandParser _commandParser;
 	private StorageHandler _storageHandler;
 	
 	// constructor
@@ -30,7 +39,7 @@ public class Logic {
 	}
 		
 	public Response processCommand(String userInput) {
-		Command commandInput = new Command(userInput);
+		Command commandInput = _commandParser.parseCommand(userInput);
 		CommandType commandType = commandInput.getCommandType();
 		
 		Response responseForOperations = new Response();
@@ -126,21 +135,21 @@ public class Logic {
 		Response responseForAddFloating = new Response();
 		
 		if (_storageHandler.isAddToFileSuccessful(floatingTask)) {
-			setSuccessResponseForAddFloating(responseForAddFloating, taskName);
+			setSuccessResponseForAdd(responseForAddFloating, taskName);
 		} else {
-			setFailureResponseForAddFloating(responseForAddFloating);
+			setFailureResponseForAdd(responseForAddFloating);
 		}
 		
 		return responseForAddFloating;
 	}
 	
-	private void setSuccessResponseForAddFloating(Response response, String taskName) {
+	private void setSuccessResponseForAdd(Response response, String taskName) {
 		response.setIsSuccess(true);
 		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_ADD, taskName);
 		response.setFeedback(userFeedback);
 	}
 	
-	private void setFailureResponseForAddFloating(Response response) {
+	private void setFailureResponseForAdd(Response response) {
 		response.setIsSuccess(false);
 		IOException exobj = new IOException(MESSAGE_ERROR_FOR_ADD);
 		response.setException(exobj);
@@ -172,63 +181,121 @@ public class Logic {
 	private Response addDeadlineTask(ArrayList<Parameter> parameters) {
 		Response responseForAddDeadline = new Response();
 		
+		String time = "";
+		String date = "";
+		String taskName = "";
+		
 		for (int i = 0; i < parameters.size(); i++) {
 			Parameter parameter = parameters.get(i);
 			ParameterType parameterType = parameter.getParameterType();
 			
 			if (parameterType == ParameterType.TIME) {
-				String time = parameter.getParameterValue();
+				time = parameter.getParameterValue();
 			} else if (parameterType == ParameterType.DATE) {
-				String date = parameter.getParameterValue();
+				date = parameter.getParameterValue();
 			} else {
-				String taskName = parameter.getParameterValue();
+				taskName = parameter.getParameterValue();
 			}
 		}
 		
-//		if (!isDateValid(date)) {
-//			
-//		} else if (!isTimeValid(time)) {
-//			setFailureResponseForInvalidTime(responseForAddDeadline);
-//		} else {
-//			
-//		}
+		String dateTime = getDateTimeFormat(date, time);
+		Date inputDate = getInputDate(dateTime);
+		
+		if (inputDate == null) {
+			setFailureResponseForInvalidDateTime(responseForAddDeadline);
+		}
+		else {
+			Date todayDate = new Date();
+			
+			if (inputDate.after(todayDate)) {
+				Entry deadlineTask = formatDeadlineTaskForStorage(taskName, date, time);
+				
+				if (_storageHandler.isAddToFileSuccessful(deadlineTask)) {
+					setSuccessResponseForAdd(responseForAddDeadline, taskName);
+				} else {
+					setFailureResponseForAdd(responseForAddDeadline);
+				}
+				
+			} else {
+				setFailureResponseForPastDateTime(responseForAddDeadline);
+			}
+		}	
 		
 		return responseForAddDeadline;
 	}
 	
-	private boolean isDateValid(ArrayList<Parameter> parameters) {
-		// Stub
-		return false;
-	}
-	
-	private boolean isTimeValid(String time) {
-		int indexOfColon = time.indexOf(':');
-		String hourPart = time.substring(INDEX_OF_FIRST_CHAR_IN_TIME, indexOfColon);
-		int hour = Integer.parseInt(hourPart);
-		String minutePart = time.substring(indexOfColon + 1);
-		int minute = Integer.parseInt(minutePart);
-				
-		boolean isHourValid = true;
-		boolean isMinuteValid = true;
-				
-		if (hour < 0 || hour > 23) {
-			isHourValid = false;
-		}
-				
-		if (minute < 0 || minute > 59) {
-			isMinuteValid = false;
-		}
-				
-		if (!isHourValid || !isMinuteValid) {
-			return false;
+	private String getDateTimeFormat(String date, String time) {
+		if (time.isEmpty()) {
+			time = DEFAULT_TIME_FORMAT;
 		}
 		
-		return true;
+		String dateTime = date.concat("T").concat(time);
+		
+		return dateTime;
 	}
 	
-	private void setFailureResponseForInvalidTime(Response response) {
+	private Date getInputDate(String dateTime) {
+		 try {
+			 DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+	         dateFormat.setLenient(false);
+	         Date inputDate = dateFormat.parse(dateTime);
+	         
+	         return inputDate;
+	     } catch (ParseException e) {
+	         return null;
+	     }
+	}
+	
+//	private boolean isTimeValid(String time) {
+//		int indexOfColon = time.indexOf(':');
+//		String hourPart = time.substring(INDEX_OF_FIRST_CHAR_IN_TIME, indexOfColon);
+//		int hour = Integer.parseInt(hourPart);
+//		String minutePart = time.substring(indexOfColon + 1);
+//		int minute = Integer.parseInt(minutePart);
+//				
+//		boolean isHourValid = true;
+//		boolean isMinuteValid = true;
+//				
+//		if (hour < 0 || hour > 23) {
+//			isHourValid = false;
+//		}
+//				
+//		if (minute < 0 || minute > 59) {
+//			isMinuteValid = false;
+//		}
+//				
+//		if (!isHourValid || !isMinuteValid) {
+//			return false;
+//		}
+//		
+//		return true;
+//	}
+	
+	private void setFailureResponseForInvalidDateTime(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exobj = new IllegalArgumentException(MESSAGE_ERROR_INVALID_TIME);
+		IllegalArgumentException exobj = new IllegalArgumentException(MESSAGE_ERROR_INVALID_DATE_TIME);
+		response.setException(exobj);
+	}
+	
+	private Entry formatDeadlineTaskForStorage(String taskName, String date, String time) {
+		String formattedTaskName = "Name: " + taskName;
+		String formattedDate = "Due date: " + date;
+		
+		Entry deadlineTask = new Entry();
+		deadlineTask.addToDetails(formattedTaskName);
+		deadlineTask.addToDetails(formattedDate);
+		
+		if (!time.isEmpty()) {
+			String formattedTime = "Due time: " + time;
+			deadlineTask.addToDetails(formattedTime);
+		}
+		
+		return deadlineTask;
+	}
+	
+	private void setFailureResponseForPastDateTime(Response response) {
+		response.setIsSuccess(false);
+		IllegalArgumentException exobj = new IllegalArgumentException(MESSAGE_ERROR_PAST_DATE_TIME);
 		response.setException(exobj);
 	}
 	
