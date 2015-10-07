@@ -121,9 +121,11 @@ public class StorageHandler {
 			for (int i = 0; i < _entries.size(); i++) {
 				Entry tempEntry = _entries.get(i);
 				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-				replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited);
-				addSingleEntryToFile(fileToAdd, tempEntry);
+				if (replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited)) {
+					break;
+				}
 			}
+			copyAllEntriesToFile(fileToAdd, _entries);
 			fileToAdd.write("\n");
 			fileToAdd.flush();
 			fileToAdd.close();
@@ -162,17 +164,21 @@ public class StorageHandler {
 		}
 	}
 	
-	public void replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
-		if ((oldDetails.get(INDEX_OF_NAME)).equals((newDetails).get(INDEX_OF_NAME))) {
-			for (int j = 1; j < newDetails.size(); j += 2) {
-				for (int k = 1; k < oldDetails.size(); k++) {
-					if ((newDetails.get(j)).equals(oldDetails.get(k))) {
-						oldDetails.set(k+1, newDetails.get(j));
-						break;
-					}
-
-				}
-			}
+	public boolean replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
+		if ((oldDetails.get(INDEX_OF_NAME)).contains((newDetails).get(INDEX_OF_NAME))) {
+//			for (int j = 1; j < newDetails.size(); j += 2) {
+//				for (int k = 1; k < oldDetails.size(); k++) {
+//					if ((newDetails.get(j)).equals(oldDetails.get(k))) {
+//						oldDetails.set(k+1, newDetails.get(j));
+//						break;
+//					}
+//
+//				}
+//			}
+			oldDetails.set(1, newDetails.get(1));
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
