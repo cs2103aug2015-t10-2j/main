@@ -22,7 +22,7 @@ public class UserInterface {
 		while (!userInput.toLowerCase().equals("exit")) {
 			Response currentResponse = _userInterface.getLogic().processCommand(userInput);
 			if (currentResponse.getIsSuccess()) {
-				String feedback = currentResponse.getFeedback();
+				String feedback = currentResponse.getFeedback().trim();
 				if (userInput.toLowerCase().equals("view")) {
 					_userInterface.getDisplayBoard().getTable(0).getRow(0).getCell(0).setContent(feedback);
 					_userInterface.getDisplayBoard().getTable(1).getRow(0).getCell(0).setContent("Successfully displayed all entries.");
