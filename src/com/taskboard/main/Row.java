@@ -3,6 +3,8 @@ package com.taskboard.main;
 import java.util.ArrayList;
 
 public class Row {
+	
+	private static final String LINES = "______________________";
 
 	// attributes
 	
@@ -57,6 +59,7 @@ public class Row {
 			_cells.get(i).printCell();
 		}
 		System.out.println();
+		System.out.println(LINES);
 	}
 	
 }
