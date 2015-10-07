@@ -12,6 +12,8 @@ import com.taskboard.main.Command;
 import com.taskboard.main.CommandType;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.ParameterType;
+import com.taskboard.main.CommandTypeParser;
+import com.taskboard.main.ParameterParser;
 
 public class TaskBoardTest {
 	
@@ -30,9 +32,9 @@ public class TaskBoardTest {
 		assertParameters(expected1, "add Hello World!");
 		
 		ArrayList<Parameter> expected2 = new ArrayList<Parameter>();
-		expected2.add(new Parameter(ParameterType.NAME, "Hello Again"));
-		expected2.add(new Parameter(ParameterType.DESCRIPTION, "This is the second Hello"));
-		assertParameters(expected2, "add Hello Again; This is the second Hello");
+		expected2.add(new Parameter(ParameterType.NAME, "Hello World!"));
+		expected2.add(new Parameter(ParameterType.NEW_NAME, "Hello Again"));
+		assertParameters(expected2, "edit Hello World!; Hello Again");
 		
 		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
 		expected3.add(new Parameter(ParameterType.NAME, "Meeting with Chris"));
@@ -43,7 +45,7 @@ public class TaskBoardTest {
 		expected3.add(new Parameter(ParameterType.START_TIME, "19:00"));
 		expected3.add(new Parameter(ParameterType.END_DATE, defaultDateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.END_TIME, "21:00"));
-		assertParameters(expected3, "add Meeting with Chris; from tomorrow 7pm To tomorrow 9pm");
+		assertParameters(expected3, "add Meeting with Chris; from tomorrow 7pm to tomorrow 9pm");
 		
 		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
 		expected4.add(new Parameter(ParameterType.NAME, "Submit paperwork"));
@@ -58,11 +60,11 @@ public class TaskBoardTest {
 	}
 
 	private void assertCommandType(CommandType expected, String command) {
-		assertEquals(expected, new Command(command).getCommandType()); 
+		assertEquals(expected, new CommandTypeParser().parseCommandType(command)); 
 	}
 	
 	private void assertParameters(ArrayList<Parameter> expected, String command) {
-		assertEquals(toString(expected), toString(new Command(command).getParameters()));
+		assertEquals(toString(expected), toString(new ParameterParser().parseParameters(command)));
 	}
 	
 	private static String toString(ArrayList<Parameter> parameters) {
