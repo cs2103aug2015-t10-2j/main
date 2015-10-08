@@ -12,7 +12,9 @@ public class StorageHandler {
 	
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
-	private static final int INDEX_OF_NAME = 0;
+	private static final int INDEX_OF_FORMATTED_ENTRY_NAME = 0;
+	private static final int INDEX_OF_ENTRY_NAME = 0;
+	private static final int INDEX_OF_DETAIL = 1;
 	
 	// attributes
 	
@@ -116,14 +118,14 @@ public class StorageHandler {
 		try {
 			FileWriter fileToEdit = new FileWriter(_original);
 			
-			String nameOfEditedTask = newContent.get(INDEX_OF_NAME);
+			String nameOfEditedTask = newContent.get(INDEX_OF_ENTRY_NAME);
 			
 			for (int i = 0; i < _entries.size(); i++) {
 				Entry entry = _entries.get(i);
 				ArrayList<String> entryDetails = entry.getDetails();
-				String taskName = entryDetails.get(INDEX_OF_NAME);
+				String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME);
 				
-				if (taskName.contains(nameOfEditedTask)) {
+				if (formattedTaskName.contains(nameOfEditedTask)) {
 					replaceWithNewContent(entryDetails, newContent);
 					entry.setDetails(entryDetails);
 					_entries.set(i, entry);
@@ -141,17 +143,49 @@ public class StorageHandler {
 
 	private void replaceWithNewContent(ArrayList<String> entryDetails, ArrayList<String> newContent) {
 		for (int i = 1; i < newContent.size(); i++) {
-			String detail = newContent.get(i);
-			String[] splitDetails = detail.split(":");
+			String newFormattedDetail = newContent.get(i);
+			String[] newFormattedDetailSegments = newFormattedDetail.split(":");
 			
 			for (int j = 0; j < entryDetails.size(); j++) {
-				String existingDetail = entryDetails.get(j);
+				String existingFormattedDetail = entryDetails.get(j);
 				
-				if (existingDetail.contains(splitDetails[0])) {
-					entryDetails.set(j, detail);
+				if (existingFormattedDetail.contains(newFormattedDetailSegments[0])) {
+					entryDetails.set(j, newFormattedDetail);
 				}
 			}
 		}
+	}
+	
+	public String retrieveDetail(String searchTaskName, String detailType) {
+		String detail = "";
+		
+		for (int i = 0; i < _entries.size(); i++) {
+			Entry entry = _entries.get(i);
+			ArrayList<String> entryDetails = entry.getDetails();
+			String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME);
+			String[] formattedTaskNameSegments = formattedTaskName.split(": ");
+			String taskName = formattedTaskNameSegments[INDEX_OF_DETAIL];
+			
+			if (taskName.equals(searchTaskName)) {
+				detail = getDetailFromEntry(entryDetails, detailType);
+			}	
+		}
+		return detail;
+	}
+	
+	private String getDetailFromEntry(ArrayList<String> entryDetails, String detailType) {
+		String detail = "";
+		
+		for (int i = 0; i < entryDetails.size(); i++) {
+			String formattedDetail = entryDetails.get(i);
+			
+			if (formattedDetail.contains(detailType)) {
+				String[] formattedDetailSegments = formattedDetail.split(": ");
+				detail = formattedDetailSegments[INDEX_OF_DETAIL];
+			}
+		}
+		
+		return detail;
 	}
 //	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
 //		try {
@@ -231,7 +265,7 @@ public class StorageHandler {
 			for (int i = 0; i < _entries.size(); i++) {
 				Entry tempEntry = _entries.get(i);
 				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-				if (tempEntryDetails.get(INDEX_OF_NAME).contains(nameOfEntryToBeDeleted)) {
+				if (tempEntryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME).contains(nameOfEntryToBeDeleted)) {
 					_entries.remove(i);
 					break;
 				}

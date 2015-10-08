@@ -368,12 +368,20 @@ public class Logic {
 			}			
 		}
 		
-		if (!editedDueDate.isEmpty()) {
-			responseForEdit = formatEditedDateTimeDetails(editedDetails, editedDueDate, editedDueTime);
-			
-			if (responseForEdit.getException() != null) {
-				return responseForEdit;
-			}
+		String detailType = "";
+		
+		if (editedDueDate.isEmpty()) {
+			detailType = "Due date:";
+			editedDueDate = _storageHandler.retrieveDetail(taskName, detailType);	
+		} else if (editedDueTime.isEmpty()) {
+			detailType = "Due time:";
+			editedDueTime = _storageHandler.retrieveDetail(taskName, detailType);
+		}
+		
+		responseForEdit = formatEditedDateTimeDetails(editedDetails, editedDueDate, editedDueTime);
+		
+		if (responseForEdit.getException() != null) {
+			return responseForEdit;
 		}
 		
 		if (_storageHandler.isEditInFileSuccessful(editedDetails)) {
@@ -401,11 +409,8 @@ public class Logic {
 				String formattedDate = "Due date: " + date;
 				editedDetails.add(formattedDate);
 				
-				if (!time.isEmpty()) {
-					String formattedTime = "Due time: " + time;
-					editedDetails.add(formattedTime);
-				}
-				
+				String formattedTime = "Due time: " + time;
+				editedDetails.add(formattedTime);
 			} else {
 				setFailureResponseForPastDateTime(reponseForDateTime);
 			}
