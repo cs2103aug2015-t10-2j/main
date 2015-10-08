@@ -211,8 +211,7 @@ public class Logic {
 		
 		if (inputDate == null) {
 			setFailureResponseForInvalidDateTime(responseForAddDeadline);
-		}
-		else {
+		}  else {
 			Date todayDate = new Date();
 			
 			if (inputDate.after(todayDate)) {
@@ -370,7 +369,11 @@ public class Logic {
 		}
 		
 		if (!editedDueDate.isEmpty()) {
-			formatEditedDateTimeDetails(editedDetails, editedDueDate, editedDueTime, responseForEdit);
+			responseForEdit = formatEditedDateTimeDetails(editedDetails, editedDueDate, editedDueTime);
+			
+			if (responseForEdit.getException() != null) {
+				return responseForEdit;
+			}
 		}
 		
 		if (_storageHandler.isEditInFileSuccessful(editedDetails)) {
@@ -382,12 +385,14 @@ public class Logic {
 		return responseForEdit;
 	}
 		
-	private void formatEditedDateTimeDetails(ArrayList<String> editedDetails, String date, String time, Response response) {
+	private Response formatEditedDateTimeDetails(ArrayList<String> editedDetails, String date, String time) {
+		Response reponseForDateTime = new Response();
+		
 		String dateTime = getDateTimeFormat(date, time);
 		Date inputDate = getInputDate(dateTime);
 		
 		if (inputDate == null) {
-			setFailureResponseForInvalidDateTime(response);
+			setFailureResponseForInvalidDateTime(reponseForDateTime);
 		}
 		else {
 			Date todayDate = new Date();
@@ -402,9 +407,11 @@ public class Logic {
 				}
 				
 			} else {
-				setFailureResponseForPastDateTime(response);
+				setFailureResponseForPastDateTime(reponseForDateTime);
 			}
 		}
+		
+		return reponseForDateTime;
 	}
 		
 	private void setSuccessResponseForEdit(Response response, String taskName) {
