@@ -197,33 +197,8 @@ public class StorageHandler {
 		
 		return detail;
 	}
-//	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
-//		try {
-//			//File tempStorage = new File("_temp");
-//			FileWriter fileToEdit = new FileWriter(_original);
-//			ArrayList<String> detailsToBeEdited = new ArrayList<String>();
-//			
-//			for (int i = 0; i < _entries.size(); i++) {
-//				Entry tempEntry = _entries.get(i);
-//				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-//				if (replaceOldDetailsWithNewDetails(tempEntryDetails, detailsToBeEdited)) {
-//					break;
-//				}
-//			}
-//			copyAllEntriesToFile(fileToAdd, _entries);
-//			fileToAdd.write("\n");
-//			fileToAdd.flush();
-//			fileToAdd.close();
-//			_original.delete();
-//			tempStorage.renameTo(_original);
-//		} catch (IOException e) {
-//			return false;
-//		}
-//		return true;
-//	}
 	
 	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
-//		try {
 		ArrayList<String> details = entry.getDetails();
 		
 		for (int i = 0; i < details.size(); i++) {
@@ -234,9 +209,6 @@ public class StorageHandler {
 		}
 		fileToAdd.write("\n");
 		fileToAdd.flush();
-//		} catch (IOException e) {
-//			return;
-//		}
 	}
 	
 	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> _entries) {
@@ -249,23 +221,6 @@ public class StorageHandler {
 		}
 	}
 	
-//	public boolean replaceOldDetailsWithNewDetails(ArrayList<String> oldDetails, ArrayList<String> newDetails) {
-//		if ((oldDetails.get(INDEX_OF_NAME)).contains((newDetails).get(INDEX_OF_NAME))) {
-//			for (int j = 1; j < newDetails.size(); j += 2) {
-//				for (int k = 1; k < oldDetails.size(); k++) {
-//					if ((newDetails.get(j)).equals(oldDetails.get(k))) {
-//						oldDetails.set(k+1, newDetails.get(j));
-//						break;
-//					}
-//
-//				}
-//			}
-//			oldDetails.set(1, newDetails.get(1));
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 
 	public boolean isDeleteFromFileSuccessful(String nameOfEntryToBeDeleted) {
 		try {
@@ -285,6 +240,18 @@ public class StorageHandler {
 		} catch (IOException e) {
 			return false;
 		}		
+		return true;
+	}
+
+	public boolean isEntryCompletedSuccessful(String entryName) throws IOException {
+		String completed = "Entry completed!";
+		for (int i = 0; i < _entries.size(); i++) {
+			Entry entry = _entries.get(i);
+			if (entry.getDetails().get(INDEX_OF_ENTRY_NAME).contains(entryName)) {
+				entry.getDetails().add(entry.getDetails().size(), completed);
+				break;
+			}
+		}
 		return true;
 	}
 }
