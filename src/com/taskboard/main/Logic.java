@@ -369,19 +369,26 @@ public class Logic {
 		}
 		
 		String detailType = "";
+		boolean isEditDueDateTime = true;
 		
-		if (editedDueDate.isEmpty()) {
-			detailType = "Due date:";
-			editedDueDate = _storageHandler.retrieveDetail(taskName, detailType);	
-		} else if (editedDueTime.isEmpty()) {
-			detailType = "Due time:";
-			editedDueTime = _storageHandler.retrieveDetail(taskName, detailType);
+		if (editedDueDate.isEmpty() && editedDueTime.isEmpty()) {
+			isEditDueDateTime = false;
 		}
 		
-		responseForEdit = formatEditedDateTimeDetails(editedDetails, editedDueDate, editedDueTime);
-		
-		if (responseForEdit.getException() != null) {
-			return responseForEdit;
+		if (isEditDueDateTime) {
+			if (editedDueDate.isEmpty()) {
+				detailType = "Due date:";
+				editedDueDate = _storageHandler.retrieveDetail(taskName, detailType);	
+			} else if (editedDueTime.isEmpty()) {
+				detailType = "Due time:";
+				editedDueTime = _storageHandler.retrieveDetail(taskName, detailType);
+			}
+			
+			responseForEdit = formatEditedDateTimeDetails(editedDetails, editedDueDate, editedDueTime);
+			
+			if (responseForEdit.getException() != null) {
+				return responseForEdit;
+			}
 		}
 		
 		if (_storageHandler.isEditInFileSuccessful(editedDetails)) {

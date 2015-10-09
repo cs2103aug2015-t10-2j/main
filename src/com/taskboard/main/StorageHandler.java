@@ -14,6 +14,7 @@ public class StorageHandler {
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final int INDEX_OF_FORMATTED_ENTRY_NAME = 0;
 	private static final int INDEX_OF_ENTRY_NAME = 0;
+	private static final int INDEX_OF_DETAIL_TYPE = 0;
 	private static final int INDEX_OF_DETAIL = 1;
 	
 	// attributes
@@ -142,6 +143,8 @@ public class StorageHandler {
 	}
 
 	private void replaceWithNewContent(ArrayList<String> entryDetails, ArrayList<String> newContent) {
+		boolean isDetailPresent = false;
+		
 		for (int i = 1; i < newContent.size(); i++) {
 			String newFormattedDetail = newContent.get(i);
 			String[] newFormattedDetailSegments = newFormattedDetail.split(":");
@@ -149,10 +152,17 @@ public class StorageHandler {
 			for (int j = 0; j < entryDetails.size(); j++) {
 				String existingFormattedDetail = entryDetails.get(j);
 				
-				if (existingFormattedDetail.contains(newFormattedDetailSegments[0])) {
+				if (existingFormattedDetail.contains(newFormattedDetailSegments[INDEX_OF_DETAIL_TYPE])) {
 					entryDetails.set(j, newFormattedDetail);
-				}
+					isDetailPresent = true;
+				} 
 			}
+			
+			if (!isDetailPresent) {
+				entryDetails.add(newFormattedDetail);
+			}
+			
+			isDetailPresent = false;
 		}
 	}
 	
