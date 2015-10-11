@@ -9,8 +9,4 @@ ____________________________________________________________
 - Editing task by name.
 - Deleting task by name.
 - Viewing all registered tasks.
-- A simple text UI.
-
-____________________________________________________________
-<h4>V0.1 UI of Project TaskBoard:</h4>
-<img src="http://postimg.org/image/yeplx75k7/">
+- A simple text UI: http://postimg.org/image/yeplx75k7/</h4>
