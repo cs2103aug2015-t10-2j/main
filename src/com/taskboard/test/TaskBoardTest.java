@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Collections;
+
 import java.text.SimpleDateFormat;
 
 import com.taskboard.main.Command;
@@ -13,7 +15,7 @@ import com.taskboard.main.CommandType;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.ParameterType;
 import com.taskboard.main.CommandTypeParser;
-import com.taskboard.main.ParameterParser;
+import com.taskboard.main.AddParameterParser;
 
 public class TaskBoardTest {
 	
@@ -32,9 +34,10 @@ public class TaskBoardTest {
 		assertParameters(expected1, "add Hello World!");
 		
 		ArrayList<Parameter> expected2 = new ArrayList<Parameter>();
-		expected2.add(new Parameter(ParameterType.NAME, "Hello World!"));
-		expected2.add(new Parameter(ParameterType.NEW_NAME, "Hello Again"));
-		assertParameters(expected2, "edit Hello World!; Hello Again");
+		expected2.add(new Parameter(ParameterType.NAME, "Hello again!"));
+		expected2.add(new Parameter(ParameterType.DATE, "12/10/2020"));
+		Collections.reverse(expected2);
+		assertParameters(expected2, "add Hello again! by 12/10/2020");
 		
 		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
 		expected3.add(new Parameter(ParameterType.NAME, "Meeting with Chris"));
@@ -45,7 +48,8 @@ public class TaskBoardTest {
 		expected3.add(new Parameter(ParameterType.START_TIME, "19:00"));
 		expected3.add(new Parameter(ParameterType.END_DATE, defaultDateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.END_TIME, "21:00"));
-		assertParameters(expected3, "add Meeting with Chris; from tomorrow 7pm to tomorrow 9pm");
+		Collections.reverse(expected3);
+		assertParameters(expected3, "add Meeting with Chris from tomorrow 7pm to tomorrow 9pm");
 		
 		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
 		expected4.add(new Parameter(ParameterType.NAME, "Submit paperwork"));
@@ -56,7 +60,8 @@ public class TaskBoardTest {
 					  ((todayDayIndex < Command.DAY_INDEX_MONDAY) ? 0 : 7)));
 		expected4.add(new Parameter(ParameterType.DATE, defaultDateFormat.format(monday)));
 		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
-		assertParameters(expected4, "add Submit paperwork; by monday 23:59");
+		Collections.reverse(expected4);
+		assertParameters(expected4, "add Submit paperwork by monday 23:59");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {
@@ -64,7 +69,7 @@ public class TaskBoardTest {
 	}
 	
 	private void assertParameters(ArrayList<Parameter> expected, String command) {
-		assertEquals(toString(expected), toString(new ParameterParser().parseParameters(command)));
+		assertEquals(toString(expected), toString(new AddParameterParser().parseParameters(command)));
 	}
 	
 	private static String toString(ArrayList<Parameter> parameters) {
