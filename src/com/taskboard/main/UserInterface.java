@@ -34,6 +34,7 @@ public class UserInterface {
 				String exception = currentResponse.getException().getMessage();
 				_userInterface.getDisplayBoard().getTable(1).getRow(0).getCell(0).setContent(exception);
 			}
+			clearScreen();
 			_userInterface.getDisplayBoard().printDisplayBoard();
 			
 			userInput = _userInterface.getCommandReader().getNextCommand();
@@ -75,6 +76,12 @@ public class UserInterface {
 		
 		_displayBoard.addTable(displayTable);
 		_displayBoard.addTable(responseTable);
+	}
+	
+	public static void clearScreen() {
+		for (int clear = 0; clear < 1000; clear++) {
+		    System.out.println("\b") ;
+		}
 	}
 	
 }
