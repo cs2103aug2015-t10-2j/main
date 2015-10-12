@@ -28,8 +28,13 @@ public class EditParameterParser implements ParameterParser {
 					if (temporaryString.isEmpty()) {
 						// throw exception here (empty parameter exception)
 					} else {
-						parameters.addAll(convertToParameters(temporaryString, expectedDelimiterType));
-						temporaryString = new String();
+						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
+						if (parametersToAdd.isEmpty()) {
+							temporaryString += tokens[i] + ' ';
+						} else {
+							parameters.addAll(convertToParameters(temporaryString, expectedDelimiterType));
+							temporaryString = new String();
+						}
 					}
 					
 					expectedDelimiterId++;

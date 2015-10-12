@@ -25,9 +25,11 @@ public class CommandParser {
 			case EDIT:
 				_parameterParser = new EditParameterParser();
 				newCommand.setParameters(_parameterParser.parseParameters(commandString));
+				break;
 			case DELETE:
 				_parameterParser = new DeleteParameterParser();
 				newCommand.setParameters(_parameterParser.parseParameters(commandString));
+				break;
 			default:
 				break;
 		}
