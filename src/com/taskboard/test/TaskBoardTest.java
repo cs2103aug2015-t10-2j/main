@@ -62,6 +62,13 @@ public class TaskBoardTest {
 		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
 		Collections.reverse(expected4);
 		assertParameters(expected4, "add Submit paperwork by monday 23:59");
+		
+		ArrayList<Parameter> expected5 = new ArrayList<Parameter>();
+		expected5.add(new Parameter(ParameterType.NAME, "talk to friend"));
+		expected5.add(new Parameter(ParameterType.DATE, "13/10/2020"));
+		expected5.add(new Parameter(ParameterType.TIME, "14:00"));
+		Collections.reverse(expected5);
+		assertParameters(expected5, "edit talk to friend by 13/10/2020 14:00");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {
