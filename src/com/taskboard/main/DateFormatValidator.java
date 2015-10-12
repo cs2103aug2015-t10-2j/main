@@ -27,14 +27,23 @@ public class DateFormatValidator implements FormatValidator {
 	public boolean isValidFormat(String token) {
 		token = token.toLowerCase();
 		switch (token) {
+			case "tda":
 			case "today":
+			case "tomo":
 			case "tomorrow":
+			case "mon":
 			case "monday":
+			case "tue":
 			case "tuesday":
+			case "wed":
 			case "wednesday":
+			case "thu":
 			case "thursday":
+			case "fri":
 			case "friday":
+			case "sat":
 			case "saturday":
+			case "sun":
 			case "sunday":
 				return true;
 			default:
@@ -52,8 +61,10 @@ public class DateFormatValidator implements FormatValidator {
 		
 		token = token.toLowerCase();
 		switch (token) {
+			case "tda":
 			case "today":
 				return defaultDateFormat.format(today);
+			case "tomo":
 			case "tomorrow":
 				Date tomorrow = new Date(today.getTime() + MILLISECONDS_PER_DAY);
 				return defaultDateFormat.format(tomorrow);
