@@ -37,7 +37,7 @@ public class CommandParser {
 			case VIEW:
 				return new ViewCommand(newCommandType, null);
 			case UNKNOWN:
-				throw new UnsupportedOperationException();
+				return new InvalidCommand(null, null);
 			default:
 				assert false : "Unexpected execution of unreachable code";
 				return null;

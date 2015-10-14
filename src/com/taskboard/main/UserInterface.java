@@ -71,6 +71,10 @@ public class UserInterface extends JFrame {
                 				_displayArea.setText(new String("No entry to display"));
                 				_feedbackArea.setText(feedback);
                 			}
+                		} else {
+                			String exception = currentResponse.getException().getMessage();
+                			_displayArea.setText("No entry to display");
+                			_feedbackArea.setText(exception);
                 		}
                 	}
                 	
