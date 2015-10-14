@@ -19,13 +19,21 @@ public class StorageHandler {
 	
 	// attributes
 	
+	private static StorageHandler instance = null;
 	private File _original;
 	private ArrayList<Entry> _entries;
 	
 	// constructor
 	
-	public StorageHandler() {
+	private StorageHandler() {
 		
+	}
+	
+	public static StorageHandler getInstance() {
+		if (instance == null) {
+			instance = new StorageHandler();
+		}
+		return instance;
 	}
 	
 	public boolean isSetUpSuccessful(String fileName) {
