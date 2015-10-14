@@ -49,8 +49,10 @@ public class DeleteParameterParser implements ParameterParser {
 					temporaryString += tokens[i] + ' ';
 				}
 			}
-			temporaryString = reverseTokens(temporaryString);
-			parameters.add(new Parameter(ParameterType.NAME, temporaryString));
+			if (!temporaryString.isEmpty()) {
+				temporaryString = reverseTokens(temporaryString);
+				parameters.add(new Parameter(ParameterType.NAME, temporaryString));
+			}
 		}
 		
 		return parameters;
@@ -70,6 +72,10 @@ public class DeleteParameterParser implements ParameterParser {
 				delimiterTypes.add(DelimiterType.BY);
 			} else if (tokens[i].equals("every") && !delimiterTypes.contains(DelimiterType.EVERY)) {
 				delimiterTypes.add(DelimiterType.EVERY);
+			} else if (tokens[i].equals("cat") && !delimiterTypes.contains(DelimiterType.CAT)) {
+				delimiterTypes.add(DelimiterType.CAT);
+			} else if (tokens[i].equals("pri") && !delimiterTypes.contains(DelimiterType.PRI)) {
+				delimiterTypes.add(DelimiterType.PRI);
 			}
 		}
 		
@@ -91,6 +97,7 @@ public class DeleteParameterParser implements ParameterParser {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
+		FormatValidator priorityFormatValidator = new PriorityFormatValidator();
 		
 		switch (delimiterType) {
 			case FROM:
@@ -128,6 +135,21 @@ public class DeleteParameterParser implements ParameterParser {
 				break;
 			case EVERY:
 				// TBD: recurring task
+				break;
+			case CAT:
+				String trimmedParameterString = parameterString.trim();
+				parameters.add(new Parameter(ParameterType.CATEGORY, trimmedParameterString));
+				break;
+			case PRI:
+				trimmedParameterString = parameterString.trim();
+				if (trimmedParameterString.split(" ").length == 1) {
+					if (priorityFormatValidator.isValidFormat(trimmedParameterString)) {
+						String priority = priorityFormatValidator.toDefaultFormat(trimmedParameterString);
+						parameters.add(new Parameter(ParameterType.PRIORITY, priority));
+					}
+				} else {
+					// TBA: throw exception here
+				}
 				break;
 			default:
 				break;
