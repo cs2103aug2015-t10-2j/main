@@ -5,11 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.util.logging.*;
+
 public class UserInterface extends JFrame {
 
 	private static final long serialVersionUID = 1;
-	private static final String DISPLAY_SUCCESSFUL_MESSAGE = "Successfully displayed all entries";
-	private static final String DISPLAY_NOTHING_MESSAGE = "Nothing to display";
+	private static final String DISPLAY_SUCCESSFUL_MESSAGE = "Successfully displayed all entries.";
+	private static final String NOTHING_DISPLAYED_MESSAGE = "Nothing to display.";
+	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
 	
 	private Logic _logic;
 	
@@ -19,6 +22,8 @@ public class UserInterface extends JFrame {
 	private JLabel _commandLabel;
 	private JTextField _commandField;
 	private JButton _submitButton;
+	
+	private static Logger logger = Logger.getLogger("UI");
 	
 	public UserInterface() {
 		initComponents();
@@ -61,6 +66,7 @@ public class UserInterface extends JFrame {
             		String userInput = _commandField.getText();
                 	
                 	if (userInput.toLowerCase().equals("exit")) {
+                		logger.log(Level.INFO, "Sytem exit.");
                 		System.exit(0);
                 	} else {
                 		Response currentResponse = getLogic().processCommand(userInput);
@@ -70,10 +76,12 @@ public class UserInterface extends JFrame {
                 				_displayArea.setText(feedback);
                 				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
                 				assert _feedbackArea.getText().equals(DISPLAY_SUCCESSFUL_MESSAGE);
+                				logger.log(Level.INFO, "Successfully displayed all tasks.");
                 			} else {
-                				_displayArea.setText(new String(DISPLAY_NOTHING_MESSAGE));
-                				assert _displayArea.getText().equals(DISPLAY_NOTHING_MESSAGE);
+                				_displayArea.setText(new String(NOTHING_DISPLAYED_MESSAGE));
+                				assert _displayArea.getText().equals(NOTHING_DISPLAYED_MESSAGE);
                 				_feedbackArea.setText(feedback);
+                				logger.log(Level.INFO,  "Nothing is displayed");
                 			}
                 		} else {
                 			String exception = currentResponse.getException().getMessage();
@@ -83,6 +91,7 @@ public class UserInterface extends JFrame {
                 	}
                 	
                     _commandField.setText("");
+                    assert _commandField.getText().equals("");
                 }
             }
         });
@@ -95,6 +104,7 @@ public class UserInterface extends JFrame {
             	String userInput = _commandField.getText();
             	
             	if (userInput.toLowerCase().equals("exit")) {
+            		logger.log(Level.INFO, "System exit.");
             		System.exit(0);
             	} else {
             		Response currentResponse = getLogic().processCommand(userInput);
@@ -103,21 +113,26 @@ public class UserInterface extends JFrame {
             			if (userInput.toLowerCase().equals("view")) {
             				_displayArea.setText(feedback);
             				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
+            				assert _feedbackArea.getText().equals(DISPLAY_SUCCESSFUL_MESSAGE);
+            				logger.log(Level.INFO, "Successfully displayed all tasks.");
             			} else {
-            				_displayArea.setText(new String(DISPLAY_NOTHING_MESSAGE));
+            				_displayArea.setText(new String(NOTHING_DISPLAYED_MESSAGE));
+            				assert _displayArea.getText().equals(NOTHING_DISPLAYED_MESSAGE);
             				_feedbackArea.setText(feedback);
+            				logger.log(Level.INFO, "Nothing is displayed.");
             			}
             		}
             	}
             	
                 _commandField.setText("");
+                assert _commandField.getText().equals("");
             }
         });
 		
 		createLayout(new JComponent[]{_title, _displayArea, _feedbackArea, _commandLabel, _commandField, _submitButton});
 		_commandField.requestFocusInWindow();
 		
-		setTitle("TaskBoard: The Revolutionary Task Manager");
+		setTitle(TITLE);
 		//setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -163,6 +178,7 @@ public class UserInterface extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				logger.log(Level.INFO, "Program is running");
 				UserInterface _userInterface = new UserInterface();
 				_userInterface.setVisible(true);
 			}
