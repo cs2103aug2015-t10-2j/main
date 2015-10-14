@@ -8,6 +8,8 @@ import java.awt.event.*;
 public class UserInterface extends JFrame {
 
 	private static final long serialVersionUID = 1;
+	private static final String DISPLAY_SUCCESSFUL_MESSAGE = "Successfully displayed all entries";
+	private static final String DISPLAY_NOTHING_MESSAGE = "Nothing to display";
 	
 	private Logic _logic;
 	
@@ -66,9 +68,11 @@ public class UserInterface extends JFrame {
                 			String feedback = currentResponse.getFeedback().trim();
                 			if (userInput.toLowerCase().equals("view")) {
                 				_displayArea.setText(feedback);
-                				_feedbackArea.setText(new String("Successfully displayed all entries."));
+                				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
+                				assert _feedbackArea.getText().equals(DISPLAY_SUCCESSFUL_MESSAGE);
                 			} else {
-                				_displayArea.setText(new String("No entry to display"));
+                				_displayArea.setText(new String(DISPLAY_NOTHING_MESSAGE));
+                				assert _displayArea.getText().equals(DISPLAY_NOTHING_MESSAGE);
                 				_feedbackArea.setText(feedback);
                 			}
                 		} else {
@@ -98,9 +102,9 @@ public class UserInterface extends JFrame {
             			String feedback = currentResponse.getFeedback().trim();
             			if (userInput.toLowerCase().equals("view")) {
             				_displayArea.setText(feedback);
-            				_feedbackArea.setText(new String("Successfully displayed all entries."));
+            				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
             			} else {
-            				_displayArea.setText(new String("No entry to display"));
+            				_displayArea.setText(new String(DISPLAY_NOTHING_MESSAGE));
             				_feedbackArea.setText(feedback);
             			}
             		}
