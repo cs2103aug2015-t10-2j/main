@@ -104,13 +104,15 @@ public class DateFormatValidator implements FormatValidator {
 		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		
 		if (todayDayIndex < dayIndex) {
-			Date monday = new Date(today.getTime() + MILLISECONDS_PER_DAY * 
+			Date target = new Date(today.getTime() + MILLISECONDS_PER_DAY * 
 						  (dayIndex - todayDayIndex));
-			return monday;
+			assert (!today.after(target)); // today must be either before or the same day as target
+			return target;
 		} else {
-			Date monday = new Date(today.getTime() + MILLISECONDS_PER_DAY * 
+			Date target = new Date(today.getTime() + MILLISECONDS_PER_DAY * 
 					  	  (dayIndex - todayDayIndex + 7));
-			return monday;
+			assert (!today.after(target)); // today must be either before or the same day as target
+			return target;
 		}
 	}
 	
