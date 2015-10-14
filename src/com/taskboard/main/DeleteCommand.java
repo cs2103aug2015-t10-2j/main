@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
-public class Delete extends Command {
+public class DeleteCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_DELETE = "\"%1$s\" deleted!";
 	private static final String MESSAGE_ERROR_FOR_DELETE = "The entry could not be deleted from the file.";
 	
-	public Delete(CommandType commandType, ArrayList<Parameter> parameters) {
+	public DeleteCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
 		_parameters = parameters;
 	}

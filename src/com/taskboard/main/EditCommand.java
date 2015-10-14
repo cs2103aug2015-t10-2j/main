@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Edit extends Command {
+public class EditCommand extends Command {
 	
 	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
@@ -19,7 +19,7 @@ public class Edit extends Command {
 	private static final String DATE_FORMAT = "dd/MM/yyyy'T'HH:mm";
 	private static final String DEFAULT_TIME_FORMAT = "00:00";
 	
-	public Edit(CommandType commandType, ArrayList<Parameter> parameters) {
+	public EditCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
 		_parameters = parameters;
 	}

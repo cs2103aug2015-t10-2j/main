@@ -2,11 +2,11 @@ package com.taskboard.main;
 
 import java.util.ArrayList;
 
-public class View extends Command {
+public class ViewCommand extends Command {
 	
 	private static final String MESSAGE_EMPTY_FILE = "There are no registered entries.";
 
-	public View(CommandType commandType, ArrayList<Parameter> parameters) {
+	public ViewCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
 		_parameters = parameters;
 	}

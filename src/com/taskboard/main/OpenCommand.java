@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
-public class New extends Command {
+public class OpenCommand extends Command{
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH = "Failed to create new scheduler.";
 	
 	private static final int INDEX_OF_FILENAME_FOR_LAUNCH = 0;
 	
-	public New(CommandType commandType, ArrayList<Parameter> parameters) {
+	public OpenCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
 		_parameters = parameters;
 	}

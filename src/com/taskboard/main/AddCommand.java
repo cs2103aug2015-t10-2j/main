@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Add extends Command {
+public class AddCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
@@ -23,7 +23,7 @@ public class Add extends Command {
 	
 	private static final int INDEX_OF_TASKNAME_FOR_ADD_FLOATING = 0;
 	
-	public Add(CommandType commandType, ArrayList<Parameter> parameters) {
+	public AddCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
 		_parameters = parameters;
 	}

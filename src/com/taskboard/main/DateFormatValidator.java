@@ -7,14 +7,14 @@ public class DateFormatValidator implements FormatValidator {
 	
 	// constants
 	
-	private static final int MILLISECONDS_PER_DAY = 86400000;
-	private static final int DAY_INDEX_MONDAY = 1;
-	private static final int DAY_INDEX_TUESDAY = 2;
-	private static final int DAY_INDEX_WEDNESDAY = 3;
-	private static final int DAY_INDEX_THURSDAY = 4;
-	private static final int DAY_INDEX_FRIDAY = 5;
-	private static final int DAY_INDEX_SATURDAY = 6;
-	private static final int DAY_INDEX_SUNDAY = 7;
+	public static final int MILLISECONDS_PER_DAY = 86400000;
+	public static final int DAY_INDEX_MONDAY = 1;
+	public static final int DAY_INDEX_TUESDAY = 2;
+	public static final int DAY_INDEX_WEDNESDAY = 3;
+	public static final int DAY_INDEX_THURSDAY = 4;
+	public static final int DAY_INDEX_FRIDAY = 5;
+	public static final int DAY_INDEX_SATURDAY = 6;
+	public static final int DAY_INDEX_SUNDAY = 7;
 	
 	// constructors
 	

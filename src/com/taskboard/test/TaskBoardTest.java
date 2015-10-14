@@ -18,6 +18,7 @@ import com.taskboard.main.CommandTypeParser;
 import com.taskboard.main.AddParameterParser;
 import com.taskboard.main.EditParameterParser;
 import com.taskboard.main.DeleteParameterParser;
+import com.taskboard.main.DateFormatValidator;
 
 public class TaskBoardTest {
 	
@@ -57,9 +58,9 @@ public class TaskBoardTest {
 		expected4.add(new Parameter(ParameterType.NAME, "Submit paperwork"));
 		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
 		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
-		Date monday = new Date(today.getTime() + Command.SECONDS_PER_DAY * 
-					  (Command.DAY_INDEX_MONDAY - todayDayIndex + 
-					  ((todayDayIndex < Command.DAY_INDEX_MONDAY) ? 0 : 7)));
+		Date monday = new Date(today.getTime() + DateFormatValidator.MILLISECONDS_PER_DAY * 
+					  (DateFormatValidator.DAY_INDEX_MONDAY - todayDayIndex + 
+					  ((todayDayIndex < DateFormatValidator.DAY_INDEX_MONDAY) ? 0 : 7)));
 		expected4.add(new Parameter(ParameterType.DATE, defaultDateFormat.format(monday)));
 		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
 		Collections.reverse(expected4);
