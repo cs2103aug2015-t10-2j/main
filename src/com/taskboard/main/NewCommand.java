@@ -12,14 +12,18 @@ public class NewCommand extends Command {
 	private static final int INDEX_OF_FILENAME_FOR_LAUNCH = 0;
 	
 	public NewCommand(CommandType commandType, ArrayList<Parameter> parameters) {
+		assert commandType != null;
 		_commandType = commandType;
+		assert parameters != null;
 		_parameters = parameters;
 	}
 	
 	public Response executeCommand() {
+		assert _parameters.size() > 0;
 		Parameter fileNameParameter = _parameters.get(INDEX_OF_FILENAME_FOR_LAUNCH); 
+		assert fileNameParameter != null;
 		String fileName = fileNameParameter.getParameterValue();
-		
+		assert fileName != null;
 		return getResponseForLaunch(fileName);
 	}
 	

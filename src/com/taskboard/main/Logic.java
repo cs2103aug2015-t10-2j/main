@@ -1,14 +1,5 @@
 package com.taskboard.main;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-
-import java.util.ArrayList;
-import java.util.Date;
-
-import java.io.IOException;
-
 public class Logic {
 	
 //	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!"; 

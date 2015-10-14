@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class StorageHandler {
 	
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
+	
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final int INDEX_OF_FORMATTED_ENTRY_NAME = 0;
 	private static final int INDEX_OF_ENTRY_NAME = 0;
@@ -97,13 +98,12 @@ public class StorageHandler {
 			_entries.add(entry);
 			
 			addSingleEntryToFile(fileToAdd, entry);
-			
 			fileToAdd.close();
+			
+			return true;
 		} catch (IOException e) {
 			return false;
 		}
-		
-		return true;
 	}
 	
 	public String retrieveEntriesInFile() {
@@ -206,6 +206,12 @@ public class StorageHandler {
 		return detail;
 	}
 	
+	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> _entries) throws IOException {
+		for (int i = 0; i < _entries.size(); i++) {
+			addSingleEntryToFile(fileToAdd, _entries.get(i));
+		}
+	}
+	
 	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
 		ArrayList<String> details = entry.getDetails();
 		
@@ -219,20 +225,8 @@ public class StorageHandler {
 		fileToAdd.flush();
 	}
 	
-	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> _entries) {
-		try {
-			for (int i = 0; i < _entries.size(); i++) {
-				addSingleEntryToFile(fileToAdd, _entries.get(i));
-			}
-		} catch (IOException e) {
-			return;
-		}
-	}
-	
-
 	public boolean isDeleteFromFileSuccessful(String nameOfEntryToBeDeleted) {
 		try {
-//			File tempStorage = new File("_temp");
 			FileWriter fileToAdd = new FileWriter(_original);
 			
 			for (int i = 0; i < _entries.size(); i++) {
@@ -243,12 +237,14 @@ public class StorageHandler {
 					break;
 				}
 			}
+			
 			copyAllEntriesToFile(fileToAdd, _entries);
-			fileToAdd.close();		
+			fileToAdd.close();	
+			
+			return true;
 		} catch (IOException e) {
 			return false;
 		}		
-		return true;
 	}
 
 	public boolean isEntryCompletedSuccessful(String entryName) throws IOException {
