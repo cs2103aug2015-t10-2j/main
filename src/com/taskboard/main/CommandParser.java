@@ -30,7 +30,10 @@ public class CommandParser {
 				_parameterParser = new DeleteParameterParser();
 				newCommand.setParameters(_parameterParser.parseParameters(commandString));
 				break;
+			case UNKNOWN:
+				throw new UnsupportedOperationException();
 			default:
+				assert false : "Unexpected execution of unreachable code";
 				break;
 		}
 		

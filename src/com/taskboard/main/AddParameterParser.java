@@ -11,7 +11,12 @@ public class AddParameterParser implements ParameterParser {
 	public ArrayList<Parameter> parseParameters(String commandString) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
-		String parameterString = commandString.substring(commandString.indexOf(" ")).trim();
+		String parameterString = new String();
+		if (commandString.indexOf(" ") != -1) {
+			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
+		} else {
+			throw new IllegalArgumentException();
+		}
 		
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
 		if (delimiterTypes.isEmpty()) {
