@@ -261,3 +261,6 @@ public class StorageHandler {
 		} else {
 			assert entry.getCompletionStatus() : false;
 			return false;
+		}
+	}
+}
