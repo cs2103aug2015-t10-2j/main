@@ -34,6 +34,9 @@ public class UserInterface extends JFrame {
 	}
 	
 	private void initComponents() {
+		Container cp = getContentPane();
+		cp.setLayout(new FlowLayout());
+		
 		_logic = new Logic();
 		
 		_title = new JLabel("TaskBoard V0.1");
@@ -41,11 +44,14 @@ public class UserInterface extends JFrame {
 		
 		_displayArea = new JTextArea(20, 50);
 		_displayArea.setEditable(false);
+		cp.add(_displayArea);
 		
 		_feedbackArea = new JTextArea(1, 50);
 		_feedbackArea.setEditable(false);
+		cp.add(_feedbackArea);
 		
 		_commandLabel = new JLabel("Enter command below:");
+		cp.add(_commandLabel);
 		
 		_commandField = new JTextField(50);
 		
@@ -89,12 +95,12 @@ public class UserInterface extends JFrame {
                 	}
                 	
                     _commandField.setText("");
-                    assert _commandField.getText().equals("");
                 }
             }
         });
 		
 		_submitButton = new JButton("Submit");
+		cp.add(_submitButton);
 		
 		_submitButton.addActionListener(new ActionListener() {
             @Override
