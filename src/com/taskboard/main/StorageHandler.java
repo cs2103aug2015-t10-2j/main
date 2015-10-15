@@ -84,7 +84,10 @@ public class StorageHandler {
 				}
 				
 				if (!detail.isEmpty()) {
-					entry.addToDetails(detail);
+					Parameter parameter = new Parameter();
+					parameter.setParameterType(ParameterType.valueOf(detail));
+					parameter.setParameterValue(detail);
+					entry.addToDetails(parameter);
 				}
 			}
 			
@@ -150,7 +153,7 @@ public class StorageHandler {
 //			}
 			
 			Entry editedEntry = _entries.get(indexOfEditedEntry); 
-			ArrayList<String> entryDetails = editedEntry.getDetails();
+			ArrayList<Parameter> entryDetails = editedEntry.getDetails();
 			replaceWithNewContent(entryDetails, newContent);
 			editedEntry.setDetails(entryDetails);
 			_entries.set(indexOfEditedEntry, editedEntry);
@@ -164,7 +167,7 @@ public class StorageHandler {
 		}
 	}
 
-	private void replaceWithNewContent(ArrayList<String> entryDetails, ArrayList<String> newContent) {
+	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<String> newContent) {
 		boolean isDetailPresent = false;
 		
 		for (int i = 1; i < newContent.size(); i++) {
@@ -172,7 +175,7 @@ public class StorageHandler {
 			String[] newFormattedDetailSegments = newFormattedDetail.split(":");
 			
 			for (int j = 0; j < entryDetails.size(); j++) {
-				String existingFormattedDetail = entryDetails.get(j);
+				String existingFormattedDetail = entryDetails.get(j).getParameterValue();
 				
 				if (existingFormattedDetail.contains(newFormattedDetailSegments[INDEX_OF_DETAIL_TYPE])) {
 					entryDetails.set(j, newFormattedDetail);
