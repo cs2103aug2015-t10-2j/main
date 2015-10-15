@@ -6,19 +6,19 @@ public class Entry {
 	
 	// attribute
 	
-	private ArrayList<String> _details;
+	private ArrayList<Parameter> _details;
 	private boolean _completionStatus = false;
 	
 	// constructor
 	
 	public Entry() {
-		_details = new ArrayList<String>();
+		_details = new ArrayList<Parameter>();
 		_completionStatus = false;
 	}
 	
 	// accessor
 	
-	public ArrayList<String> getDetails() {
+	public ArrayList<Parameter> getDetails() {
 		return _details;
 	}
 	
@@ -28,11 +28,11 @@ public class Entry {
 	
 	// mutator
 	
-	public void setDetails(ArrayList<String> details) {
+	public void setDetails(ArrayList<Parameter> details) {
 		_details = details;
 	}
 	 
-	public void addToDetails(String detail) {
+	public void addToDetails(Parameter detail) {
 		_details.add(detail);
 	}
 	
@@ -45,8 +45,10 @@ public class Entry {
 		String entryDetails = "";
 		
 		for (int i = 0; i < _details.size(); i++) {
-			String detail = _details.get(i);
-			entryDetails = entryDetails.concat(detail).concat("\n");
+			Parameter detailParameter = _details.get(i);
+			String detailType = detailParameter.getParameterType().name();
+			String detail = detailParameter.getParameterValue();
+			entryDetails = entryDetails.concat(detailType).concat(": ").concat(detail).concat("\n");
 		}
 		
 		return entryDetails;

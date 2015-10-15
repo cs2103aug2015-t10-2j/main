@@ -1,5 +1,7 @@
 package com.taskboard.main;
 
+import java.util.ArrayList;
+
 public class Response {
 	
 	// attributes
@@ -7,6 +9,7 @@ public class Response {
 	private boolean _isSuccess;
 	private String _feedback;
 	private Exception _exobj;
+	private ArrayList<Entry> _entries;
 	
 	// constructor
 	
