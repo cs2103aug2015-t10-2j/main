@@ -20,13 +20,13 @@ public class StorageHandler {
 	
 	// attributes
 	
-	private static StorageHandler instance = null;
+//	private static StorageHandler instance = null;
 	private File _original;
 	private ArrayList<Entry> _entries;
 	
 	// constructor
 	
-	private StorageHandler() {
+	public StorageHandler() {
 		
 	}
 	
@@ -37,33 +37,43 @@ public class StorageHandler {
 	}
 	
 	
-	public static StorageHandler getInstance() {
-		if (instance == null) {
-			instance = new StorageHandler();
-		}
-		return instance;
-	}
+//	public static StorageHandler getInstance() {
+//		if (instance == null) {
+//			instance = new StorageHandler();
+//		}
+//		return instance;
+//	}
 	
-	public boolean isSetUpSuccessful(String fileName) {
+	public boolean isCreatingNewFileSuccessful(String fileName) throws IOException {
 		_original = new File(fileName);
 		
-		boolean isFileCreationSuccessful = isFileValid(_original);
+		boolean doesFileExist = doesFileExist(_original);
 		
-		if (isFileCreationSuccessful) {
+//		assert doesFileExist: false;
+		if (!doesFileExist) {
+			_original.createNewFile();
 			_entries = new ArrayList<Entry>();
-			copyExistingEntriesFromFile();
+			return true;
+		} else {
+			return false;
 		}
-		
-		return isFileCreationSuccessful;
 	}
 	
-	private boolean isFileValid(File fileToCheck) {
+	public boolean isOpeningExistingFileSuccessful(String fileName) throws IOException{
+		_original = new File(fileName);
+		
+		boolean doesFileExist = doesFileExist(_original);
+		if (doesFileExist) {
+			copyExistingEntriesFromFile();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean doesFileExist(File fileToCheck) {
 		if (!fileToCheck.exists()) {
-			try {
-				fileToCheck.createNewFile();
-			} catch (IOException exobj) {
-				return false;
-			}
+			return false;
 		}
 		
 		return true;
@@ -87,7 +97,7 @@ public class StorageHandler {
 					Parameter parameter = new Parameter();
 					parameter.setParameterType(ParameterType.valueOf(detail));
 					parameter.setParameterValue(detail);
-					entry.addToDetails(parameter);
+					entry.addToParameters(parameter);
 				}
 			}
 			
@@ -102,126 +112,130 @@ public class StorageHandler {
 		}
 	}
 	
-	public boolean isAddToFileSuccessful(Entry entry) {
-		try {
-			FileWriter fileToAdd = new FileWriter(_original, true);
-			_entries.add(entry);
-			
-			addSingleEntryToFile(fileToAdd, entry);
-			fileToAdd.close();
-			
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
+	public void setStorage(ArrayList<Entry> entries) {
+		_entries = entries;
 	}
 	
-	public String retrieveEntriesInFile() {
-		String entriesList = "";
-		
-		for (int i = 0; i < _entries.size(); i++) {
-			Entry entry = _entries.get(i);
-			String entryDetails = entry.toString();
-			
-			if (i == _entries.size() - 1) {
-				entriesList = entriesList.concat(entryDetails);
-			} else {
-				assert i < _entries.size() -1;
-				entriesList = entriesList.concat(entryDetails).concat("\n");
-			}
-		}
-		
-		return entriesList;
-	}
+//	public boolean isAddToFileSuccessful(Entry entry) {
+//		try {
+//			FileWriter fileToAdd = new FileWriter(_original, true);
+//			_entries.add(entry);
+//			
+//			addSingleEntryToFile(fileToAdd, entry);
+//			fileToAdd.close();
+//			
+//			return true;
+//		} catch (IOException e) {
+//			return false;
+//		}
+//	}
 	
-	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
-		try {
-			FileWriter fileToEdit = new FileWriter(_original);
-			
-			Integer indexOfEditedEntry = Integer.valueOf(newContent.get(INDEX_OF_ENTRY_INDEX));
-			
-//			for (int i = 0; i < _entries.size(); i++) {
-//				Entry entry = _entries.get(i);
-//				ArrayList<String> entryDetails = entry.getDetails();
-//				Integer formattedTaskIndex = Integer.valueOf(entryDetails.get(INDEX_OF_FORMATTED_ENTRY));
-//				
-//				if (formattedTaskIndex == indexOfEditedTask) {
-//					replaceWithNewContent(entryDetails, newContent);
-//					entry.setDetails(entryDetails);
-//					_entries.set(i, entry);
-//				}				
+//	public String retrieveEntriesInFile() {
+//		String entriesList = "";
+//		
+//		for (int i = 0; i < _entries.size(); i++) {
+//			Entry entry = _entries.get(i);
+//			String entryDetails = entry.toString();
+//			
+//			if (i == _entries.size() - 1) {
+//				entriesList = entriesList.concat(entryDetails);
+//			} else {
+//				assert i < _entries.size() -1;
+//				entriesList = entriesList.concat(entryDetails).concat("\n");
 //			}
-			
-			Entry editedEntry = _entries.get(indexOfEditedEntry); 
-			ArrayList<Parameter> entryDetails = editedEntry.getDetails();
-			replaceWithNewContent(entryDetails, newContent);
-			editedEntry.setDetails(entryDetails);
-			_entries.set(indexOfEditedEntry, editedEntry);
-			
-			copyAllEntriesToFile(fileToEdit, _entries);
-			fileToEdit.close();
-			
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
-	}
+//		}
+//		
+//		return entriesList;
+//	}
+	
+//	public boolean isEditInFileSuccessful(ArrayList<String> newContent) {
+//		try {
+//			FileWriter fileToEdit = new FileWriter(_original);
+//			
+//			Integer indexOfEditedEntry = Integer.valueOf(newContent.get(INDEX_OF_ENTRY_INDEX));
+//			
+////			for (int i = 0; i < _entries.size(); i++) {
+////				Entry entry = _entries.get(i);
+////				ArrayList<String> entryDetails = entry.getDetails();
+////				Integer formattedTaskIndex = Integer.valueOf(entryDetails.get(INDEX_OF_FORMATTED_ENTRY));
+////				
+////				if (formattedTaskIndex == indexOfEditedTask) {
+////					replaceWithNewContent(entryDetails, newContent);
+////					entry.setDetails(entryDetails);
+////					_entries.set(i, entry);
+////				}				
+////			}
+//			
+//			Entry editedEntry = _entries.get(indexOfEditedEntry); 
+//			ArrayList<Parameter> entryDetails = editedEntry.getDetails();
+//			replaceWithNewContent(entryDetails, newContent);
+//			editedEntry.setDetails(entryDetails);
+//			_entries.set(indexOfEditedEntry, editedEntry);
+//			
+//			copyAllEntriesToFile(fileToEdit, _entries);
+//			fileToEdit.close();
+//			
+//			return true;
+//		} catch (IOException e) {
+//			return false;
+//		}
+//	}
 
-	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<String> newContent) {
-		boolean isDetailPresent = false;
-		
-		for (int i = 1; i < newContent.size(); i++) {
-			String newFormattedDetail = newContent.get(i);
-			String[] newFormattedDetailSegments = newFormattedDetail.split(":");
-			
-			for (int j = 0; j < entryDetails.size(); j++) {
-				String existingFormattedDetail = entryDetails.get(j).getParameterValue();
-				
-				if (existingFormattedDetail.contains(newFormattedDetailSegments[INDEX_OF_DETAIL_TYPE])) {
-					entryDetails.set(j, newFormattedDetail);
-					isDetailPresent = true;
-				} 
-			}
-			
-			if (!isDetailPresent) {
-				entryDetails.add(newFormattedDetail);
-			}
-			
-			isDetailPresent = false;
-		}
-	}
-	
-	public String retrieveDetail(String searchTaskName, String detailType) {
-		String detail = "";
-		
-		for (int i = 0; i < _entries.size(); i++) {
-			Entry entry = _entries.get(i);
-			ArrayList<String> entryDetails = entry.getDetails();
-			String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY);
-			String[] formattedTaskNameSegments = formattedTaskName.split(": ");
-			String taskName = formattedTaskNameSegments[INDEX_OF_DETAIL];
-			
-			if (taskName.equals(searchTaskName)) {
-				detail = getDetailFromEntry(entryDetails, detailType);
-			}	
-		}
-		return detail;
-	}
-	
-	private String getDetailFromEntry(ArrayList<String> entryDetails, String detailType) {
-		String detail = "";
-		
-		for (int i = 0; i < entryDetails.size(); i++) {
-			String formattedDetail = entryDetails.get(i);
-			
-			if (formattedDetail.contains(detailType)) {
-				String[] formattedDetailSegments = formattedDetail.split(": ");
-				detail = formattedDetailSegments[INDEX_OF_DETAIL];
-			}
-		}
-		
-		return detail;
-	}
+//	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<String> newContent) {
+//		boolean isDetailPresent = false;
+//		
+//		for (int i = 1; i < newContent.size(); i++) {
+//			String newFormattedDetail = newContent.get(i);
+//			String[] newFormattedDetailSegments = newFormattedDetail.split(":");
+//			
+//			for (int j = 0; j < entryDetails.size(); j++) {
+//				String existingFormattedDetail = entryDetails.get(j).getParameterValue();
+//				
+//				if (existingFormattedDetail.contains(newFormattedDetailSegments[INDEX_OF_DETAIL_TYPE])) {
+//					entryDetails.set(j, newFormattedDetail);
+//					isDetailPresent = true;
+//				} 
+//			}
+//			
+//			if (!isDetailPresent) {
+//				entryDetails.add(newFormattedDetail);
+//			}
+//			
+//			isDetailPresent = false;
+//		}
+//	}
+//	
+//	public String retrieveDetail(String searchTaskName, String detailType) {
+//		String detail = "";
+//		
+//		for (int i = 0; i < _entries.size(); i++) {
+//			Entry entry = _entries.get(i);
+//			ArrayList<String> entryDetails = entry.getDetails();
+//			String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY);
+//			String[] formattedTaskNameSegments = formattedTaskName.split(": ");
+//			String taskName = formattedTaskNameSegments[INDEX_OF_DETAIL];
+//			
+//			if (taskName.equals(searchTaskName)) {
+//				detail = getDetailFromEntry(entryDetails, detailType);
+//			}	
+//		}
+//		return detail;
+//	}
+//	
+//	private String getDetailFromEntry(ArrayList<String> entryDetails, String detailType) {
+//		String detail = "";
+//		
+//		for (int i = 0; i < entryDetails.size(); i++) {
+//			String formattedDetail = entryDetails.get(i);
+//			
+//			if (formattedDetail.contains(detailType)) {
+//				String[] formattedDetailSegments = formattedDetail.split(": ");
+//				detail = formattedDetailSegments[INDEX_OF_DETAIL];
+//			}
+//		}
+//		
+//		return detail;
+//	}
 	
 	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> _entries) throws IOException {
 		for (int i = 0; i < _entries.size(); i++) {
@@ -230,10 +244,10 @@ public class StorageHandler {
 	}
 	
 	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
-		ArrayList<String> details = entry.getDetails();
+		ArrayList<Parameter> parameters = entry.getParameters();
 		
-		for (int i = 0; i < details.size(); i++) {
-			String detail = details.get(i);
+		for (int i = 0; i < parameters.size(); i++) {
+			String detail = parameters.get(i).getParameterValue();
 			fileToAdd.write(detail);
 			fileToAdd.write("\n");
 			fileToAdd.flush();
@@ -242,25 +256,25 @@ public class StorageHandler {
 		fileToAdd.flush();
 	}
 	
-	public boolean isDeleteFromFileSuccessful(Integer i) {
-		try {
-			FileWriter fileToAdd = new FileWriter(_original);
-			_entries.remove(i);
-			copyAllEntriesToFile(fileToAdd, _entries);
-			fileToAdd.close();	
-			
-			return true;
-		} catch (IOException e) {
-			return false;
-		}		
-	}
+//	public boolean isDeleteFromFileSuccessful(Integer i) {
+//		try {
+//			FileWriter fileToAdd = new FileWriter(_original);
+//			_entries.remove(i);
+//			copyAllEntriesToFile(fileToAdd, _entries);
+//			fileToAdd.close();	
+//			
+//			return true;
+//		} catch (IOException e) {
+//			return false;
+//		}		
+//	}
 
-	public boolean isEntryCompletedSuccessful(Integer i) throws IOException {
-		if (_entries.get(i).getCompletionStatus()) {
-			return true;
-		} else {
-			assert _entries.get(i).getCompletionStatus() : false;
-			return false;
-		}
-	}
+//	public boolean isEntryCompletedSuccessful(Integer i) throws IOException {
+//		if (_entries.get(i).getCompletionStatus()) {
+//			return true;
+//		} else {
+//			assert _entries.get(i).getCompletionStatus() : false;
+//			return false;
+//		}
+//	}
 }
