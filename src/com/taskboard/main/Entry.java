@@ -7,17 +7,23 @@ public class Entry {
 	// attribute
 	
 	private ArrayList<String> _details;
+	private boolean _completionStatus = false;
 	
 	// constructor
 	
 	public Entry() {
 		_details = new ArrayList<String>();
+		_completionStatus = false;
 	}
 	
 	// accessor
 	
 	public ArrayList<String> getDetails() {
 		return _details;
+	}
+	
+	public boolean getCompletionStatus() {
+		return _completionStatus;
 	}
 	
 	// mutator
@@ -30,7 +36,9 @@ public class Entry {
 		_details.add(detail);
 	}
 	
-	
+	public void setCompletionStatus(boolean trueOrFalse) {
+		_completionStatus = trueOrFalse;
+	}
 	// overriding method
 	
 	public String toString() {
@@ -44,3 +52,4 @@ public class Entry {
 		return entryDetails;
 	}
 }
+

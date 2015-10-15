@@ -30,11 +30,18 @@ public class StorageHandler {
 		
 	}
 	
+<<<<<<< HEAD
+	// accessor
+	
+	public ArrayList<Entry> getEntryListFromStorage() {
+		return _entries;
+=======
 	public static StorageHandler getInstance() {
 		if (instance == null) {
 			instance = new StorageHandler();
 		}
 		return instance;
+>>>>>>> origin/master
 	}
 	
 	public boolean isSetUpSuccessful(String fileName) {
@@ -116,6 +123,7 @@ public class StorageHandler {
 			if (i == _entries.size() - 1) {
 				entriesList = entriesList.concat(entryDetails);
 			} else {
+				assert i < _entries.size() -1;
 				entriesList = entriesList.concat(entryDetails).concat("\n");
 			}
 		}
@@ -247,16 +255,9 @@ public class StorageHandler {
 		}		
 	}
 
-	public boolean isEntryCompletedSuccessful(String entryName) throws IOException {
-		String completed = "Entry completed!";
-		for (int i = 0; i < _entries.size(); i++) {
-			Entry entry = _entries.get(i);
-			if (entry.getDetails().get(INDEX_OF_ENTRY_NAME).contains(entryName)) {
-				entry.getDetails().add(entry.getDetails().size(), completed);
-				break;
-			}
-		}
-		return true;
-	}
-}
-
+	public boolean isEntryCompletedSuccessful(Entry entry) throws IOException {
+		if (entry.getCompletionStatus()) {
+			return true;
+		} else {
+			assert entry.getCompletionStatus() : false;
+			return false;
