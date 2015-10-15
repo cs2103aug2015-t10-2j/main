@@ -10,7 +10,6 @@ import java.util.Collections;
 
 import java.text.SimpleDateFormat;
 
-import com.taskboard.main.Command;
 import com.taskboard.main.CommandType;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.ParameterType;
@@ -34,6 +33,7 @@ public class TaskBoardTest {
 	public void TestParameters() {
 		ArrayList<Parameter> expected1 = new ArrayList<Parameter>();
 		expected1.add(new Parameter(ParameterType.NAME, "Hello World!"));
+		Collections.reverse(expected1);
 		assertAddParameters(expected1, "add Hello World!");
 		
 		ArrayList<Parameter> expected2 = new ArrayList<Parameter>();
@@ -55,7 +55,7 @@ public class TaskBoardTest {
 		assertAddParameters(expected3, "add Meeting with Chris from tomorrow 7pm to tomorrow 9pm");
 		
 		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
-		expected4.add(new Parameter(ParameterType.NAME, "Submit paperwork"));
+		expected4.add(new Parameter(ParameterType.INDEX, "4"));
 		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
 		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		Date monday = new Date(today.getTime() + DateFormatValidator.MILLISECONDS_PER_DAY * 
@@ -64,15 +64,15 @@ public class TaskBoardTest {
 		expected4.add(new Parameter(ParameterType.DATE, defaultDateFormat.format(monday)));
 		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
 		Collections.reverse(expected4);
-		assertAddParameters(expected4, "edit Submit paperwork by monday 23:59");
+		assertEditParameters(expected4, "edit 4 by monday 23:59");
 		
 		ArrayList<Parameter> expected5 = new ArrayList<Parameter>();
-		expected5.add(new Parameter(ParameterType.NAME, "talk to friend"));
+		expected5.add(new Parameter(ParameterType.INDEX, "12"));
 		expected5.add(new Parameter(ParameterType.DATE, "13/10/2020"));
 		expected5.add(new Parameter(ParameterType.TIME, "14:00"));
 		expected5.add(new Parameter(ParameterType.PRIORITY, "medium"));
 		Collections.reverse(expected5);
-		assertEditParameters(expected5, "edit talk to friend by 13/10/2020 14:00 pri med");
+		assertEditParameters(expected5, "edit 12 by 13/10/2020 14:00 pri med");
 		
 		ArrayList<Parameter> expected6 = new ArrayList<Parameter>();
 		expected6.add(new Parameter(ParameterType.NAME, "V0.1 Progress Report"));
@@ -86,6 +86,11 @@ public class TaskBoardTest {
 		expected7.add(new Parameter(ParameterType.PRIORITY, "low"));
 		Collections.reverse(expected7);
 		assertDeleteParameters(expected7, "delete cat other pri low");
+		
+		ArrayList<Parameter> expected8 = new ArrayList<Parameter>();
+		expected8.add(new Parameter(ParameterType.INDEX, "102"));
+		Collections.reverse(expected8);
+		assertDeleteParameters(expected8, "delete 102");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {

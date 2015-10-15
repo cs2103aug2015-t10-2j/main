@@ -20,7 +20,7 @@ public class EditParameterParser implements ParameterParser {
 		
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
 		if (delimiterTypes.isEmpty()) {
-			parameters.add(new Parameter(ParameterType.NAME, parameterString));
+			parameters.addAll(convertToParameters(parameterString, DelimiterType.NONE));
 		} else {
 			int expectedDelimiterId = 0;
 			DelimiterType expectedDelimiterType = delimiterTypes.get(expectedDelimiterId);
@@ -56,7 +56,7 @@ public class EditParameterParser implements ParameterParser {
 			}
 			if (!temporaryString.isEmpty()) {
 				temporaryString = reverseTokens(temporaryString);
-				parameters.add(new Parameter(ParameterType.NAME, temporaryString));
+				parameters.addAll(convertToParameters(temporaryString, DelimiterType.NONE));
 			}
 		}
 		
@@ -100,11 +100,23 @@ public class EditParameterParser implements ParameterParser {
 	
 	private static ArrayList<Parameter> convertToParameters(String parameterString, DelimiterType delimiterType) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		FormatValidator indexFormatValidator = new IndexFormatValidator();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
 		FormatValidator priorityFormatValidator = new PriorityFormatValidator();
 		
 		switch (delimiterType) {
+			case NONE:
+				String trimmedParameterString = parameterString.trim();
+				if (trimmedParameterString.split(" ").length == 1) {
+					if (indexFormatValidator.isValidFormat(parameterString)) {
+						String index = indexFormatValidator.toDefaultFormat(parameterString);
+						parameters.add(new Parameter(ParameterType.INDEX, index));
+					}
+				} else {
+					// TBA: throw exception here
+				}
+				break;
 			case FROM:
 				for (String parameterToken : parameterString.split(" ")) {
 					if (dateFormatValidator.isValidFormat(parameterToken)) {
@@ -142,7 +154,7 @@ public class EditParameterParser implements ParameterParser {
 				// TBD: recurring task
 				break;
 			case CAT:
-				String trimmedParameterString = parameterString.trim();
+				trimmedParameterString = parameterString.trim();
 				parameters.add(new Parameter(ParameterType.CATEGORY, trimmedParameterString));
 				break;
 			case PRI:
