@@ -16,28 +16,10 @@ public class Entry {
 		_isCompleted = false;
 	}
 	
-	// accessor
+	// accessors
 	
 	public ArrayList<Parameter> getParameters() {
 		return _parameters;
-	}
-	
-	public boolean isCompleted() {
-		return _isCompleted;
-	}
-	
-	// mutator
-	
-	public void setDetails(ArrayList<Parameter> newParameters) {
-		_parameters = newParameters;
-	}
-	 
-	public void addToParameters(Parameter newParameter) {
-		_parameters.add(newParameter);
-	}
-	
-	public void setCompleted(boolean trueOrFalse) {
-		_isCompleted = trueOrFalse;
 	}
 	
 	public Parameter getNameParameter() {
@@ -119,6 +101,96 @@ public class Entry {
 			}
 		}
 		return null;
+	}
+	
+	public boolean isCompleted() {
+		return _isCompleted;
+	}
+	
+	// mutators
+	
+	public void setParameters(ArrayList<Parameter> newParameters) {
+		_parameters = newParameters;
+	}
+	 
+	public void addToParameters(Parameter newParameter) {
+		_parameters.add(newParameter);
+	}
+	
+	public void setNameParameter(Parameter newNameParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.NAME) {
+				_parameters.set(i, newNameParameter);
+			}
+		}
+	}
+	
+	public void setDateParameter(Parameter newDateParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.DATE) {
+				_parameters.set(i, newDateParameter);
+			}
+		}
+	}
+	
+	public void setTimeParameter(Parameter newTimeParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.TIME) {
+				_parameters.set(i, newTimeParameter);
+			}
+		}
+	}
+	
+	public void setStartDateParameter(Parameter newStartDateParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.START_DATE) {
+				_parameters.set(i, newStartDateParameter);
+			}
+		}
+	}
+	
+	public void setStartTimeParameter(Parameter newStartTimeParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.START_TIME) {
+				_parameters.set(i, newStartTimeParameter);
+			}
+		}
+	}
+	
+	public void setEndDateParameter(Parameter newEndDateParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.END_DATE) {
+				_parameters.set(i, newEndDateParameter);
+			}
+		}
+	}
+	
+	public void setEndTimeParameter(Parameter newEndTimeParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.END_TIME) {
+				_parameters.set(i, newEndTimeParameter);
+			}
+		}
+	}
+	
+	public void setCategoryParameter(Parameter newCategoryParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.CATEGORY) {
+				_parameters.set(i, newCategoryParameter);
+			}
+		}
+	}
+	
+	public void setPriorityParameter(Parameter newPriorityParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.PRIORITY) {
+				_parameters.set(i, newPriorityParameter);
+			}
+		}
+	}
+	
+	public void setCompleted(boolean newIsCompleted) {
+		_isCompleted = newIsCompleted;
 	}
 	
 	// overriding method
