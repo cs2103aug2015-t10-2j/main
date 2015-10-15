@@ -64,7 +64,7 @@ public class UserInterface extends JFrame {
             public void keyPressed(KeyEvent arg0) {
             	if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
             		String userInput = _commandField.getText();
-                	
+            		
                 	if (userInput.toLowerCase().equals("exit")) {
                 		logger.log(Level.INFO, "Sytem exit.");
                 		System.exit(0);
@@ -75,11 +75,9 @@ public class UserInterface extends JFrame {
                 			if (userInput.toLowerCase().equals("view")) {
                 				_displayArea.setText(feedback);
                 				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
-                				assert _feedbackArea.getText().equals(DISPLAY_SUCCESSFUL_MESSAGE);
                 				logger.log(Level.INFO, "Successfully displayed all tasks.");
                 			} else {
                 				_displayArea.setText(new String(NOTHING_DISPLAYED_MESSAGE));
-                				assert _displayArea.getText().equals(NOTHING_DISPLAYED_MESSAGE);
                 				_feedbackArea.setText(feedback);
                 				logger.log(Level.INFO,  "Nothing is displayed");
                 			}
@@ -113,11 +111,9 @@ public class UserInterface extends JFrame {
             			if (userInput.toLowerCase().equals("view")) {
             				_displayArea.setText(feedback);
             				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
-            				assert _feedbackArea.getText().equals(DISPLAY_SUCCESSFUL_MESSAGE);
             				logger.log(Level.INFO, "Successfully displayed all tasks.");
             			} else {
             				_displayArea.setText(new String(NOTHING_DISPLAYED_MESSAGE));
-            				assert _displayArea.getText().equals(NOTHING_DISPLAYED_MESSAGE);
             				_feedbackArea.setText(feedback);
             				logger.log(Level.INFO, "Nothing is displayed.");
             			}
@@ -125,7 +121,6 @@ public class UserInterface extends JFrame {
             	}
             	
                 _commandField.setText("");
-                assert _commandField.getText().equals("");
             }
         });
 		
