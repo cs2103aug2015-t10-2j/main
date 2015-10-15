@@ -23,7 +23,7 @@ public class UserInterface extends JFrame {
 	private JTextField _commandField;
 	private JButton _submitButton;
 	
-	private static Logger logger = Logger.getLogger("UI");
+	private static Logger logger = Logger.getLogger("UserInterface");
 	
 	public UserInterface() {
 		initComponents();
