@@ -13,8 +13,8 @@ public class StorageHandler {
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
 	
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
-	private static final int INDEX_OF_FORMATTED_ENTRY_NAME = 0;
-	private static final int INDEX_OF_ENTRY_NAME = 0;
+	private static final int INDEX_OF_FORMATTED_ENTRY = 0;
+	private static final int INDEX_OF_ENTRY_INDEX = 0;
 	private static final int INDEX_OF_DETAIL_TYPE = 0;
 	private static final int INDEX_OF_DETAIL = 1;
 	
@@ -35,6 +35,7 @@ public class StorageHandler {
 	public ArrayList<Entry> getEntryListFromStorage() {
 		return _entries;
 	}
+	
 	
 	public static StorageHandler getInstance() {
 		if (instance == null) {
@@ -134,19 +135,25 @@ public class StorageHandler {
 		try {
 			FileWriter fileToEdit = new FileWriter(_original);
 			
-			String nameOfEditedTask = newContent.get(INDEX_OF_ENTRY_NAME);
+			Integer indexOfEditedEntry = Integer.valueOf(newContent.get(INDEX_OF_ENTRY_INDEX));
 			
-			for (int i = 0; i < _entries.size(); i++) {
-				Entry entry = _entries.get(i);
-				ArrayList<String> entryDetails = entry.getDetails();
-				String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME);
-				
-				if (formattedTaskName.contains(nameOfEditedTask)) {
-					replaceWithNewContent(entryDetails, newContent);
-					entry.setDetails(entryDetails);
-					_entries.set(i, entry);
-				}				
-			}
+//			for (int i = 0; i < _entries.size(); i++) {
+//				Entry entry = _entries.get(i);
+//				ArrayList<String> entryDetails = entry.getDetails();
+//				Integer formattedTaskIndex = Integer.valueOf(entryDetails.get(INDEX_OF_FORMATTED_ENTRY));
+//				
+//				if (formattedTaskIndex == indexOfEditedTask) {
+//					replaceWithNewContent(entryDetails, newContent);
+//					entry.setDetails(entryDetails);
+//					_entries.set(i, entry);
+//				}				
+//			}
+			
+			Entry editedEntry = _entries.get(indexOfEditedEntry); 
+			ArrayList<String> entryDetails = editedEntry.getDetails();
+			replaceWithNewContent(entryDetails, newContent);
+			editedEntry.setDetails(entryDetails);
+			_entries.set(indexOfEditedEntry, editedEntry);
 			
 			copyAllEntriesToFile(fileToEdit, _entries);
 			fileToEdit.close();
@@ -187,7 +194,7 @@ public class StorageHandler {
 		for (int i = 0; i < _entries.size(); i++) {
 			Entry entry = _entries.get(i);
 			ArrayList<String> entryDetails = entry.getDetails();
-			String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME);
+			String formattedTaskName = entryDetails.get(INDEX_OF_FORMATTED_ENTRY);
 			String[] formattedTaskNameSegments = formattedTaskName.split(": ");
 			String taskName = formattedTaskNameSegments[INDEX_OF_DETAIL];
 			
@@ -232,19 +239,10 @@ public class StorageHandler {
 		fileToAdd.flush();
 	}
 	
-	public boolean isDeleteFromFileSuccessful(String nameOfEntryToBeDeleted) {
+	public boolean isDeleteFromFileSuccessful(Integer i) {
 		try {
 			FileWriter fileToAdd = new FileWriter(_original);
-			
-			for (int i = 0; i < _entries.size(); i++) {
-				Entry tempEntry = _entries.get(i);
-				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-				if (tempEntryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME).substring(6).contains(nameOfEntryToBeDeleted)) {
-					_entries.remove(i);
-					break;
-				}
-			}
-			
+			_entries.remove(i);
 			copyAllEntriesToFile(fileToAdd, _entries);
 			fileToAdd.close();	
 			
@@ -254,11 +252,11 @@ public class StorageHandler {
 		}		
 	}
 
-	public boolean isEntryCompletedSuccessful(Entry entry) throws IOException {
-		if (entry.getCompletionStatus()) {
+	public boolean isEntryCompletedSuccessful(Integer i) throws IOException {
+		if (_entries.get(i).getCompletionStatus()) {
 			return true;
 		} else {
-			assert entry.getCompletionStatus() : false;
+			assert _entries.get(i).getCompletionStatus() : false;
 			return false;
 		}
 	}
