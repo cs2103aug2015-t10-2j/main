@@ -30,18 +30,17 @@ public class StorageHandler {
 		
 	}
 	
-<<<<<<< HEAD
 	// accessor
 	
 	public ArrayList<Entry> getEntryListFromStorage() {
 		return _entries;
-=======
+	}
+	
 	public static StorageHandler getInstance() {
 		if (instance == null) {
 			instance = new StorageHandler();
 		}
 		return instance;
->>>>>>> origin/master
 	}
 	
 	public boolean isSetUpSuccessful(String fileName) {
@@ -240,7 +239,7 @@ public class StorageHandler {
 			for (int i = 0; i < _entries.size(); i++) {
 				Entry tempEntry = _entries.get(i);
 				ArrayList<String> tempEntryDetails = tempEntry.getDetails();
-				if (tempEntryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME).contains(nameOfEntryToBeDeleted)) {
+				if (tempEntryDetails.get(INDEX_OF_FORMATTED_ENTRY_NAME).substring(6).contains(nameOfEntryToBeDeleted)) {
 					_entries.remove(i);
 					break;
 				}
