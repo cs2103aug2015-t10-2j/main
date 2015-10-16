@@ -12,7 +12,7 @@ public class ViewParameterParser implements ParameterParser {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
 		String parameterString = new String();
-		if (commandString.indexOf(" ") != -1) {
+		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
 			// view command allows a command with no trailing parameter (return an empty ArrayList)
