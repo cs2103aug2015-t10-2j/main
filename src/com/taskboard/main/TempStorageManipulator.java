@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class TempStorageManipulator {
 	
 	// attributes
-	private static TempStorageManipulator instance = null;
+//	private static TempStorageManipulator instance = null;
 	private ArrayList<Entry> _tempStorage;
 	private ArrayList<Entry> _tempArchive;
 	StorageHandler _storageHandler = new StorageHandler();
@@ -28,12 +28,12 @@ public class TempStorageManipulator {
 	}
 	
 	
-	public static TempStorageManipulator getInstance() {
-		if (instance == null) {
-			instance = new TempStorageManipulator();
-		}
-		return instance;
-	}
+//	public static TempStorageManipulator getInstance() {
+//		if (instance == null) {
+//			instance = new TempStorageManipulator();
+//		}
+//		return instance;
+//	}
 	
 	public ArrayList<Entry> fileStatus(String fileName) throws IOException {
 //		StorageHandler storageHandler = new StorageHandler();
