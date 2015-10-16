@@ -16,7 +16,7 @@ public class Entry {
 		_isCompleted = false;
 	}
 	
-	// accessors
+		// accessors
 	
 	public ArrayList<Parameter> getParameters() {
 		return _parameters;

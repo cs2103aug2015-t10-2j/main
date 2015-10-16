@@ -13,10 +13,10 @@ public class StorageHandler {
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
 	
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
-	private static final int INDEX_OF_FORMATTED_ENTRY = 0;
-	private static final int INDEX_OF_ENTRY_INDEX = 0;
-	private static final int INDEX_OF_DETAIL_TYPE = 0;
-	private static final int INDEX_OF_DETAIL = 1;
+//	private static final int INDEX_OF_FORMATTED_ENTRY = 0;
+//	private static final int INDEX_OF_ENTRY_INDEX = 0;
+//	private static final int INDEX_OF_DETAIL_TYPE = 0;
+//	private static final int INDEX_OF_DETAIL = 1;
 	
 	// attributes
 	

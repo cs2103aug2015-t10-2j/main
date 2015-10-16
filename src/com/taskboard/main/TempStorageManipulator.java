@@ -13,6 +13,9 @@ public class TempStorageManipulator {
 	// attributes
 	private static TempStorageManipulator instance = null;
 	private ArrayList<Entry> _tempStorage;
+	private ArrayList<Entry> _tempArchive;
+	StorageHandler _storageHandler = new StorageHandler();
+	ArchiveHandler _archiveHandler = new ArchiveHandler();
 	
 	// constructor
 	private TempStorageManipulator() {
@@ -33,9 +36,9 @@ public class TempStorageManipulator {
 	}
 	
 	public ArrayList<Entry> fileStatus(String fileName) throws IOException {
-		StorageHandler storageHandler = new StorageHandler();
-		boolean isItANewFile = storageHandler.isCreatingNewFileSuccessful(fileName);
-		boolean isItAnExistingFile = storageHandler.isOpeningExistingFileSuccessful(fileName);
+//		StorageHandler storageHandler = new StorageHandler();
+		boolean isItANewFile = _storageHandler.isCreatingNewFileSuccessful(fileName);
+		boolean isItAnExistingFile = _storageHandler.isOpeningExistingFileSuccessful(fileName);
 		
 		if (isItANewFile) {
 			assert isItAnExistingFile: false;
@@ -44,14 +47,16 @@ public class TempStorageManipulator {
 		
 		if (isItAnExistingFile) {
 			assert isItANewFile = false;
-			_tempStorage = storageHandler.getEntryListFromStorage();
+			_tempStorage = _storageHandler.getEntryListFromStorage();
 		}
 		
 		return _tempStorage;		
 	}
 	
 	public void addToTempStorage(Entry entry) {
-		_tempStorage.add(entry);		
+		_tempStorage.add(entry);
+		setTempStorageToFile(_tempStorage);
+		
 	}
 	
 	public void editTempStorage(Integer i, ArrayList<String> newContent) {
@@ -60,6 +65,7 @@ public class TempStorageManipulator {
 		replaceWithNewContent(entryDetails, newContent);
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
+		setTempStorageToFile(_tempStorage);
 	}
 	
 	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<String> newContent) {
@@ -91,12 +97,24 @@ public class TempStorageManipulator {
 	
 	public void deleteFromTempStorage(Integer i) {
 		_tempStorage.remove(i);
+		setTempStorageToFile(_tempStorage);
 
 	}		
 
 	public void setCompletedInTempStorage(Integer i) throws IOException {
 		Entry entry = _tempStorage.get(i);
 		entry.setCompleted(true);
+		_tempStorage.remove(i);
+		_tempArchive.add(entry);
+		setTempStorageToFile(_tempStorage);
+		setTempArchiveToFile(_tempArchive);
 	}
 
+	public void setTempStorageToFile(ArrayList<Entry> entries) {
+		_storageHandler.setStorage(entries);
+	}
+	
+	public void setTempArchiveToFile(ArrayList<Entry> entries) {
+		_archiveHandler.setStorage(entries);
+	}
 }
