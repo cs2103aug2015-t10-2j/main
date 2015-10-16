@@ -17,6 +17,7 @@ import com.taskboard.main.CommandTypeParser;
 import com.taskboard.main.AddParameterParser;
 import com.taskboard.main.EditParameterParser;
 import com.taskboard.main.DeleteParameterParser;
+import com.taskboard.main.ViewParameterParser;
 import com.taskboard.main.DateFormatValidator;
 
 public class TaskBoardTest {
@@ -91,6 +92,15 @@ public class TaskBoardTest {
 		expected8.add(new Parameter(ParameterType.INDEX, "102"));
 		Collections.reverse(expected8);
 		assertDeleteParameters(expected8, "delete 102");
+		
+		ArrayList<Parameter> expected9 = new ArrayList<Parameter>();
+		assertViewParameters(expected9, "view");
+		
+		ArrayList<Parameter> expected10 = new ArrayList<Parameter>();
+		expected10.add(new Parameter(ParameterType.DATE, "25/10/2015"));
+		expected10.add(new Parameter(ParameterType.CATEGORY, "Homework"));
+		Collections.reverse(expected10);
+		assertViewParameters(expected10, "view by 25/10/2015 cat Homework");
 	}
 
 	private void assertCommandType(CommandType expected, String command) {
@@ -107,6 +117,10 @@ public class TaskBoardTest {
 	
 	private void assertDeleteParameters(ArrayList<Parameter> expected, String command) {
 		assertEquals(toString(expected), toString(new DeleteParameterParser().parseParameters(command)));
+	}
+	
+	private void assertViewParameters(ArrayList<Parameter> expected, String command) {
+		assertEquals(toString(expected), toString(new ViewParameterParser().parseParameters(command)));
 	}
 	
 	private static String toString(ArrayList<Parameter> parameters) {

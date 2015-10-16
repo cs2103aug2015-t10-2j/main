@@ -44,6 +44,8 @@ public class CommandParser {
 				logger.log(Level.INFO, "Finished parsing DELETE command string");
 				return new DeleteCommand(newCommandType, newCommandParameters);
 			case VIEW:
+				_parameterParser = new ViewParameterParser();
+				newCommandParameters = _parameterParser.parseParameters(commandString);
 				logger.log(Level.INFO, "Finished parsing VIEW command string");
 				return new ViewCommand(newCommandType, null);
 			case UNKNOWN:
