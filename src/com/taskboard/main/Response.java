@@ -31,6 +31,10 @@ public class Response {
 		return _exobj;
 	}
 	
+	public ArrayList<Entry> getEntries() {
+		return _entries;
+	}
+	
 	// mutators
 	
 	public void setIsSuccess(boolean isSuccess) {
@@ -43,5 +47,9 @@ public class Response {
 	
 	public void setException(Exception exobj) {
 		_exobj = exobj;
+	}
+	
+	public void setEntries(ArrayList<Entry> newEntries) {
+		_entries = newEntries;
 	}
 }
