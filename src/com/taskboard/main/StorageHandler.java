@@ -22,7 +22,7 @@ public class StorageHandler {
 	
 //	private static StorageHandler instance = null;
 	private File _original;
-	private ArrayList<Entry> _entries;
+//	private ArrayList<Entry> _entries;
 	
 	// constructor
 	
@@ -32,10 +32,10 @@ public class StorageHandler {
 	
 	// accessor
 	
-	public ArrayList<Entry> getEntryListFromStorage() {
-		return _entries;
-	}
-	
+//	public ArrayList<Entry> getEntryListFromStorage() {
+//		return _entries;
+//	}
+//	
 	
 //	public static StorageHandler getInstance() {
 //		if (instance == null) {
@@ -52,16 +52,15 @@ public class StorageHandler {
 //		assert doesFileExist: false;
 		if (!doesFileExist) {
 			_original.createNewFile();
-			_entries = new ArrayList<Entry>();
+//			_entries = new ArrayList<Entry>();
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public boolean isOpeningExistingFileSuccessful(String fileName) throws IOException{
+	public boolean isOpeningExistingFileSuccessful(String fileName) throws FileNotFoundException {
 		_original = new File(fileName);
-		
 		boolean doesFileExist = doesFileExist(_original);
 		if (doesFileExist) {
 			copyExistingEntriesFromFile();
@@ -79,43 +78,42 @@ public class StorageHandler {
 		return true;
 	}
 	
-	private void copyExistingEntriesFromFile() {
-		try {
-			Scanner scanFileToCopy = new Scanner(_original);
+	public ArrayList<Entry> copyExistingEntriesFromFile() throws FileNotFoundException {
+		Scanner scanFileToCopy = new Scanner(_original);
+		ArrayList<Entry> entries = new ArrayList<Entry>();
+		
+		Entry entry = new Entry();
 			
-			Entry entry = new Entry();
-			
-			while (scanFileToCopy.hasNext()) {
-				String detail = scanFileToCopy.nextLine();
+		while (scanFileToCopy.hasNext()) {
+			String detail = scanFileToCopy.nextLine();
 				
-				if (detail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
-					_entries.add(entry);
-					entry = new Entry();	
-				}
+			if (detail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
+				entries.add(entry);
+				entry = new Entry();	
+			}
 				
-				if (!detail.isEmpty()) {
-					Parameter parameter = new Parameter();
-					parameter.setParameterType(ParameterType.valueOf(detail));
-					parameter.setParameterValue(detail);
-					entry.addToParameters(parameter);
-				}
+			if (!detail.isEmpty()) {
+				Parameter parameter = new Parameter();
+				parameter.setParameterType(ParameterType.valueOf(detail));
+				parameter.setParameterValue(detail);
+				entry.addToParameters(parameter);
 			}
-			
-			if (!_entries.isEmpty()) {
-				_entries.add(entry);
-				_entries.remove(INDEX_OF_EMPTY_ENTRY);
-			}
-			
-			scanFileToCopy.close();	
-		} catch (FileNotFoundException e) {
-			return;
 		}
+			
+		if (!entries.isEmpty()) {
+			entries.add(entry);
+			entries.remove(INDEX_OF_EMPTY_ENTRY);
+		}
+			
+		scanFileToCopy.close();	
+		return entries;
 	}
 	
-	public void setStorage(ArrayList<Entry> entries) {
-		_entries = entries;
+	public void setStorage(ArrayList<Entry> entries) throws IOException {
+		FileWriter fileToAdd = new FileWriter(_original, true);
+		copyAllEntriesToFile(fileToAdd, entries);
 	}
-	
+//	
 //	public boolean isAddToFileSuccessful(Entry entry) {
 //		try {
 //			FileWriter fileToAdd = new FileWriter(_original, true);
@@ -237,9 +235,9 @@ public class StorageHandler {
 //		return detail;
 //	}
 	
-	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> _entries) throws IOException {
-		for (int i = 0; i < _entries.size(); i++) {
-			addSingleEntryToFile(fileToAdd, _entries.get(i));
+	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> entries) throws IOException {
+		for (int i = 0; i < entries.size(); i++) {
+			addSingleEntryToFile(fileToAdd, entries.get(i));
 		}
 	}
 	

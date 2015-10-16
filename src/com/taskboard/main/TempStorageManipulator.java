@@ -1,5 +1,6 @@
 package com.taskboard.main;
 
+import java.io.FileNotFoundException;
 //import java.io.File;
 //import java.io.FileWriter;
 //import java.io.FileNotFoundException;
@@ -38,28 +39,28 @@ public class TempStorageManipulator {
 	public ArrayList<Entry> fileStatus(String fileName) throws IOException {
 //		StorageHandler storageHandler = new StorageHandler();
 		boolean isItANewFile = _storageHandler.isCreatingNewFileSuccessful(fileName);
-		boolean isItAnExistingFile = _storageHandler.isOpeningExistingFileSuccessful(fileName);
 		
 		if (isItANewFile) {
-			assert isItAnExistingFile: false;
 			_tempStorage = new ArrayList<Entry>();
 		}
-		
-		if (isItAnExistingFile) {
-			assert isItANewFile = false;
-			_tempStorage = _storageHandler.getEntryListFromStorage();
-		}
-		
 		return _tempStorage;		
 	}
 	
-	public void addToTempStorage(Entry entry) {
+	public ArrayList<Entry> openFileStatus(String fileName) throws FileNotFoundException {
+		boolean isItAnExistingFile = _storageHandler.isOpeningExistingFileSuccessful(fileName);
+		if (isItAnExistingFile) {
+			_tempStorage = _storageHandler.copyExistingEntriesFromFile();
+		}
+		return _tempStorage;
+	}
+	
+	public void addToTempStorage(Entry entry) throws IOException {
 		_tempStorage.add(entry);
 		setTempStorageToFile(_tempStorage);
 		
 	}
 	
-	public void editTempStorage(Integer i, ArrayList<String> newContent) {
+	public void editTempStorage(Integer i, ArrayList<String> newContent) throws IOException {
 		Entry editedEntry = _tempStorage.get(i);
 		ArrayList<Parameter> entryDetails = editedEntry.getParameters();
 		replaceWithNewContent(entryDetails, newContent);
@@ -95,7 +96,7 @@ public class TempStorageManipulator {
 		}
 	}
 	
-	public void deleteFromTempStorage(Integer i) {
+	public void deleteFromTempStorage(Integer i) throws IOException {
 		_tempStorage.remove(i);
 		setTempStorageToFile(_tempStorage);
 
@@ -110,7 +111,7 @@ public class TempStorageManipulator {
 		setTempArchiveToFile(_tempArchive);
 	}
 
-	public void setTempStorageToFile(ArrayList<Entry> entries) {
+	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		_storageHandler.setStorage(entries);
 	}
 	
