@@ -8,7 +8,7 @@ public class Response {
 	
 	private boolean _isSuccess;
 	private String _feedback;
-	private Exception _exobj;
+	private Exception _exObj;
 	private ArrayList<Entry> _entries;
 	
 	// constructor
@@ -19,7 +19,7 @@ public class Response {
 	
 	// accessors 
 	
-	public boolean getIsSuccess() {
+	public boolean isSuccess() {
 		return _isSuccess;
 	}
 	
@@ -28,7 +28,7 @@ public class Response {
 	}
 	
 	public Exception getException() {
-		return _exobj;
+		return _exObj;
 	}
 	
 	public ArrayList<Entry> getEntries() {
@@ -45,11 +45,11 @@ public class Response {
 		_feedback = feedback;
 	}
 	
-	public void setException(Exception exobj) {
-		_exobj = exobj;
+	public void setException(Exception exObj) {
+		_exObj = exObj;
 	}
 	
-	public void setEntries(ArrayList<Entry> newEntries) {
-		_entries = newEntries;
+	public void setEntries(ArrayList<Entry> entries) {
+		_entries = entries;
 	}
 }

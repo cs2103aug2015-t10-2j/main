@@ -1,13 +1,9 @@
 package com.taskboard.main;
 
 import java.io.FileNotFoundException;
-//import java.io.File;
-//import java.io.FileWriter;
-//import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.ArrayList;
-//import java.util.Scanner;
 
 public class TempStorageManipulator {
 	
@@ -20,21 +16,22 @@ public class TempStorageManipulator {
 	
 	// constructor
 	
-	private TempStorageManipulator() {
+	public TempStorageManipulator() {
 		_storageHandler = new StorageHandler();
 		_archiveHandler = new ArchiveHandler();
 	}
 	
 	// accessor
-	public ArrayList<Entry> getEntryListFromStorage() {
+	
+	public ArrayList<Entry> getTempStorage() {
 		return _tempStorage;
 	}
 	
-	public void initialise(String fileName) throws IOException, IllegalArgumentException {
+	public void initialise(String fileName) throws IllegalArgumentException, IOException  {
 		_tempStorage = _storageHandler.createNewFile(fileName);	
 	}
 	
-	public void repopulate(String fileName) throws FileNotFoundException, IllegalArgumentException {
+	public void repopulate(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		_tempStorage = _storageHandler.openExistingFile(fileName);
 	}
 	

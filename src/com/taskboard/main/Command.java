@@ -6,6 +6,7 @@ public abstract class Command {
 	
 	// attributes
 	
+	protected static TempStorageManipulator _tempStorageManipulator;
 	protected CommandType _commandType;
 	protected ArrayList<Parameter> _parameters;
 	
@@ -30,6 +31,10 @@ public abstract class Command {
 		return _parameters;
 	}
 	
+	public TempStorageManipulator getTempStorageManipulator() {
+		return _tempStorageManipulator;
+	}
+	
 	// mutators
 	
 	public void setCommandType(CommandType newCommandType) {
@@ -38,6 +43,10 @@ public abstract class Command {
 	
 	public void setParameters(ArrayList<Parameter> newParameters) {
 		_parameters = newParameters;
+	}
+	
+	protected String getFeedbackForUser(String feedbackMessage, String detail) {
+		return String.format(feedbackMessage, detail);
 	}
 	
 	public abstract Response executeCommand(); 

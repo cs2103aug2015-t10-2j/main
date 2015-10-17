@@ -7,20 +7,24 @@ import java.util.ArrayList;
 public class NewCommand extends Command {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
-	private static final String MESSAGE_ERROR_FOR_LAUNCH = "Failed to create new scheduler.";
+	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
 	
-	private static final int INDEX_OF_FILENAME_FOR_LAUNCH = 0;
+	private static final int INDEX_OF_FILENAME = 0;
 	
 	public NewCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		assert commandType != null;
 		_commandType = commandType;
 		assert parameters != null;
 		_parameters = parameters;
+		
+		if (getTempStorageManipulator() == null) {
+			_tempStorageManipulator = new TempStorageManipulator();
+		}
 	}
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
-		Parameter fileNameParameter = _parameters.get(INDEX_OF_FILENAME_FOR_LAUNCH); 
+		Parameter fileNameParameter = _parameters.get(INDEX_OF_FILENAME); 
 		assert fileNameParameter != null;
 		String fileName = fileNameParameter.getParameterValue();
 		assert fileName != null;
@@ -28,32 +32,35 @@ public class NewCommand extends Command {
 	}
 	
 	private Response getResponseForLaunch(String fileName) {
-		Response responseForLaunch = new Response();
+		Response responseForNew = new Response();
 		
-		StorageHandler storageHandler = StorageHandler.getInstance();
+		try {
+			_tempStorageManipulator.initialise(fileName);
+			setSuccessResponseForNew(responseForNew, fileName);
+		} catch (IllegalArgumentException ex) {
+			setFailureResponseForInvalidNew(responseForNew, ex);
+		} catch (IOException ex) {
+			setFailureResponseForLaunchNew(responseForNew);
+		}
 		
-		if (storageHandler.isSetUpSuccessful(fileName)) {
-			setSuccessResponseForLaunch(responseForLaunch, fileName);
-		} else {
-			setFailureResponseForLaunch(responseForLaunch);
-		}	
-		
-		return responseForLaunch;
+		return responseForNew;
 	}
 	
-	private void setSuccessResponseForLaunch(Response response, String fileName) {
+	private void setSuccessResponseForNew(Response response, String fileName) {
 		response.setIsSuccess(true);
 		String userFeedback = getFeedbackForUser(MESSAGE_WELCOME, fileName);
 		response.setFeedback(userFeedback);
+		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
 	
-	private String getFeedbackForUser(String feedbackMessage, String details) {
-		return String.format(feedbackMessage, details);
-	}
-	
-	private void setFailureResponseForLaunch(Response response) {
+	private void setFailureResponseForInvalidNew(Response response, IllegalArgumentException ex) {
 		response.setIsSuccess(false);
-		IOException exObj = new IOException(MESSAGE_ERROR_FOR_LAUNCH);
+		response.setException(ex);
+	}
+	
+	private void setFailureResponseForLaunchNew(Response response) {
+		response.setIsSuccess(false);
+		IOException exObj = new IOException(MESSAGE_ERROR_FOR_LAUNCH_NEW);
 		response.setException(exObj);
 	}
 }

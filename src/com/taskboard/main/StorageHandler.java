@@ -46,7 +46,7 @@ public class StorageHandler {
 //		return instance;
 //	}
 	
-	public ArrayList<Entry> createNewFile(String fileName) throws IOException, IllegalArgumentException {
+	public ArrayList<Entry> createNewFile(String fileName) throws IllegalArgumentException, IOException {
 		_original = new File(fileName);
 		boolean doesFileExist = doesFileExist(_original);
 		
@@ -63,7 +63,7 @@ public class StorageHandler {
 		return entries;
 	}
 	
-	public ArrayList<Entry> openExistingFile(String fileName) throws FileNotFoundException, IllegalArgumentException {
+	public ArrayList<Entry> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		_original = new File(fileName);
 		boolean doesFileExist = doesFileExist(_original);
 		
