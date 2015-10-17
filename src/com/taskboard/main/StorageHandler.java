@@ -10,9 +10,13 @@ import java.util.Scanner;
 
 public class StorageHandler {
 	
-	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
+	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
+	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
+	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "NAME:";
 	
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
+	private static final int INDEX_OF_DETAIL_TYPE = 0;
+	private static final int INDEX_OF_DETAIL = 1;
 //	private static final int INDEX_OF_FORMATTED_ENTRY = 0;
 //	private static final int INDEX_OF_ENTRY_INDEX = 0;
 //	private static final int INDEX_OF_DETAIL_TYPE = 0;
@@ -20,9 +24,7 @@ public class StorageHandler {
 	
 	// attributes
 	
-//	private static StorageHandler instance = null;
 	private File _original;
-//	private ArrayList<Entry> _entries;
 	
 	// constructor
 	
@@ -44,73 +46,84 @@ public class StorageHandler {
 //		return instance;
 //	}
 	
-	public boolean isCreatingNewFileSuccessful(String fileName) throws IOException {
+	public ArrayList<Entry> createNewFile(String fileName) throws IOException, IllegalArgumentException {
 		_original = new File(fileName);
-		
 		boolean doesFileExist = doesFileExist(_original);
+		
+		ArrayList<Entry> entries;
 		
 //		assert doesFileExist: false;
 		if (!doesFileExist) {
 			_original.createNewFile();
-//			_entries = new ArrayList<Entry>();
-			return true;
+			entries = new ArrayList<Entry>();
 		} else {
-			return false;
+			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
+		
+		return entries;
 	}
 	
-	public boolean isOpeningExistingFileSuccessful(String fileName) throws FileNotFoundException {
+	public ArrayList<Entry> openExistingFile(String fileName) throws FileNotFoundException, IllegalArgumentException {
 		_original = new File(fileName);
 		boolean doesFileExist = doesFileExist(_original);
+		
+		ArrayList<Entry> entries;
+		
 		if (doesFileExist) {
-			copyExistingEntriesFromFile();
-			return true;
+			Scanner scanFileToCopy = new Scanner(_original);
+			entries = copyExistingEntriesFromFile(scanFileToCopy);
+			scanFileToCopy.close();	
 		} else {
-			return false;
+			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);
 		}
+		
+		return entries;
 	}
 	
 	private boolean doesFileExist(File fileToCheck) {
-		if (!fileToCheck.exists()) {
-			return false;
+		if (fileToCheck.exists()) {
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
-	public ArrayList<Entry> copyExistingEntriesFromFile() throws FileNotFoundException {
-		Scanner scanFileToCopy = new Scanner(_original);
+	public ArrayList<Entry> copyExistingEntriesFromFile(Scanner scanFileToCopy) {
 		ArrayList<Entry> entries = new ArrayList<Entry>();
 		
 		Entry entry = new Entry();
 			
 		while (scanFileToCopy.hasNext()) {
-			String detail = scanFileToCopy.nextLine();
+			String formattedDetail = scanFileToCopy.nextLine();
 				
-			if (detail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
+			if (formattedDetail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
 				entries.add(entry);
 				entry = new Entry();	
 			}
 				
-			if (!detail.isEmpty()) {
+			if (!formattedDetail.isEmpty()) {
+				String[] splitFormattedDetail = formattedDetail.split(": ");
+				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE];
+				String detail = splitFormattedDetail[INDEX_OF_DETAIL];
+				
 				Parameter parameter = new Parameter();
-				parameter.setParameterType(ParameterType.valueOf(detail));
+				parameter.setParameterType(ParameterType.valueOf(detailType));
 				parameter.setParameterValue(detail);
 				entry.addToParameters(parameter);
 			}
 		}
 			
 		if (!entries.isEmpty()) {
+			// to add the final entry once end of file is reached
 			entries.add(entry);
 			entries.remove(INDEX_OF_EMPTY_ENTRY);
 		}
-			
-		scanFileToCopy.close();	
+	
 		return entries;
 	}
 	
-	public void setStorage(ArrayList<Entry> entries) throws IOException {
-		FileWriter fileToAdd = new FileWriter(_original, true);
+	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
+		FileWriter fileToAdd = new FileWriter(_original);
 		copyAllEntriesToFile(fileToAdd, entries);
 	}
 //	
@@ -245,13 +258,13 @@ public class StorageHandler {
 		ArrayList<Parameter> parameters = entry.getParameters();
 		
 		for (int i = 0; i < parameters.size(); i++) {
-			String detail = parameters.get(i).getParameterValue();
-			fileToAdd.write(detail);
+			String entrydetails = parameters.get(i).toString();
+			fileToAdd.write(entrydetails);
 			fileToAdd.write("\n");
 			fileToAdd.flush();
 		}
-		fileToAdd.write("\n");
-		fileToAdd.flush();
+//		fileToAdd.write("\n");
+//		fileToAdd.flush();
 	}
 	
 //	public boolean isDeleteFromFileSuccessful(Integer i) {

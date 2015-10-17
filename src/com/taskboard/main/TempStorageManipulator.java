@@ -12,15 +12,17 @@ import java.util.ArrayList;
 public class TempStorageManipulator {
 	
 	// attributes
-//	private static TempStorageManipulator instance = null;
+
 	private ArrayList<Entry> _tempStorage;
 	private ArrayList<Entry> _tempArchive;
-	StorageHandler _storageHandler = new StorageHandler();
-	ArchiveHandler _archiveHandler = new ArchiveHandler();
+	StorageHandler _storageHandler;
+	ArchiveHandler _archiveHandler;
 	
 	// constructor
+	
 	private TempStorageManipulator() {
-		
+		_storageHandler = new StorageHandler();
+		_archiveHandler = new ArchiveHandler();
 	}
 	
 	// accessor
@@ -28,36 +30,17 @@ public class TempStorageManipulator {
 		return _tempStorage;
 	}
 	
-	
-//	public static TempStorageManipulator getInstance() {
-//		if (instance == null) {
-//			instance = new TempStorageManipulator();
-//		}
-//		return instance;
-//	}
-	
-	public ArrayList<Entry> fileStatus(String fileName) throws IOException {
-//		StorageHandler storageHandler = new StorageHandler();
-		boolean isItANewFile = _storageHandler.isCreatingNewFileSuccessful(fileName);
-		
-		if (isItANewFile) {
-			_tempStorage = new ArrayList<Entry>();
-		}
-		return _tempStorage;		
+	public void initialise(String fileName) throws IOException, IllegalArgumentException {
+		_tempStorage = _storageHandler.createNewFile(fileName);	
 	}
 	
-	public ArrayList<Entry> openFileStatus(String fileName) throws FileNotFoundException {
-		boolean isItAnExistingFile = _storageHandler.isOpeningExistingFileSuccessful(fileName);
-		if (isItAnExistingFile) {
-			_tempStorage = _storageHandler.copyExistingEntriesFromFile();
-		}
-		return _tempStorage;
+	public void repopulate(String fileName) throws FileNotFoundException, IllegalArgumentException {
+		_tempStorage = _storageHandler.openExistingFile(fileName);
 	}
 	
 	public void addToTempStorage(Entry entry) throws IOException {
 		_tempStorage.add(entry);
-		setTempStorageToFile(_tempStorage);
-		
+		_storageHandler.updateTempStorageToFile(_tempStorage);	
 	}
 	
 	public void editTempStorage(Integer i, ArrayList<String> newContent) throws IOException {
@@ -111,11 +94,11 @@ public class TempStorageManipulator {
 		setTempArchiveToFile(_tempArchive);
 	}
 
-	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
-		_storageHandler.setStorage(entries);
-	}
+//	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
+//		_storageHandler.setStorage(entries);
+//	}
 	
-	public void setTempArchiveToFile(ArrayList<Entry> entries) {
-		_archiveHandler.setStorage(entries);
-	}
+//	public void setTempArchiveToFile(ArrayList<Entry> entries) {
+//		_archiveHandler.setStorage(entries);
+//	}
 }

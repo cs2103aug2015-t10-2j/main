@@ -7,7 +7,7 @@ public class Entry {
 	// attribute
 	
 	private ArrayList<Parameter> _parameters;
-	private boolean _isCompleted = false;
+	private boolean _isCompleted;
 	
 	// constructor
 	
@@ -28,6 +28,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
 		return null;
 	}
 	
@@ -37,6 +38,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
 		return null;
 	}
 	
@@ -46,6 +48,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
 		return null;
 	}
 	
@@ -55,6 +58,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
 		return null;
 	}
 	
@@ -64,6 +68,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
 		return null;
 	}
 	
@@ -73,6 +78,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
 		return null;
 	}
 	
@@ -82,15 +88,7 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
-		return null;
-	}
-	
-	public Parameter getCategoryParameter() {
-		for (int i = 0; i < _parameters.size(); i++) {
-			if (_parameters.get(i).getParameterType() == ParameterType.CATEGORY) {
-				return _parameters.get(i);
-			}
-		}
+		
 		return null;
 	}
 	
@@ -100,6 +98,17 @@ public class Entry {
 				return _parameters.get(i);
 			}
 		}
+		
+		return null;
+	}
+	
+	public Parameter getCategoryParameter() {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.CATEGORY) {
+				return _parameters.get(i);
+			}
+		}
+		
 		return null;
 	}
 	
@@ -193,7 +202,6 @@ public class Entry {
 		_isCompleted = newIsCompleted;
 	}
 	
-	// overriding method
 	@Override
 	public String toString() {
 		String entryDetails = "";
