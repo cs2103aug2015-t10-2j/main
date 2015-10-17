@@ -13,19 +13,21 @@ public class AddCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
+	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	
-	private static final String DATE_FORMAT = "dd/MM/yyyy'T'HH:mm";
-	private static final String DEFAULT_TIME_FORMAT = "00:00";
-	
-	private static final int SIZE_OF_PARAMETERS_STORAGE_FOR_ADD_FLOATING = 1;
-	
-	private static final int INDEX_OF_TASKNAME_FOR_ADD_FLOATING = 0;
+	private static final String FORMAT_DEFAULT_TIME = "00:00";
+	private static final String FORMAT_DATE_TIME = "dd/MM/yyyy'T'HH:mm";
 	
 	public AddCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
 		_parameters = parameters;
+		
+		if (getTempStorageManipulator() == null) {
+			_tempStorageManipulator = new TempStorageManipulator();
+		}
 	}
 	
 	public Response executeCommand() {
@@ -43,44 +45,76 @@ public class AddCommand extends Command {
 	}
 	
 	private boolean isAddFloatingTask() {
-		if (_parameters.size() == SIZE_OF_PARAMETERS_STORAGE_FOR_ADD_FLOATING) {
-			return true;
+		for (int i = 0; i < _parameters.size(); i++) {
+			Parameter parameter = _parameters.get(i);
+			ParameterType parameterType = parameter.getParameterType();
+			
+			if (parameterType == ParameterType.DATE || parameterType == ParameterType.START_DATE) {
+				return false;
+			}
 		}
 		
-		return false;
+		return true;
 	}
 	
-	private Response addFloatingTask() {		
-		Parameter taskNameParameter = _parameters.get(INDEX_OF_TASKNAME_FOR_ADD_FLOATING);
-		String taskName = taskNameParameter.getParameterValue();
-		
+	private Response addFloatingTask() {
 		Response responseForAddFloating = new Response();
-		responseForAddFloating = processFloatingTaskForStorage(taskName);
 		
+		String taskName = "";
+		String priority = "";
+		String category = "";
+		
+		for (int i = 0; i < _parameters.size(); i++) {
+			Parameter parameter = _parameters.get(i);
+			ParameterType parameterType = parameter.getParameterType();
+			
+			switch (parameterType) {
+				case NAME:
+					taskName = parameter.getParameterValue();
+					break;
+				case PRIORITY:
+					priority = parameter.getParameterValue();
+					break;
+				case CATEGORY:
+					category = parameter.getParameterValue();
+					break;
+			}
+		}
+		
+		responseForAddFloating = processFloatingTaskForStorage(taskName, priority, category);
 		return responseForAddFloating;
 	}
 	
-	private Response processFloatingTaskForStorage(String taskName) {
+	private Response processFloatingTaskForStorage(String taskName, String priority, String category) {
 		Response responseForAddFloating = new Response();
 		
-		Entry floatingTask = formatFloatingTaskForStorage(taskName);
+		Entry floatingTask = formatFloatingTaskParameters(taskName, priority, category);
 		
-		StorageHandler storageHandler = StorageHandler.getInstance();
-		
-		if (storageHandler.isAddToFileSuccessful(floatingTask)) {
+		try {
+			_tempStorageManipulator.addToTempStorage(floatingTask);
 			setSuccessResponseForAdd(responseForAddFloating, taskName);
-		} else {
+		} catch (IOException ex) {
 			setFailureResponseForAdd(responseForAddFloating);
 		}
-		
+			
 		return responseForAddFloating;
 	}
 	
-	private Entry formatFloatingTaskForStorage(String taskName) {
-		String formattedTaskName = "Name: " + taskName;
-		
+	private Entry formatFloatingTaskParameters(String taskName, String priority, String category) {
 		Entry floatingTask = new Entry();
-		floatingTask.addToDetails(formattedTaskName);
+		
+		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
+		floatingTask.addToParameters(taskNameParameter);
+		
+		if (!priority.isEmpty()) {
+			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
+			floatingTask.addToParameters(priorityParameter);
+		}
+		
+		if (!category.isEmpty()) {
+			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
+			floatingTask.addToParameters(categoryParameter);
+		}
 		
 		return floatingTask;
 	}
@@ -89,10 +123,7 @@ public class AddCommand extends Command {
 		response.setIsSuccess(true);
 		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_ADD, taskName);
 		response.setFeedback(userFeedback);
-	}
-	
-	private String getFeedbackForUser(String feedbackMessage, String details) {
-		return String.format(feedbackMessage, details);
+		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
 	
 	private void setFailureResponseForAdd(Response response) {
@@ -113,13 +144,15 @@ public class AddCommand extends Command {
 		
 		return false;
 	}
-	
+		
 	private Response addDeadlineTask() {
 		Response responseForAddDeadline = new Response();
 		
 		String taskName = "";
 		String date = "";
 		String time = "";
+		String priority = "";
+		String category = "";
 		
 		for (int i = 0; i < _parameters.size(); i++) {
 			Parameter parameter = _parameters.get(i);
@@ -135,13 +168,19 @@ public class AddCommand extends Command {
 				case TIME:
 					time = parameter.getParameterValue();
 					break;
+				case PRIORITY:
+					priority = parameter.getParameterValue();
+					break;
+				case CATEGORY:
+					category = parameter.getParameterValue();
+					break;
 			}
 		}
 		
 		responseForAddDeadline = validateDateTimeDetailsForDeadlineTask(date, time);
 		
-		if (responseForAddDeadline.getIsSuccess() == true) {
-			responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time);
+		if (responseForAddDeadline.isSuccess() == true) {
+			responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);
 		}
 	
 		return responseForAddDeadline;
@@ -149,6 +188,11 @@ public class AddCommand extends Command {
 	
 	private Response validateDateTimeDetailsForDeadlineTask(String date, String time) {
 		Response responseForDateTime = new Response();
+		
+		if (date.isEmpty()) {
+			setFailureResponseForNoDate(responseForDateTime);
+			return responseForDateTime;
+		}
 		
 		String dateTime = getDateTimeFormat(date, time);
 		Date inputDate = getInputDate(dateTime);
@@ -158,9 +202,15 @@ public class AddCommand extends Command {
 		return responseForDateTime;
 	}
 	
+	private void setFailureResponseForNoDate(Response response) {
+		response.setIsSuccess(false);
+		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
+		response.setException(exObj);
+	}
+	
 	private String getDateTimeFormat(String date, String time) {
 		if (time.isEmpty()) {
-			time = DEFAULT_TIME_FORMAT;
+			time = FORMAT_DEFAULT_TIME;
 		}
 		
 		String dateTime = date.concat("T").concat(time);
@@ -170,10 +220,10 @@ public class AddCommand extends Command {
 	
 	private Date getInputDate(String dateTime) {
 		 try {
-			 DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+			 DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
 	         dateFormat.setLenient(false);
 	         Date inputDate = dateFormat.parse(dateTime);
-	         
+ 	         
 	         return inputDate;
 	     } catch (ParseException e) {
 	         return null;
@@ -209,33 +259,45 @@ public class AddCommand extends Command {
 		response.setException(exObj);
 	}
 	
-	private Response processDeadlineTaskForStorage(String taskName, String date, String time) {
+	private Response processDeadlineTaskForStorage(String taskName, String date, String time, String priority, 
+			                                       String category) {
 		Response responseForAddDeadline = new Response();
 		
-		Entry deadlineTask = formatDeadlineTaskForStorage(taskName, date, time);
+		Entry deadlineTask = formatDeadlineTaskParameters(taskName, date, time, priority, category);
 		
-		StorageHandler storageHandler = StorageHandler.getInstance();
-		
-		if (storageHandler.isAddToFileSuccessful(deadlineTask)) {
+		try {
+			_tempStorageManipulator.addToTempStorage(deadlineTask);
 			setSuccessResponseForAdd(responseForAddDeadline, taskName);
-		} else {
+		} catch (IOException ex) {
 			setFailureResponseForAdd(responseForAddDeadline);
 		}
 		
 		return responseForAddDeadline;
 	}
 	
-	private Entry formatDeadlineTaskForStorage(String taskName, String date, String time) {
-		String formattedTaskName = "Name: " + taskName;
-		String formattedDate = "Due date: " + date;
-		
+	private Entry formatDeadlineTaskParameters(String taskName, String date, String time, String priority,
+			                                   String category) {
 		Entry deadlineTask = new Entry();
-		deadlineTask.addToDetails(formattedTaskName);
-		deadlineTask.addToDetails(formattedDate);
+		
+		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
+		deadlineTask.addToParameters(taskNameParameter);
+		
+		Parameter dateParameter = new Parameter(ParameterType.DATE, date);
+		deadlineTask.addToParameters(dateParameter);
 		
 		if (!time.isEmpty()) {
-			String formattedTime = "Due time: " + time;
-			deadlineTask.addToDetails(formattedTime);
+			Parameter timeParameter = new Parameter(ParameterType.TIME, time);
+			deadlineTask.addToParameters(timeParameter);
+		}
+		
+		if (!priority.isEmpty()) {
+			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
+			deadlineTask.addToParameters(priorityParameter);
+		}
+		
+		if (!category.isEmpty()) {
+			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
+			deadlineTask.addToParameters(categoryParameter);
 		}
 		
 		return deadlineTask;
@@ -262,6 +324,8 @@ public class AddCommand extends Command {
 		String startTime = "";
 		String endDate = "";
 		String endTime = "";
+		String priority = "";
+		String category = "";
 		
 		for (int i = 0; i < _parameters.size(); i++) {
 			Parameter parameter = _parameters.get(i);
@@ -283,6 +347,12 @@ public class AddCommand extends Command {
 				case END_TIME:
 					endTime = parameter.getParameterValue();
 					break;
+				case PRIORITY:
+					priority = parameter.getParameterValue();
+					break;
+				case CATEGORY:
+					category = parameter.getParameterValue();
+					break;
 			}
 		}
 		
@@ -292,8 +362,9 @@ public class AddCommand extends Command {
 		
 		responseForAddEvent = validateDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
 		
-		if (responseForAddEvent.getIsSuccess() == true) {
-			responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, endTime);
+		if (responseForAddEvent.isSuccess() == true) {
+			responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, endTime, 
+					                                     priority, category);
 		}
 		
 		return responseForAddEvent;
@@ -303,12 +374,17 @@ public class AddCommand extends Command {
                                                      String endTime) {
 		Response responseForDateTime = new Response();
 		
+		if (startDate.isEmpty()) {
+			setFailureResponseForNoStartDate(responseForDateTime);
+			return responseForDateTime;
+		}
+		
 		String startDateTime = getDateTimeFormat(startDate, startTime);
 		Date inputStartDate = getInputDate(startDateTime);
 		Date todayDate = new Date();
 		responseForDateTime = checkValidityOfInputDate(inputStartDate, todayDate);
 		
-		if (responseForDateTime.getIsSuccess() == true) {			
+		if (responseForDateTime.isSuccess() == true) {			
 			String endDateTime = getDateTimeFormat(endDate, endTime);
 			Date inputEndDate = getInputDate(endDateTime);
 			responseForDateTime = checkValidityOfInputDate(inputEndDate, inputStartDate);
@@ -317,43 +393,60 @@ public class AddCommand extends Command {
 		return responseForDateTime;
 	}
 	
-	private Response processEventForStorage(String eventName, String startDate, String startTime, 
-                                            String endDate, String endTime) {
+	private void setFailureResponseForNoStartDate(Response response) {
+		response.setIsSuccess(false);
+		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
+		response.setException(exObj);
+	}
+	
+	private Response processEventForStorage(String eventName, String startDate, String startTime, String endDate, 
+                                            String endTime, String priority, String category) {
 		Response responseForEvent = new Response();
 		
-		Entry event = formatEventForStorage(eventName, startDate, startTime, endDate, endTime);
+		Entry event = formatEventParameters(eventName, startDate, startTime, endDate, endTime,
+				                            priority, category);
 		
-		StorageHandler storageHandler = StorageHandler.getInstance();
-		
-		if (storageHandler.isAddToFileSuccessful(event)) {
+		try {
+			_tempStorageManipulator.addToTempStorage(event);
 			setSuccessResponseForAdd(responseForEvent, eventName);
-		} else {
+		} catch (IOException ex) {
 			setFailureResponseForAdd(responseForEvent);
 		}
 		
 		return responseForEvent;
 	}
 	
-	private Entry formatEventForStorage(String eventName, String startDate, String startTime, 
-                                        String endDate, String endTime) {
-		String formattedEventName = "Name: " + eventName;
-		String formattedStartDate = "Start date: " + startDate;
-		
+	private Entry formatEventParameters(String eventName, String startDate, String startTime, String endDate,
+                                        String endTime, String priority, String category) {
 		Entry event = new Entry();
-		event.addToDetails(formattedEventName);
-		event.addToDetails(formattedStartDate);
+		
+		Parameter eventNameParameter = new Parameter(ParameterType.NAME, eventName);
+		event.addToParameters(eventNameParameter);
+		
+		Parameter startDateParameter = new Parameter(ParameterType.START_DATE, startDate);
+		event.addToParameters(startDateParameter);
 		
 		if (!startTime.isEmpty()) {
-			String formattedStartTime = "Start time: " + startTime;
-			event.addToDetails(formattedStartTime);
+			Parameter startTimeParameter = new Parameter(ParameterType.START_TIME, startTime);
+			event.addToParameters(startTimeParameter);
 		}
 		
-		String formattedEndDate = "End date: " + endDate;
-		event.addToDetails(formattedEndDate);
+		Parameter endDateParameter = new Parameter(ParameterType.END_DATE, endDate);
+		event.addToParameters(endDateParameter);
 		
 		if (!endTime.isEmpty()) {
-			String formattedEndTime = "End time: " + endTime;
-			event.addToDetails(formattedEndTime);
+			Parameter endTimeParameter = new Parameter(ParameterType.END_TIME, endTime);
+			event.addToParameters(endTimeParameter);
+		}
+		
+		if (!priority.isEmpty()) {
+			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
+			event.addToParameters(priorityParameter);
+		}
+		
+		if (!category.isEmpty()) {
+			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
+			event.addToParameters(categoryParameter);
 		}
 		
 		return event;

@@ -31,7 +31,7 @@ public class OpenCommand extends Command{
 		Response responseForOpen = new Response();
 			
 		try {
-			_tempStorageManipulator.repopulate(fileName);;
+			_tempStorageManipulator.repopulate(fileName);
 			setSuccessResponseForOpen(responseForOpen, fileName);
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidOpen(responseForOpen, ex);
