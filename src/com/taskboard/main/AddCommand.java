@@ -2,10 +2,6 @@ package com.taskboard.main;
 
 import java.io.IOException;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,13 +9,13 @@ public class AddCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
-	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
-	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
-	
-	private static final String FORMAT_DEFAULT_TIME = "00:00";
-	private static final String FORMAT_DATE_TIME = "dd/MM/yyyy'T'HH:mm";
+//	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
+//	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
+//	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
+//	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
+//	
+//	private static final String FORMAT_DEFAULT_TIME = "00:00";
+//	private static final String FORMAT_DATE_TIME = "dd/MM/yyyy'T'HH:mm";
 	
 	public AddCommand(CommandType commandType, ArrayList<Parameter> parameters) {
 		_commandType = commandType;
@@ -119,9 +115,9 @@ public class AddCommand extends Command {
 		return floatingTask;
 	}
 	
-	private void setSuccessResponseForAdd(Response response, String taskName) {
+	private void setSuccessResponseForAdd(Response response, String entryName) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_ADD, taskName);
+		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_ADD, entryName);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
@@ -177,7 +173,9 @@ public class AddCommand extends Command {
 			}
 		}
 		
-		responseForAddDeadline = validateDateTimeDetailsForDeadlineTask(date, time);
+		DateTimeValidator dateTimeValidator = new DateTimeValidator();
+		Date currentDate = new Date();
+		responseForAddDeadline = dateTimeValidator.validateDateTimeDetails(date, time, currentDate);
 		
 		if (responseForAddDeadline.isSuccess() == true) {
 			responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);
@@ -186,78 +184,78 @@ public class AddCommand extends Command {
 		return responseForAddDeadline;
 	}
 	
-	private Response validateDateTimeDetailsForDeadlineTask(String date, String time) {
-		Response responseForDateTime = new Response();
-		
-		if (date.isEmpty()) {
-			setFailureResponseForNoDate(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		String dateTime = getDateTimeFormat(date, time);
-		Date inputDate = getInputDate(dateTime);
-		Date todayDate = new Date();
-		responseForDateTime = checkValidityOfInputDate(inputDate, todayDate);
-		
-		return responseForDateTime;
-	}
-	
-	private void setFailureResponseForNoDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
-		response.setException(exObj);
-	}
-	
-	private String getDateTimeFormat(String date, String time) {
-		if (time.isEmpty()) {
-			time = FORMAT_DEFAULT_TIME;
-		}
-		
-		String dateTime = date.concat("T").concat(time);
-		
-		return dateTime;
-	}
-	
-	private Date getInputDate(String dateTime) {
-		 try {
-			 DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
-	         dateFormat.setLenient(false);
-	         Date inputDate = dateFormat.parse(dateTime);
- 	         
-	         return inputDate;
-	     } catch (ParseException e) {
-	         return null;
-	     }
-	}
-	
-	private Response checkValidityOfInputDate(Date inputDate, Date referenceDate) {
-		Response responseForInputDate = new Response();
-		
-		if (inputDate == null) {
-			setFailureResponseForInvalidDateTime(responseForInputDate);
-		} else {
-			
-			if (inputDate.after(referenceDate)) {
-				responseForInputDate.setIsSuccess(true);
-			} else {
-				setFailureResponseForPastDateTime(responseForInputDate);
-			}
-		}	
-		
-		return responseForInputDate;
-	}
-	
-	private void setFailureResponseForInvalidDateTime(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
-		response.setException(exObj);
-	}
-	
-	private void setFailureResponseForPastDateTime(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
-		response.setException(exObj);
-	}
+//	private Response validateDateTimeDetailsForDeadlineTask(String date, String time) {
+//		Response responseForDateTime = new Response();
+//		
+//		if (date.isEmpty()) {
+//			setFailureResponseForNoDate(responseForDateTime);
+//			return responseForDateTime;
+//		}
+//		
+//		String dateTime = getDateTimeFormat(date, time);
+//		Date inputDate = getInputDate(dateTime);
+//		Date todayDate = new Date();
+//		responseForDateTime = checkValidityOfInputDate(inputDate, todayDate);
+//		
+//		return responseForDateTime;
+//	}
+//	
+//	private void setFailureResponseForNoDate(Response response) {
+//		response.setIsSuccess(false);
+//		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
+//		response.setException(exObj);
+//	}
+//	
+//	private String getDateTimeFormat(String date, String time) {
+//		if (time.isEmpty()) {
+//			time = FORMAT_DEFAULT_TIME;
+//		}
+//		
+//		String dateTime = date.concat("T").concat(time);
+//		
+//		return dateTime;
+//	}
+//	
+//	private Date getInputDate(String dateTime) {
+//		 try {
+//			 DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
+//	         dateFormat.setLenient(false);
+//	         Date inputDate = dateFormat.parse(dateTime);
+// 	         
+//	         return inputDate;
+//	     } catch (ParseException e) {
+//	         return null;
+//	     }
+//	}
+//	
+//	private Response checkValidityOfInputDate(Date inputDate, Date referenceDate) {
+//		Response responseForInputDate = new Response();
+//		
+//		if (inputDate == null) {
+//			setFailureResponseForInvalidDateTime(responseForInputDate);
+//		} else {
+//			
+//			if (inputDate.after(referenceDate)) {
+//				responseForInputDate.setIsSuccess(true);
+//			} else {
+//				setFailureResponseForPastDateTime(responseForInputDate);
+//			}
+//		}	
+//		
+//		return responseForInputDate;
+//	}
+//	
+//	private void setFailureResponseForInvalidDateTime(Response response) {
+//		response.setIsSuccess(false);
+//		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
+//		response.setException(exObj);
+//	}
+//	
+//	private void setFailureResponseForPastDateTime(Response response) {
+//		response.setIsSuccess(false);
+//		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
+//		response.setException(exObj);
+//	}
 	
 	private Response processDeadlineTaskForStorage(String taskName, String date, String time, String priority, 
 			                                       String category) {
@@ -360,7 +358,15 @@ public class AddCommand extends Command {
 			endDate = startDate;
 		}
 		
-		responseForAddEvent = validateDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
+		DateTimeValidator startDateTimeValidator = new DateTimeValidator();
+		Date currentDate = new Date();
+		responseForAddEvent = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, currentDate);
+		
+		if (responseForAddEvent.isSuccess() == true) {
+			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
+			Date inputStartDate = startDateTimeValidator.getInputDate();
+			responseForAddEvent = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
+		}
 		
 		if (responseForAddEvent.isSuccess() == true) {
 			responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, endTime, 
@@ -370,34 +376,34 @@ public class AddCommand extends Command {
 		return responseForAddEvent;
 	}
 	
-	private Response validateDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
-                                                     String endTime) {
-		Response responseForDateTime = new Response();
-		
-		if (startDate.isEmpty()) {
-			setFailureResponseForNoStartDate(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		String startDateTime = getDateTimeFormat(startDate, startTime);
-		Date inputStartDate = getInputDate(startDateTime);
-		Date todayDate = new Date();
-		responseForDateTime = checkValidityOfInputDate(inputStartDate, todayDate);
-		
-		if (responseForDateTime.isSuccess() == true) {			
-			String endDateTime = getDateTimeFormat(endDate, endTime);
-			Date inputEndDate = getInputDate(endDateTime);
-			responseForDateTime = checkValidityOfInputDate(inputEndDate, inputStartDate);
-		}
-		
-		return responseForDateTime;
-	}
-	
-	private void setFailureResponseForNoStartDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
-		response.setException(exObj);
-	}
+//	private Response validateDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
+//                                                     String endTime) {
+//		Response responseForDateTime = new Response();
+//		
+//		if (startDate.isEmpty()) {
+//			setFailureResponseForNoStartDate(responseForDateTime);
+//			return responseForDateTime;
+//		}
+//		
+//		String startDateTime = getDateTimeFormat(startDate, startTime);
+//		Date inputStartDate = getInputDate(startDateTime);
+//		Date todayDate = new Date();
+//		responseForDateTime = checkValidityOfInputDate(inputStartDate, todayDate);
+//		
+//		if (responseForDateTime.isSuccess() == true) {			
+//			String endDateTime = getDateTimeFormat(endDate, endTime);
+//			Date inputEndDate = getInputDate(endDateTime);
+//			responseForDateTime = checkValidityOfInputDate(inputEndDate, inputStartDate);
+//		}
+//		
+//		return responseForDateTime;
+//	}
+//	
+//	private void setFailureResponseForNoStartDate(Response response) {
+//		response.setIsSuccess(false);
+//		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
+//		response.setException(exObj);
+//	}
 	
 	private Response processEventForStorage(String eventName, String startDate, String startTime, String endDate, 
                                             String endTime, String priority, String category) {
