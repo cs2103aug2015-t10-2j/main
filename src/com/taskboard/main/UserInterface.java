@@ -70,7 +70,7 @@ public class UserInterface extends JFrame {
                 		System.exit(0);
                 	} else {
                 		Response currentResponse = getLogic().processCommand(userInput);
-                		if (currentResponse.getIsSuccess()) {
+                		if (currentResponse.isSuccess()) {
                 			String feedback = currentResponse.getFeedback().trim();
                 			if (userInput.toLowerCase().equals("view")) {
                 				_displayArea.setText(feedback);
@@ -106,7 +106,7 @@ public class UserInterface extends JFrame {
             		System.exit(0);
             	} else {
             		Response currentResponse = getLogic().processCommand(userInput);
-            		if (currentResponse.getIsSuccess()) {
+            		if (currentResponse.isSuccess()) {
             			String feedback = currentResponse.getFeedback().trim();
             			if (userInput.toLowerCase().equals("view")) {
             				_displayArea.setText(feedback);
