@@ -23,7 +23,7 @@ import com.taskboard.main.DateFormatValidator;
 public class TaskBoardTest {
 	
 	@Test
-	public void testCommandType() {
+	public void testCommandTypeParser() {
 		assertCommandType(CommandType.ADD, "Add Hello; by tomorrow 10pm");
 		assertCommandType(CommandType.EDIT, "edit Hello; by today");
 		assertCommandType(CommandType.DELETE, "deLeTe Hello");
@@ -31,8 +31,12 @@ public class TaskBoardTest {
 		assertCommandType(CommandType.UNKNOWN, "tHrow");
 	}
 	
+	private void assertCommandType(CommandType expected, String command) {
+		assertEquals(expected, new CommandTypeParser().parseCommandType(command)); 
+	}
+	
 	@Test
-	public void TestParameters() {
+	public void TestParameterParser() {
 		ArrayList<Parameter> expected1 = new ArrayList<Parameter>();
 		expected1.add(new Parameter(ParameterType.NAME, "Hello World!"));
 		Collections.reverse(expected1);
@@ -102,10 +106,6 @@ public class TaskBoardTest {
 		expected10.add(new Parameter(ParameterType.CATEGORY, "Homework"));
 		Collections.reverse(expected10);
 		assertViewParameters(expected10, "view by 25/10/2015 cat Homework");
-	}
-
-	private void assertCommandType(CommandType expected, String command) {
-		assertEquals(expected, new CommandTypeParser().parseCommandType(command)); 
 	}
 	
 	private void assertAddParameters(ArrayList<Parameter> expected, String command) {
