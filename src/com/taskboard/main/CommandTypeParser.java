@@ -28,6 +28,12 @@ public class CommandTypeParser {
 			case "n":
 			case "new":
 				return CommandType.NEW;
+			case "h":
+			case "help":
+			case "cmd":
+			case "command":
+			case "commands":
+				return CommandType.HELP;
 			case "esc":
 			case "exit":
 				return CommandType.EXIT;

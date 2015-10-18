@@ -65,7 +65,10 @@ public class CommandParser {
 				_parameterParser = new ViewParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing VIEW command string");
-				return new ViewCommand(newCommandType, null);
+				return new ViewCommand(newCommandType, newCommandParameters);
+			case HELP:
+				// TBA: implement HelpCommand
+				// return new HelpCommand();
 			case UNKNOWN:
 				_logger.log(Level.INFO, "Finished parsing UNKNOWN command string");
 				return new InvalidCommand(null, null);
