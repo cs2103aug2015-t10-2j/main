@@ -40,7 +40,7 @@ public class TempStorageManipulator {
 		_storageHandler.updateTempStorageToFile(_tempStorage);	
 	}
 	
-	public void editTempStorage(Integer i, ArrayList<String> newContent) throws IOException {
+	public void editTempStorage(int i, ArrayList<Parameter> newContent) throws IOException {
 		Entry editedEntry = _tempStorage.get(i);
 		ArrayList<Parameter> entryDetails = editedEntry.getParameters();
 		replaceWithNewContent(entryDetails, newContent);
@@ -49,26 +49,26 @@ public class TempStorageManipulator {
 		setTempStorageToFile(_tempStorage);
 	}
 	
-	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<String> newContent) {
+	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent) {
 		boolean isDetailPresent = false;
 		
 		for (int i = 1; i < newContent.size(); i++) {
-			String newFormattedDetail = newContent.get(i);
+			Parameter newFormattedDetail = newContent.get(i);
 //			String[] newFormattedDetailSegments = newFormattedDetail.split(":");
 			
 			for (int j = 0; j < entryDetails.size(); j++) {
 //				String existingFormattedDetail = entryDetails.get(j).getParameterValue();
 				
-				if (entryDetails.get(j).getParameterType() == ParameterType.valueOf(newFormattedDetail)) {					
-					entryDetails.get(j).setParameterValue(newFormattedDetail);
+				if (entryDetails.get(j).getParameterType() == newFormattedDetail.getParameterType()) {					
+					entryDetails.get(j).setParameterValue(newFormattedDetail.getParameterValue());
 					isDetailPresent = true;
 				} 
 			}
 			
 			if (!isDetailPresent) {
 				Parameter newParameter = new Parameter();
-				newParameter.setParameterType(ParameterType.valueOf(newFormattedDetail));
-				newParameter.setParameterValue(newFormattedDetail);
+				newParameter.setParameterType(newFormattedDetail.getParameterType());
+				newParameter.setParameterValue(newFormattedDetail.getParameterValue());
 				entryDetails.add(newParameter);
 			}
 			
@@ -76,13 +76,13 @@ public class TempStorageManipulator {
 		}
 	}
 	
-	public void deleteFromTempStorage(Integer i) throws IOException {
+	public void deleteFromTempStorage(int i) throws IOException {
 		_tempStorage.remove(i);
 		setTempStorageToFile(_tempStorage);
 
 	}		
 
-	public void setCompletedInTempStorage(Integer i) throws IOException {
+	public void setCompletedInTempStorage(int i) throws IOException {
 		Entry entry = _tempStorage.get(i);
 		entry.setCompleted(true);
 		_tempStorage.remove(i);
@@ -91,11 +91,11 @@ public class TempStorageManipulator {
 		setTempArchiveToFile(_tempArchive);
 	}
 
-//	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
-//		_storageHandler.setStorage(entries);
-//	}
+	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
+		_storageHandler.updateTempStorageToFile(entries);
+	}
 	
-//	public void setTempArchiveToFile(ArrayList<Entry> entries) {
-//		_archiveHandler.setStorage(entries);
-//	}
+	public void setTempArchiveToFile(ArrayList<Entry> entries) throws IOException {
+		_archiveHandler.updateTempStorageToFile(entries);
+	}
 }
