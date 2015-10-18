@@ -107,55 +107,22 @@ public class ViewParameterParser implements ParameterParser {
 		
 		switch (delimiterType) {
 			case FROM:
-				for (String parameterToken : parameterString.split(" ")) {
-					if (dateFormatValidator.isValidFormat(parameterToken)) {
-						String startDate = dateFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.START_DATE, startDate));
-					} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-						String startTime = timeFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.START_TIME, startTime));
-					}
-				}
+				parameters.addAll(ParameterParser.getStartDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case TO:
-				for (String parameterToken : parameterString.split(" ")) {
-					if (dateFormatValidator.isValidFormat(parameterToken)) {
-						String endDate = dateFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.END_DATE, endDate));
-					} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-						String endTime = timeFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.END_TIME, endTime));
-					}
-				}
+				parameters.addAll(ParameterParser.getEndDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case BY:
-				for (String parameterToken : parameterString.split(" ")) {
-					if (dateFormatValidator.isValidFormat(parameterToken)) {
-						String date = dateFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.DATE, date));
-					} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-						String time = timeFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.TIME, time));
-					}
-				}
+				parameters.addAll(ParameterParser.getDueDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case EVERY:
 				// TBD: recurring task
 				break;
 			case CAT:
-				String trimmedParameterString = parameterString.trim();
-				parameters.add(new Parameter(ParameterType.CATEGORY, trimmedParameterString));
+				parameters.add(ParameterParser.getCategory(parameterString));
 				break;
 			case PRI:
-				trimmedParameterString = parameterString.trim();
-				if (trimmedParameterString.split(" ").length == 1) {
-					if (priorityFormatValidator.isValidFormat(trimmedParameterString)) {
-						String priority = priorityFormatValidator.toDefaultFormat(trimmedParameterString);
-						parameters.add(new Parameter(ParameterType.PRIORITY, priority));
-					}
-				} else {
-					// TBA: throw exception here
-				}
+				parameters.add(ParameterParser.getPriority(parameterString, priorityFormatValidator));
 				break;
 			default:
 				break;

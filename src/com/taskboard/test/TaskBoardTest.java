@@ -27,6 +27,7 @@ public class TaskBoardTest {
 		assertCommandType(CommandType.ADD, "Add Hello; by tomorrow 10pm");
 		assertCommandType(CommandType.EDIT, "edit Hello; by today");
 		assertCommandType(CommandType.DELETE, "deLeTe Hello");
+		assertCommandType(CommandType.VIEW, "view from tomorrow 5pm to tomorrow 9pm");
 		assertCommandType(CommandType.UNKNOWN, "tHrow");
 	}
 	

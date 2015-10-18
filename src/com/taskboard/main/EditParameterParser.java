@@ -3,11 +3,11 @@ package com.taskboard.main;
 import java.util.ArrayList;
 
 public class EditParameterParser implements ParameterParser {
-	
+
 	public EditParameterParser() {
-		
+
 	}
-	
+
 	public ArrayList<Parameter> parseParameters(String commandString) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
@@ -17,7 +17,7 @@ public class EditParameterParser implements ParameterParser {
 		} else {
 			throw new IllegalArgumentException();
 		}
-		
+
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
 		if (delimiterTypes.isEmpty()) {
 			parameters.addAll(convertToParameters(parameterString, DelimiterType.NONE));
@@ -25,7 +25,7 @@ public class EditParameterParser implements ParameterParser {
 			int expectedDelimiterId = 0;
 			DelimiterType expectedDelimiterType = delimiterTypes.get(expectedDelimiterId);
 			String expectedDelimiterName = expectedDelimiterType.name().toLowerCase();
-			
+
 			String temporaryString = new String();
 			String[] tokens = parameterString.split(" ");
 			for (int i = tokens.length - 1; i >= 0; i--) {
@@ -41,7 +41,7 @@ public class EditParameterParser implements ParameterParser {
 							temporaryString = new String();
 						}
 					}
-					
+
 					expectedDelimiterId++;
 					if (expectedDelimiterId < delimiterTypes.size()) {
 						expectedDelimiterType = delimiterTypes.get(expectedDelimiterId);
@@ -59,13 +59,13 @@ public class EditParameterParser implements ParameterParser {
 				parameters.addAll(convertToParameters(temporaryString, DelimiterType.NONE));
 			}
 		}
-		
+
 		return parameters;
 	}
-	
+
 	private static ArrayList<DelimiterType> extractDelimiterTypes(String parameterString) {
 		ArrayList<DelimiterType> delimiterTypes = new ArrayList<DelimiterType>();
-		
+
 		parameterString = parameterString.toLowerCase();
 		String[] tokens = parameterString.split(" ");
 		for (int i = tokens.length - 1; i >= 0; i--) {
@@ -83,96 +83,55 @@ public class EditParameterParser implements ParameterParser {
 				delimiterTypes.add(DelimiterType.PRI);
 			}
 		}
-		
+
 		return delimiterTypes;
 	}
-	
+
 	private static String reverseTokens(String parameterString) {
 		String resultString = new String();
-		
+
 		String[] tokens = parameterString.split(" ");
 		for (int i = tokens.length - 1; i >= 0; i--) {
 			resultString += tokens[i] + ' ';
 		}
-		
+
 		return resultString.trim();
 	}
-	
+
 	private static ArrayList<Parameter> convertToParameters(String parameterString, DelimiterType delimiterType) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		FormatValidator indexFormatValidator = new IndexFormatValidator();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
 		FormatValidator priorityFormatValidator = new PriorityFormatValidator();
-		
+
 		switch (delimiterType) {
 			case NONE:
-				String trimmedParameterString = parameterString.trim();
-				if (trimmedParameterString.split(" ").length == 1) {
-					if (indexFormatValidator.isValidFormat(parameterString)) {
-						String index = indexFormatValidator.toDefaultFormat(parameterString);
-						parameters.add(new Parameter(ParameterType.INDEX, index));
-					}
-				} else {
-					// TBA: throw exception here
-				}
+				parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
 				break;
 			case FROM:
-				for (String parameterToken : parameterString.split(" ")) {
-					if (dateFormatValidator.isValidFormat(parameterToken)) {
-						String startDate = dateFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.START_DATE, startDate));
-					} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-						String startTime = timeFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.START_TIME, startTime));
-					}
-				}
+				parameters.addAll(ParameterParser.getStartDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case TO:
-				for (String parameterToken : parameterString.split(" ")) {
-					if (dateFormatValidator.isValidFormat(parameterToken)) {
-						String endDate = dateFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.END_DATE, endDate));
-					} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-						String endTime = timeFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.END_TIME, endTime));
-					}
-				}
+				parameters.addAll(ParameterParser.getEndDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case BY:
-				for (String parameterToken : parameterString.split(" ")) {
-					if (dateFormatValidator.isValidFormat(parameterToken)) {
-						String date = dateFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.DATE, date));
-					} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-						String time = timeFormatValidator.toDefaultFormat(parameterToken);
-						parameters.add(new Parameter(ParameterType.TIME, time));
-					}
-				}
+				parameters.addAll(ParameterParser.getDueDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case EVERY:
 				// TBD: recurring task
 				break;
 			case CAT:
-				trimmedParameterString = parameterString.trim();
-				parameters.add(new Parameter(ParameterType.CATEGORY, trimmedParameterString));
+				parameters.add(ParameterParser.getCategory(parameterString));
 				break;
 			case PRI:
-				trimmedParameterString = parameterString.trim();
-				if (trimmedParameterString.split(" ").length == 1) {
-					if (priorityFormatValidator.isValidFormat(trimmedParameterString)) {
-						String priority = priorityFormatValidator.toDefaultFormat(trimmedParameterString);
-						parameters.add(new Parameter(ParameterType.PRIORITY, priority));
-					}
-				} else {
-					// TBA: throw exception here
-				}
+				parameters.add(ParameterParser.getPriority(parameterString, priorityFormatValidator));
 				break;
 			default:
 				break;
 		}
-		
+
 		return parameters;
 	}
-	
+
 }
