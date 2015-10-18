@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class DateTimeValidator {
 	
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	
@@ -34,27 +33,16 @@ public class DateTimeValidator {
 	public Response validateDateTimeDetails(String date, String time, Date referenceDate) {
 		Response responseForDateTime = new Response();
 		
-		if (date.isEmpty()) {
-			setFailureResponseForNoDate(responseForDateTime);
-			return responseForDateTime;
-		}
-		
 		String dateTime = getDateTimeFormat(date, time);
 		_inputDate = getInputDate(dateTime);
 		
 		if (_inputDate == null) {
 			setFailureResponseForInvalidDateTime(responseForDateTime);
-		} else {
+		} else if (referenceDate != null){
 			responseForDateTime = checkValidityOfInputDate(referenceDate);
 		}
 		
 		return responseForDateTime;
-	}
-	
-	private void setFailureResponseForNoDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
-		response.setException(exObj);
 	}
 	
 	private String getDateTimeFormat(String date, String time) {
