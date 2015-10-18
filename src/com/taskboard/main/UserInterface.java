@@ -6,12 +6,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 import java.util.logging.*;
+import java.util.ArrayList;
 
 public class UserInterface extends JFrame {
 
 	private static final long serialVersionUID = 1;
-	private static final String DISPLAY_SUCCESSFUL_MESSAGE = "Successfully displayed all entries.";
-	private static final String NOTHING_DISPLAYED_MESSAGE = "Nothing to display.";
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
 	
 	private Logic _logic;
@@ -77,16 +76,18 @@ public class UserInterface extends JFrame {
                 	} else {
                 		Response currentResponse = getLogic().processCommand(userInput);
                 		if (currentResponse.isSuccess()) {
+                			ArrayList<Entry> entries = currentResponse.getEntries();
                 			String feedback = currentResponse.getFeedback().trim();
-                			if (userInput.toLowerCase().equals("view")) {
-                				_displayArea.setText(feedback);
-                				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
-                				logger.log(Level.INFO, "Successfully displayed all tasks.");
-                			} else {
-                				_displayArea.setText(new String(NOTHING_DISPLAYED_MESSAGE));
-                				_feedbackArea.setText(feedback);
-                				logger.log(Level.INFO,  "Nothing is displayed");
+                			
+                			String entriesString = "";
+                			for (int i = 0; i < entries.size(); i++) {
+                				entriesString += entries.get(i).toString();
+                				entriesString += "\n";
                 			}
+                			
+                			_displayArea.setText(entriesString);
+                			_feedbackArea.setText(feedback);
+                			logger.log(Level.INFO, "Successfully updated display.");
                 		} else {
                 			String exception = currentResponse.getException().getMessage();
                 			_displayArea.setText("No entry to display");
@@ -99,38 +100,7 @@ public class UserInterface extends JFrame {
             }
         });
 		
-		_submitButton = new JButton("Submit");
-		cp.add(_submitButton);
-		
-		_submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-            	String userInput = _commandField.getText();
-            	
-            	if (userInput.toLowerCase().equals("exit")) {
-            		logger.log(Level.INFO, "System exit.");
-            		System.exit(0);
-            	} else {
-            		Response currentResponse = getLogic().processCommand(userInput);
-            		if (currentResponse.isSuccess()) {
-            			String feedback = currentResponse.getFeedback().trim();
-            			if (userInput.toLowerCase().equals("view")) {
-            				_displayArea.setText(feedback);
-            				_feedbackArea.setText(new String(DISPLAY_SUCCESSFUL_MESSAGE));
-            				logger.log(Level.INFO, "Successfully displayed all tasks.");
-            			} else {
-            				_displayArea.setText(new String(NOTHING_DISPLAYED_MESSAGE));
-            				_feedbackArea.setText(feedback);
-            				logger.log(Level.INFO, "Nothing is displayed.");
-            			}
-            		}
-            	}
-            	
-                _commandField.setText("");
-            }
-        });
-		
-		createLayout(new JComponent[]{_title, _displayArea, _feedbackArea, _commandLabel, _commandField, _submitButton});
+		createLayout(new JComponent[]{_title, _displayArea, _feedbackArea, _commandLabel, _commandField});
 		_commandField.requestFocusInWindow();
 		
 		setTitle(TITLE);
@@ -154,7 +124,6 @@ public class UserInterface extends JFrame {
 	    			.addComponent(arg[2])
 	    			.addComponent(arg[3])
 	    			.addComponent(arg[4])
-	    			.addComponent(arg[5])
 		    	)
 	    );
 	
@@ -168,8 +137,6 @@ public class UserInterface extends JFrame {
 			    .addComponent(arg[3])
 			    .addGap(10)
 			    .addComponent(arg[4])
-			    .addGap(10)
-			    .addComponent(arg[5])
 	    );
         
 	    pack();

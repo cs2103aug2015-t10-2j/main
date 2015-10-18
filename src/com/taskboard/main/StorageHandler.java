@@ -258,7 +258,7 @@ public class StorageHandler {
 		ArrayList<Parameter> parameters = entry.getParameters();
 		
 		for (int i = 0; i < parameters.size(); i++) {
-			String entrydetails = parameters.get(i).toString();
+			String entrydetails = parameters.get(i).getParameterValue();
 			fileToAdd.write(entrydetails);
 			fileToAdd.write("\n");
 			fileToAdd.flush();
