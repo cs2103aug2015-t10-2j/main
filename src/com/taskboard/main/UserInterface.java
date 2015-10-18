@@ -77,16 +77,21 @@ public class UserInterface extends JFrame {
                 		Response currentResponse = getLogic().processCommand(userInput);
                 		if (currentResponse.isSuccess()) {
                 			ArrayList<Entry> entries = currentResponse.getEntries();
-                			String feedback = currentResponse.getFeedback().trim();
-                			
-                			String entriesString = "";
-                			for (int i = 0; i < entries.size(); i++) {
-                				entriesString += entries.get(i).toString();
-                				entriesString += "\n";
+                			if (currentResponse.getFeedback() != null) {
+                				String feedback = currentResponse.getFeedback().trim();
+                				_feedbackArea.setText(feedback);
                 			}
                 			
-                			_displayArea.setText(entriesString);
-                			_feedbackArea.setText(feedback);
+                			if (currentResponse.getEntries() != null) {
+	                			String entriesString = "";
+	                			for (int i = 0; i < entries.size(); i++) {
+	                				entriesString += entries.get(i).toString();
+	                				entriesString += "\n";
+	                			}
+	                			
+	                			_displayArea.setText(entriesString);
+                			}
+                			
                 			logger.log(Level.INFO, "Successfully updated display.");
                 		} else {
                 			String exception = currentResponse.getException().getMessage();
