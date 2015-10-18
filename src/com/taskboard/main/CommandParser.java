@@ -40,38 +40,38 @@ public class CommandParser {
 				_parameterParser = new OpenParameterParser();
 				ArrayList<Parameter> newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing NEW command string");
-				return new NewCommand(newCommandType, newCommandParameters);
+				return new NewCommand(newCommandParameters);
 			case OPEN:
 				_parameterParser = new OpenParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing OPEN command string");
-				return new OpenCommand(newCommandType, newCommandParameters);
+				return new OpenCommand(newCommandParameters);
 			case ADD:
 				_parameterParser = new AddParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing ADD command string");
-				return new AddCommand(newCommandType, newCommandParameters);
+				return new AddCommand(newCommandParameters);
 			case EDIT:
 				_parameterParser = new EditParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing EDIT command string");
-				return new EditCommand(newCommandType, newCommandParameters);
+				return new EditCommand(newCommandParameters);
 			case DELETE:
 				_parameterParser = new DeleteParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing DELETE command string");
-				return new DeleteCommand(newCommandType, newCommandParameters);
+				return new DeleteCommand(newCommandParameters);
 			case VIEW:
 				_parameterParser = new ViewParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing VIEW command string");
-				return new ViewCommand(newCommandType, newCommandParameters);
+				return new ViewCommand(newCommandParameters);
 			case HELP:
 				// TBA: implement HelpCommand
 				// return new HelpCommand();
 			case UNKNOWN:
 				_logger.log(Level.INFO, "Finished parsing UNKNOWN command string");
-				return new InvalidCommand(null, null);
+				return new InvalidCommand(null);
 			default:
 				_logger.log(Level.SEVERE, "Unexpected execution of unreachable code in CommandParser");
 				assert false : "Unexpected execution of unreachable code";
