@@ -20,7 +20,6 @@ public class UserInterface extends JFrame {
 	private JTextArea _feedbackArea;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
-	private JButton _submitButton;
 	
 	private static Logger logger = Logger.getLogger("UserInterface");
 	
