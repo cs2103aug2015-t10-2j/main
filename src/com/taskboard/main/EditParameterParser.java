@@ -158,7 +158,7 @@ public class EditParameterParser implements ParameterParser {
 		
 		switch (delimiterType) {
 			case NONE:
-				parameters.add(ParameterParser.getName(parameterString));
+				parameters.add(ParameterParser.getNewName(parameterString));
 				break;
 			case FROM:
 				parameters.addAll(ParameterParser.getStartDateTime(parameterString, dateFormatValidator, timeFormatValidator));
