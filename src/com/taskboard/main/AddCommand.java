@@ -13,8 +13,7 @@ public class AddCommand extends Command {
 	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
 	
-	public AddCommand(CommandType commandType, ArrayList<Parameter> parameters) {
-		_commandType = commandType;
+	public AddCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
 		
 		if (getTempStorageManipulator() == null) {
@@ -95,6 +94,7 @@ public class AddCommand extends Command {
 		}
 		
 		responseForAddFloating = processFloatingTaskForStorage(taskName, priority, category);
+		
 		return responseForAddFloating;
 	}
 	
@@ -194,9 +194,7 @@ public class AddCommand extends Command {
 			return responseForDateTime;
 		}
 		
-		DateTimeValidator dateTimeValidator = new DateTimeValidator();
-		Date currentDate = new Date();
-		responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, currentDate);
+		responseForDateTime = validateDateTimeDetailsForDeadlineTask(date, time);
 		
 		return responseForDateTime;
 	}
@@ -205,6 +203,16 @@ public class AddCommand extends Command {
 		response.setIsSuccess(false);
 		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
 		response.setException(exObj);
+	}
+	
+	private Response validateDateTimeDetailsForDeadlineTask(String date, String time) {
+		Response responseForDateTime = new Response();
+		
+		DateTimeValidator dateTimeValidator = new DateTimeValidator();
+		Date currentDate = new Date();
+		responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, currentDate);
+		
+		return responseForDateTime;
 	}
 		
 	private Response processDeadlineTaskForStorage(String taskName, String date, String time, String priority, 
@@ -319,16 +327,8 @@ public class AddCommand extends Command {
 			endDate = startDate;
 		}
 		
-		DateTimeValidator startDateTimeValidator = new DateTimeValidator();
-		Date currentDate = new Date();
-		responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, currentDate);
-		
-		if (responseForDateTime.isSuccess() == true) {
-			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
-			Date inputStartDate = startDateTimeValidator.getInputDate();
-			responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
-		}
-		
+		responseForDateTime = validateDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
+				
 		return responseForDateTime;
 	}
 	
@@ -344,29 +344,23 @@ public class AddCommand extends Command {
 		response.setException(exObj);
 	}
 	
-//	private Response validateDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
-//                                                     String endTime) {
-//		Response responseForDateTime = new Response();
-//		
-//		if (startDate.isEmpty()) {
-//			setFailureResponseForNoStartDate(responseForDateTime);
-//			return responseForDateTime;
-//		}
-//		
-//		String startDateTime = getDateTimeFormat(startDate, startTime);
-//		Date inputStartDate = getInputDate(startDateTime);
-//		Date todayDate = new Date();
-//		responseForDateTime = checkValidityOfInputDate(inputStartDate, todayDate);
-//		
-//		if (responseForDateTime.isSuccess() == true) {			
-//			String endDateTime = getDateTimeFormat(endDate, endTime);
-//			Date inputEndDate = getInputDate(endDateTime);
-//			responseForDateTime = checkValidityOfInputDate(inputEndDate, inputStartDate);
-//		}
-//		
-//		return responseForDateTime;
-//	}
+	private Response validateDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
+                                                     String endTime) {
+		Response responseForDateTime = new Response();
 		
+		DateTimeValidator startDateTimeValidator = new DateTimeValidator();
+		Date currentDate = new Date();
+		responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, currentDate);
+		
+		if (responseForDateTime.isSuccess() == true) {
+			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
+			Date inputStartDate = startDateTimeValidator.getInputDate();
+			responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
+		}
+		
+		return responseForDateTime;
+	}
+	
 	private Response processEventForStorage(String eventName, String startDate, String startTime, String endDate, 
                                             String endTime, String priority, String category) {
 		Response responseForEvent = new Response();

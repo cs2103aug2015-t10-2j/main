@@ -9,50 +9,60 @@ public class DeleteCommand extends Command {
 	private static final String MESSAGE_AFTER_DELETE = "\"%1$s\" deleted!";
 	private static final String MESSAGE_ERROR_FOR_DELETE = "The entry could not be deleted from the file.";
 	
-	public DeleteCommand(CommandType commandType, ArrayList<Parameter> parameters) {
-		_commandType = commandType;
+	public DeleteCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
+		
+		if (getTempStorageManipulator() == null) {
+			_tempStorageManipulator = new TempStorageManipulator();
+		}
 	}
 	
 	public Response executeCommand() {
 		Response responseForDelete = new Response();
 		
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter parameter = _parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
+		if (isDeleteByIndex()) {
+			ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
+			IndexValidator indexValidator = new IndexValidator();
 			
-			if (parameterType == ParameterType.NAME) {
-				responseForDelete = deleteByName(parameter);
-			}
+			responseForDelete = indexValidator.checkValidityOfInputIndex(_parameters, entries);
 		}
 		
 		return responseForDelete;
 	}
 	
-	private Response deleteByName(Parameter parameter) {
-		Response responseForDeleteByName = new Response();
-		
-		String taskName = parameter.getParameterValue();
-		
-		StorageHandler storageHandler = StorageHandler.getInstance();
-		
-		if (storageHandler.isDeleteFromFileSuccessful(taskName)) {
-			setSuccessResponseForDeleteByName(responseForDeleteByName, taskName);
-		} else {
-			setFailureResponseForDeleteByName(responseForDeleteByName);
+	private boolean isDeleteByIndex() {
+		for (int i = 0; i < _parameters.size(); i++) {
+			Parameter parameter = _parameters.get(i);
+			ParameterType parameterType = parameter.getParameterType();
+			
+			if (parameterType == ParameterType.INDEX) {
+				return true;
+			}
 		}
 		
-		return responseForDeleteByName;
+		return false; 
 	}
+	
+//	private Response deleteByName(Parameter parameter) {
+//		Response responseForDeleteByName = new Response();
+//		
+//		String taskName = parameter.getParameterValue();
+//		
+//		StorageHandler storageHandler = StorageHandler.getInstance();
+//		
+//		if (storageHandler.isDeleteFromFileSuccessful(taskName)) {
+//			setSuccessResponseForDeleteByName(responseForDeleteByName, taskName);
+//		} else {
+//			setFailureResponseForDeleteByName(responseForDeleteByName);
+//		}
+//		
+//		return responseForDeleteByName;
+//	}
 	
 	private void setSuccessResponseForDeleteByName(Response response, String taskName) {
 		response.setIsSuccess(true);
 		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_DELETE, taskName);
 		response.setFeedback(userFeedback);
-	}
-	
-	private String getFeedbackForUser(String feedbackMessage, String details) {
-		return String.format(feedbackMessage, details);
 	}
 	
 	private void setFailureResponseForDeleteByName(Response response) {

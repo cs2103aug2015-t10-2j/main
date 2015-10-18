@@ -11,9 +11,7 @@ public class NewCommand extends Command {
 	
 	private static final int INDEX_OF_FILENAME = 0;
 	
-	public NewCommand(CommandType commandType, ArrayList<Parameter> parameters) {
-		assert commandType != null;
-		_commandType = commandType;
+	public NewCommand(ArrayList<Parameter> parameters) {
 		assert parameters != null;
 		_parameters = parameters;
 		

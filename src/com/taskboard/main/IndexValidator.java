@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class IndexValidator {
 	
+	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
 	private static final int MIN_ENTRY_INDEX = 1;
 	
 	// constructor
@@ -12,7 +13,9 @@ public class IndexValidator {
 		
 	}
 	
-	public boolean isInputIndexValid(ArrayList<Parameter> parameters, ArrayList<Entry> entries) {
+	public Response checkValidityOfInputIndex(ArrayList<Parameter> parameters, ArrayList<Entry> entries) {
+		Response responseForIndex = new Response();
+		
 		String index = "";
 		
 		for (int i = 0; i < parameters.size(); i++) {
@@ -29,10 +32,17 @@ public class IndexValidator {
 		int maxEntryIndex = entries.size();
 		
 		if (indexValue > maxEntryIndex || indexValue < MIN_ENTRY_INDEX) {
-			return false;
+			setFailureResponseForInvalidIndex(responseForIndex);
+		} else {
+			responseForIndex.setIsSuccess(true);
 		}
 		
-		return true;
+		return responseForIndex;
 	}
-
+	
+	private void setFailureResponseForInvalidIndex(Response response) {
+		response.setIsSuccess(false);
+		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_INVALID_INDEX);
+		response.setException(exObj);
+	}
 }

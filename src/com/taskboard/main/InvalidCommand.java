@@ -6,9 +6,12 @@ public class InvalidCommand extends Command {
 	
 	private static final String MESSAGE_ERROR_INVALID_COMMAND = "Invalid command type provided.";
 	
-	public InvalidCommand(CommandType commandType, ArrayList<Parameter> parameters) {
-		_commandType = commandType;
+	public InvalidCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
+		
+		if (getTempStorageManipulator() == null) {
+			_tempStorageManipulator = new TempStorageManipulator();
+		}
 	}
 	
 	public Response executeCommand() {

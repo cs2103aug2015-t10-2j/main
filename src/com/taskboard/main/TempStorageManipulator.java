@@ -40,7 +40,7 @@ public class TempStorageManipulator {
 		_storageHandler.updateTempStorageToFile(_tempStorage);	
 	}
 	
-	public void editTempStorage(int i, ArrayList<Parameter> newContent) throws IOException {
+	public void editTempStorage(int i, ArrayList<Parameter> newContent, boolean isEntryTypeChanged) throws IOException {
 		Entry editedEntry = _tempStorage.get(i);
 		ArrayList<Parameter> entryDetails = editedEntry.getParameters();
 		replaceWithNewContent(entryDetails, newContent);

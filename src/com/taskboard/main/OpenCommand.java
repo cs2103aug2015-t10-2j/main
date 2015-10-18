@@ -11,8 +11,7 @@ public class OpenCommand extends Command{
 	
 	private static final int INDEX_OF_FILENAME = 0;
 	
-	public OpenCommand(CommandType commandType, ArrayList<Parameter> parameters) {
-		_commandType = commandType;
+	public OpenCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
 		
 		if (getTempStorageManipulator() == null) {

@@ -7,25 +7,9 @@ public abstract class Command {
 	// attributes
 	
 	protected static TempStorageManipulator _tempStorageManipulator;
-	protected CommandType _commandType;
 	protected ArrayList<Parameter> _parameters;
 	
-	// constructors
-	
-//	public Command() {
-//		
-//	}
-//	
-//	public Command(CommandType commandType, ArrayList<Parameter> parameters) {
-//		_commandType = commandType;
-//		_parameters = parameters;
-//	}
-	
 	// accessors
-	
-	public CommandType getCommandType() {
-		return _commandType;
-	}
 		
 	public ArrayList<Parameter> getParameters() {
 		return _parameters;
@@ -37,10 +21,6 @@ public abstract class Command {
 	
 	// mutators
 	
-	public void setCommandType(CommandType newCommandType) {
-		_commandType = newCommandType;
-	}
-	
 	public void setParameters(ArrayList<Parameter> newParameters) {
 		_parameters = newParameters;
 	}
@@ -51,5 +31,3 @@ public abstract class Command {
 	
 	public abstract Response executeCommand(); 
 }
-
-
