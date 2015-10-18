@@ -35,13 +35,30 @@ public class EditParameterParser implements ParameterParser {
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
-		String parameterString = new String();
+		String parameterString = "";
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
 			throw new IllegalArgumentException();
 		}
-
+		
+		if (parameterString.trim().indexOf(" ") != -1) {
+			FormatValidator indexFormatValidator =  new IndexFormatValidator();
+			
+			String indexString = parameterString.substring(0, parameterString.indexOf(" ")).trim();
+			if (indexFormatValidator.isValidFormat(indexString)) {
+				indexString = indexFormatValidator.toDefaultFormat(indexString);
+				parameters.add(new Parameter(ParameterType.INDEX, indexString));
+			} else {
+				// TBA: index not found exception
+			}
+			
+			parameterString = parameterString.substring(parameterString.indexOf(" ")).trim();
+		} else {
+			// TBA: index not found exception
+		}
+		
+		
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
 		if (delimiterTypes.isEmpty()) {
 			parameters.addAll(convertToParameters(parameterString, DelimiterType.NONE));
@@ -135,14 +152,13 @@ public class EditParameterParser implements ParameterParser {
 
 	private static ArrayList<Parameter> convertToParameters(String parameterString, DelimiterType delimiterType) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		FormatValidator indexFormatValidator = new IndexFormatValidator();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
 		FormatValidator priorityFormatValidator = new PriorityFormatValidator();
-
+		
 		switch (delimiterType) {
 			case NONE:
-				parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
+				parameters.add(ParameterParser.getName(parameterString));
 				break;
 			case FROM:
 				parameters.addAll(ParameterParser.getStartDateTime(parameterString, dateFormatValidator, timeFormatValidator));

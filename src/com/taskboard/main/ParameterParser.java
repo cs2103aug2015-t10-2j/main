@@ -22,6 +22,10 @@ public interface ParameterParser {
 		}
 	}
 	
+	static Parameter getName(String parameterString) {
+		return new Parameter(ParameterType.NAME, parameterString);
+	}
+	
 	static ArrayList<Parameter> getStartDateTime(String parameterString, FormatValidator dateFormatValidator, 
 														 FormatValidator timeFormatValidator) {
 		ArrayList<Parameter> startDateTime = new ArrayList<Parameter>();

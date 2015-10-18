@@ -61,7 +61,6 @@ public class TaskBoardTest {
 		assertAddParameters(expected3, "add Meeting with Chris from tomorrow 7pm to tomorrow 9pm");
 		
 		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
-		expected4.add(new Parameter(ParameterType.INDEX, "4"));
 		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
 		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		Date monday = new Date(today.getTime() + DateFormatValidator.MILLISECONDS_PER_DAY * 
@@ -69,16 +68,18 @@ public class TaskBoardTest {
 					  ((todayDayIndex < DateFormatValidator.DAY_INDEX_MONDAY) ? 0 : 7)));
 		expected4.add(new Parameter(ParameterType.DATE, defaultDateFormat.format(monday)));
 		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
+		expected4.add(new Parameter(ParameterType.INDEX, "4"));
 		Collections.reverse(expected4);
 		assertEditParameters(expected4, "edit 4 by monday 23:59");
 		
 		ArrayList<Parameter> expected5 = new ArrayList<Parameter>();
-		expected5.add(new Parameter(ParameterType.INDEX, "12"));
+		expected5.add(new Parameter(ParameterType.NAME, "testName"));
 		expected5.add(new Parameter(ParameterType.DATE, "13/10/2020"));
 		expected5.add(new Parameter(ParameterType.TIME, "14:00"));
 		expected5.add(new Parameter(ParameterType.PRIORITY, "medium"));
+		expected5.add(new Parameter(ParameterType.INDEX, "12"));
 		Collections.reverse(expected5);
-		assertEditParameters(expected5, "edit 12 on 13/10/2020 14:00 pri med");
+		assertEditParameters(expected5, "edit 12 testName on 13/10/2020 14:00 pri med");
 		
 		ArrayList<Parameter> expected6 = new ArrayList<Parameter>();
 		expected6.add(new Parameter(ParameterType.NAME, "V0.1 Progress Report"));
