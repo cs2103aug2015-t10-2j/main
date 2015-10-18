@@ -75,6 +75,10 @@ public class DeleteParameterParser implements ParameterParser {
 				delimiterTypes.add(DelimiterType.TO);
 			} else if (tokens[i].equals("by") && !delimiterTypes.contains(DelimiterType.BY)) {
 				delimiterTypes.add(DelimiterType.BY);
+			} else if (tokens[i].equals("at") && !delimiterTypes.contains(DelimiterType.AT)) {
+				delimiterTypes.add(DelimiterType.AT);
+			} else if (tokens[i].equals("on") && !delimiterTypes.contains(DelimiterType.ON)) {
+				delimiterTypes.add(DelimiterType.ON);
 			} else if (tokens[i].equals("every") && !delimiterTypes.contains(DelimiterType.EVERY)) {
 				delimiterTypes.add(DelimiterType.EVERY);
 			} else if (tokens[i].equals("cat") && !delimiterTypes.contains(DelimiterType.CAT)) {
@@ -116,6 +120,8 @@ public class DeleteParameterParser implements ParameterParser {
 				parameters.addAll(ParameterParser.getEndDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case BY:
+			case AT:
+			case ON:
 				parameters.addAll(ParameterParser.getDueDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
 			case EVERY:

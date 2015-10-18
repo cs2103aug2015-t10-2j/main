@@ -46,7 +46,7 @@ public class TaskBoardTest {
 		expected2.add(new Parameter(ParameterType.NAME, "Hello again!"));
 		expected2.add(new Parameter(ParameterType.DATE, "12/10/2020"));
 		Collections.reverse(expected2);
-		assertAddParameters(expected2, "add Hello again! by 12/10/2020");
+		assertAddParameters(expected2, "add Hello again! at 12/10/2020");
 		
 		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
 		expected3.add(new Parameter(ParameterType.NAME, "Meeting with Chris"));
@@ -78,7 +78,7 @@ public class TaskBoardTest {
 		expected5.add(new Parameter(ParameterType.TIME, "14:00"));
 		expected5.add(new Parameter(ParameterType.PRIORITY, "medium"));
 		Collections.reverse(expected5);
-		assertEditParameters(expected5, "edit 12 by 13/10/2020 14:00 pri med");
+		assertEditParameters(expected5, "edit 12 on 13/10/2020 14:00 pri med");
 		
 		ArrayList<Parameter> expected6 = new ArrayList<Parameter>();
 		expected6.add(new Parameter(ParameterType.NAME, "V0.1 Progress Report"));
