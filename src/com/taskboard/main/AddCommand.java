@@ -25,7 +25,7 @@ public class AddCommand extends Command {
 	public Response executeCommand() {
 		Response responseForAdd = new Response();
 		
-		if (!isAddDeadlineTask() && !isAddEvent()) {
+		if (isAddFloatingTask()) {
 			responseForAdd = addFloatingTask();
 		} else if (isAddDeadlineTask()) {
 			responseForAdd = addDeadlineTask();
@@ -34,6 +34,14 @@ public class AddCommand extends Command {
 		}
 		
 		return responseForAdd;
+	}
+	
+	private boolean isAddFloatingTask() {
+		if(!isAddDeadlineTask() && !isAddEvent()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private boolean isAddDeadlineTask() {
@@ -198,9 +206,7 @@ public class AddCommand extends Command {
 		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
 		response.setException(exObj);
 	}
-	
-
-	
+		
 	private Response processDeadlineTaskForStorage(String taskName, String date, String time, String priority, 
 			                                       String category) {
 		Response responseForAddDeadline = new Response();
