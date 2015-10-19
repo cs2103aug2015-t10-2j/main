@@ -16,7 +16,9 @@ public class ArchiveHandler {
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
-
+	private static final int INDEX_OF_DETAIL_TYPE = 0;
+	private static final int INDEX_OF_DETAIL = 1;
+	
 	// attributes
 	private File _archive;
 //	private ArrayList<Entry> _completedEntries;
@@ -32,7 +34,8 @@ public class ArchiveHandler {
 	}
 	
 	public ArrayList<Entry> createNewFile(String fileName) throws IllegalArgumentException,IOException {
-		_archive = new File(fileName);
+		String archiveFileName = "archiveOf" + fileName;
+		_archive = new File(archiveFileName);
 		
 		boolean doesFileExist = doesFileExist(_archive);
 		ArrayList<Entry> completedEntries;
@@ -48,7 +51,8 @@ public class ArchiveHandler {
 	}
 	
 	public ArrayList<Entry> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
-		_archive = new File(fileName);
+		String archiveFileName = "archiveOf" + fileName;
+		_archive = new File(archiveFileName);
 		boolean doesFileExist = doesFileExist(_archive);
 		
 		ArrayList<Entry> completedEntries;
@@ -65,33 +69,37 @@ public class ArchiveHandler {
 	}
 	
 	private ArrayList<Entry> copyExistingEntriesFromFile(Scanner scanFileToCopy) {
-//			Scanner scanFileToCopy = new Scanner(_archive);
-		ArrayList<Entry> completedEntries = new ArrayList<Entry>();
+		ArrayList<Entry> entries = new ArrayList<Entry>();
+
 		Entry entry = new Entry();
-			
+
 		while (scanFileToCopy.hasNext()) {
-			String detail = scanFileToCopy.nextLine();
-				
-			if (detail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
-				completedEntries.add(entry);
-				entry = new Entry();	
+			String formattedDetail = scanFileToCopy.nextLine();
+
+			if (formattedDetail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
+				entries.add(entry);
+				entry = new Entry();
 			}
-				
-			if (!detail.isEmpty()) {
+
+			if (!formattedDetail.isEmpty()) {
+				String[] splitFormattedDetail = formattedDetail.split(":");
+				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE].trim();
+				String detail = splitFormattedDetail[INDEX_OF_DETAIL].trim();
+
 				Parameter parameter = new Parameter();
-				parameter.setParameterType(ParameterType.valueOf(detail));
+				parameter.setParameterType(ParameterType.valueOf(detailType));
 				parameter.setParameterValue(detail);
 				entry.addToParameters(parameter);
 			}
 		}
-			
-		if (!completedEntries.isEmpty()) {
-			completedEntries.add(entry);
-			completedEntries.remove(INDEX_OF_EMPTY_ENTRY);
+
+		if (!entries.isEmpty()) {
+			// to add the final entry once end of file is reached
+			entries.add(entry);
+			entries.remove(INDEX_OF_EMPTY_ENTRY);
 		}
-		
-		scanFileToCopy.close();	
-		return completedEntries;
+		logger.log(Level.INFO, "Copy data from file to temp storage.");
+		return entries;
 	}
 	
 	private boolean doesFileExist(File fileToCheck) {
@@ -105,6 +113,7 @@ public class ArchiveHandler {
 	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_archive);
 		copyAllEntriesToFile(fileToAdd, entries);
+		fileToAdd.close();
 		logger.log(Level.INFO, "Copy temp storage to archive.");
 	}
 	
@@ -115,15 +124,9 @@ public class ArchiveHandler {
 	}
 	
 	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
-		ArrayList<Parameter> parameters = entry.getParameters();
-		
-		for (int i = 0; i < parameters.size(); i++) {
-			String entrydetails = parameters.get(i).toString();
-			fileToAdd.write(entrydetails);
-			fileToAdd.write("\n");
-			fileToAdd.flush();
-		}
-//		fileToAdd.write("\n");
-//		fileToAdd.flush();
+		String entrydetails = entry.toString();
+		fileToAdd.write(entrydetails);
+		fileToAdd.write(System.lineSeparator());
+		fileToAdd.flush();
 	}
 }

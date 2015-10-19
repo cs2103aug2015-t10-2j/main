@@ -31,11 +31,13 @@ public class TempStorageManipulator {
 
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
 		_tempStorage = _storageHandler.createNewFile(fileName);
+		_tempArchive = _archiveHandler.createNewFile(fileName);
 		logger.log(Level.INFO, "Initialise a new temporary storage.");
 	}
 
 	public void repopulate(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		_tempStorage = _storageHandler.openExistingFile(fileName);
+		_tempArchive = _archiveHandler.openExistingFile(fileName);
 		logger.log(Level.INFO, "Repopulate a temporary storage.");
 	}
 
@@ -59,7 +61,7 @@ public class TempStorageManipulator {
 			boolean isEntryTypeChanged) {
 		boolean isDetailPresent = false;
 
-		for (int i = 1; i < newContent.size(); i++) {
+		for (int i = 0; i < newContent.size(); i++) {
 			Parameter newFormattedDetail = newContent.get(i);
 
 			if (!isEntryTypeChanged) {
@@ -72,6 +74,7 @@ public class TempStorageManipulator {
 				}
 
 				if (!isDetailPresent) {
+					assert isDetailPresent: false;
 					Parameter newParameter = new Parameter();
 					newParameter.setParameterType(newFormattedDetail.getParameterType());
 					newParameter.setParameterValue(newFormattedDetail.getParameterValue());
