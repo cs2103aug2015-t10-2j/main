@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StorageHandler {
 	
@@ -25,6 +27,8 @@ public class StorageHandler {
 	// attributes
 	
 	private File _original;
+	
+	private static Logger logger = Logger.getLogger("TempStorageManipulator");
 	
 	// constructor
 	
@@ -59,6 +63,7 @@ public class StorageHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
+		logger.log(Level.INFO, "Create a new file.");
 		return entries;
 	}
 	
@@ -75,7 +80,7 @@ public class StorageHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);
 		}
-		
+		logger.log(Level.INFO, "Open an existing file.");
 		return entries;
 	}
 	
@@ -83,7 +88,7 @@ public class StorageHandler {
 		if (fileToCheck.exists()) {
 			return true;
 		}
-		
+		logger.log(Level.INFO, "Check whether if a file already exists.");
 		return false;
 	}
 	
@@ -117,13 +122,14 @@ public class StorageHandler {
 			entries.add(entry);
 			entries.remove(INDEX_OF_EMPTY_ENTRY);
 		}
-	
+		logger.log(Level.INFO, "Copy data from file to temp storage.");
 		return entries;
 	}
 	
 	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_original);
 		copyAllEntriesToFile(fileToAdd, entries);
+		logger.log(Level.INFO, "Copy data from temp storage to file.");
 	}
 //	
 //	public boolean isAddToFileSuccessful(Entry entry) {

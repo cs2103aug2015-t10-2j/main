@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ArchiveHandler {
 	
@@ -18,6 +20,7 @@ public class ArchiveHandler {
 	// attributes
 	private File _archive;
 //	private ArrayList<Entry> _completedEntries;
+	private static Logger logger = Logger.getLogger("StorageHandler");
 	
 	// constructor
 	public ArchiveHandler() {
@@ -40,6 +43,7 @@ public class ArchiveHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
+		logger.log(Level.INFO, "Create a new archive.");
 		return completedEntries;
 	}
 	
@@ -56,7 +60,7 @@ public class ArchiveHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);
 		}
-		
+		logger.log(Level.INFO, "Open an existing archive.");
 		return completedEntries;
 	}
 	
@@ -94,12 +98,14 @@ public class ArchiveHandler {
 		if (!fileToCheck.exists()) {
 			return false;
 		}		
+		logger.log(Level.INFO, "Check whether a file already exists.");
 		return true;
 	}
 	
 	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_archive);
 		copyAllEntriesToFile(fileToAdd, entries);
+		logger.log(Level.INFO, "Copy temp storage to archive.");
 	}
 	
 	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> entries) throws IOException {
