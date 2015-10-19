@@ -3,31 +3,13 @@ package com.taskboard.main;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
-
-import java.io.IOException;
 
 public class ViewParameterParser implements ParameterParser {
 	
-	private static final String logDirectory = "logs/";
-	private static final String logFileFormat = ".log";
-	
 	private Logger _logger;
-	private FileHandler _loggerFileHandler;
-	private SimpleFormatter _loggerFormatter;
 	
 	public ViewParameterParser() {
-		_logger = Logger.getLogger(ViewParameterParser.class.getName());
-		try {
-			_loggerFileHandler = new FileHandler(logDirectory + ViewParameterParser.class.getSimpleName() 
-												 + logFileFormat);
-		} catch (IOException exception) {
-			// TBA: process exception or throw exception
-		}
-		_logger.addHandler(_loggerFileHandler);
-		_loggerFormatter = new SimpleFormatter();
-		_loggerFileHandler.setFormatter(_loggerFormatter);
+		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) {

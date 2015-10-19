@@ -3,38 +3,20 @@ package com.taskboard.main;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
-
-import java.io.IOException;
 
 public class CommandParser {
-	
-	private static final String logDirectory = "logs/";
-	private static final String logFileFormat = ".log";
 	
 	private CommandTypeParser _commandTypeParser;
 	private ParameterParser _parameterParser;
 	private Logger _logger;
-	private FileHandler _loggerFileHandler;
-	private SimpleFormatter _loggerFormatter;
 	
 	public CommandParser() {
 		_commandTypeParser = new CommandTypeParser();
-		_logger = Logger.getLogger(CommandParser.class.getName());
-		try {
-			_loggerFileHandler = new FileHandler(logDirectory + CommandParser.class.getSimpleName() 
-												 + logFileFormat);
-		} catch (IOException exception) {
-			// TBA: process exception or throw exception
-		}
-		_logger.addHandler(_loggerFileHandler);
-		_loggerFormatter = new SimpleFormatter();
-		_loggerFileHandler.setFormatter(_loggerFormatter);
+		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
 	public Command parseCommand(String commandString) {
-		_logger.log(Level.INFO, "Started parsing command string");
+		_logger.log(Level.INFO, "Started parsing command string: " + commandString);
 		CommandType newCommandType = _commandTypeParser.parseCommandType(commandString);
 		switch (newCommandType) {
 			case NEW:
