@@ -28,7 +28,7 @@ public class StorageHandler {
 	
 	private File _original;
 	
-	private static Logger logger = Logger.getLogger("TempStorageManipulator");
+	private static Logger logger = Logger.getLogger("StorageHandler");
 	
 	// constructor
 	
