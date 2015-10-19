@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.test;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
+
+import com.taskboard.main.*;
 
 public class TempStorageManipulatorTest {
 	
@@ -55,6 +57,15 @@ public class TempStorageManipulatorTest {
 		entry.setParameters(parameters);
 		entries.add(entry);
 	}
+	
+	public String convertArrayListToString(ArrayList<Entry> entries) {
+		String result = "";
+		for (int i = 0; i< entries.size(); i++) {
+			result += entries.get(i).getNameParameter().getParameterValue();
+		}
+		return result;
+	}
+	
 	@Test
 	public void testRepopulate() throws IllegalArgumentException, IOException {
 		createTestFile();
@@ -63,7 +74,9 @@ public class TempStorageManipulatorTest {
 		addEntryToArrayListOfEntries(entries, "test1");
 		addEntryToArrayListOfEntries(entries, "test2");
 		addEntryToArrayListOfEntries(entries, "test3");
-		assertEquals(entries, tempStorageManipulator.getTempStorage());
+		String expected = convertArrayListToString(entries);
+		String actual = convertArrayListToString(tempStorageManipulator.getTempStorage());
+		assertEquals(expected, actual);
 	}
 
 	@Test
