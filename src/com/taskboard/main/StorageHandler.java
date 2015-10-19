@@ -59,7 +59,6 @@ public class StorageHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
-		
 		return entries;
 	}
 	
@@ -102,9 +101,9 @@ public class StorageHandler {
 			}
 				
 			if (!formattedDetail.isEmpty()) {
-				String[] splitFormattedDetail = formattedDetail.split(": ");
-				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE];
-				String detail = splitFormattedDetail[INDEX_OF_DETAIL];
+				String[] splitFormattedDetail = formattedDetail.split(":");
+				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE].trim();
+				String detail = splitFormattedDetail[INDEX_OF_DETAIL].trim();
 				
 				Parameter parameter = new Parameter();
 				parameter.setParameterType(ParameterType.valueOf(detailType));
