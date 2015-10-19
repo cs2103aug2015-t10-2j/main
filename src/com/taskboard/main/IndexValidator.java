@@ -35,8 +35,6 @@ public class IndexValidator {
 			setFailureResponseForInvalidIndex(responseForIndex);
 		} else {
 			responseForIndex.setIsSuccess(true);
-			responseForIndex.setEntries(entries);
-			responseForIndex.setFeedback("Deletion successful."); // !!! Attention !!!: Move this line later
 		}
 		
 		return responseForIndex;

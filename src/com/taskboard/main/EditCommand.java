@@ -479,7 +479,8 @@ public class EditCommand extends Command {
 		Response responseForEdit = new Response();
 		
 		try {
-			_tempStorageManipulator.editTempStorage(index - 1, editedParameters, isEntryTypeChanged);
+			int tempStorageIndex = index - 1;
+			_tempStorageManipulator.editTempStorage(tempStorageIndex, editedParameters, isEntryTypeChanged);
 			String entryName = getEntryName(index);
 			setSuccessResponseForEdit(responseForEdit, entryName);
 		} catch (IOException ex) {
