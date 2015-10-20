@@ -56,6 +56,7 @@ public class TempStorageManipulator {
 		logger.log(Level.INFO, "Replace old entries with new ones.");
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
+		Collections.sort(_tempStorage, new DateComparator());
 		setTempStorageToFile(_tempStorage);
 	}
 
