@@ -12,23 +12,23 @@ public class DateComparator implements Comparator<Entry>{
 		return date1.compareTo(date2);
 	}
 
-	public Date getDateObject(Entry entry) {
+	private Date getDateObject(Entry entry) {
 		if (entry.getDateParameter() != null) {
 			String date = entry.getDateParameter().getParameterValue();
 			String time = new String();
 			if (entry.getTimeParameter() != null) {
 				time = entry.getTimeParameter().getParameterValue();
 			}
-			String dateTime = dateTimeValidator.getDateTimeFormat(date, time);
-			return dateTimeValidator.getInputDate(dateTime);
+			dateTimeValidator.validateDateTimeDetails(date, time, null);
+			return dateTimeValidator.getDate();
 		} else {
 			String date = entry.getStartDateParameter().getParameterValue();
 			String time = new String();
-			if (entry.getTimeParameter() != null) {
-				time = entry.getTimeParameter().getParameterValue();
+			if (entry.getStartTimeParameter() != null) {
+				time = entry.getStartTimeParameter().getParameterValue();
 			}			
-			String dateTime = dateTimeValidator.getDateTimeFormat(date, time);
-			return dateTimeValidator.getInputDate(dateTime);
+			dateTimeValidator.validateDateTimeDetails(date, time, null);
+			return dateTimeValidator.getDate();
 		}	
 	}
 }
