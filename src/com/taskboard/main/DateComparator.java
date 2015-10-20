@@ -15,12 +15,18 @@ public class DateComparator implements Comparator<Entry>{
 	public Date getDateObject(Entry entry) {
 		if (entry.getDateParameter() != null) {
 			String date = entry.getDateParameter().getParameterValue();
-			String time = entry.getTimeParameter().getParameterValue();
+			String time = new String();
+			if (entry.getTimeParameter().getParameterValue() != null) {
+				time = entry.getTimeParameter().getParameterValue();
+			}
 			String dateTime = dateTimeValidator.getDateTimeFormat(date, time);
 			return dateTimeValidator.getInputDate(dateTime);
 		} else {
 			String date = entry.getStartDateParameter().getParameterValue();
-			String time = entry.getStartTimeParameter().getParameterValue();
+			String time = new String();
+			if (entry.getTimeParameter().getParameterValue() != null) {
+				time = entry.getTimeParameter().getParameterValue();
+			}			
 			String dateTime = dateTimeValidator.getDateTimeFormat(date, time);
 			return dateTimeValidator.getInputDate(dateTime);
 		}	
