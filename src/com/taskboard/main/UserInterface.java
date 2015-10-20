@@ -84,6 +84,7 @@ public class UserInterface extends JFrame {
                 			if (currentResponse.getEntries() != null) {
 	                			String entriesString = "";
 	                			for (int i = 0; i < entries.size(); i++) {
+	                				entriesString += i + 1 + ".\n";
 	                				entriesString += entries.get(i).toString();
 	                				entriesString += "\n";
 	                			}
