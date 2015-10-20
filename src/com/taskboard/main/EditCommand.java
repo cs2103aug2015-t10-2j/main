@@ -363,7 +363,7 @@ public class EditCommand extends Command {
 		
 		if (responseForDateTime.isSuccess() == true) {
 			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
-			Date inputStartDate = startDateTimeValidator.getInputDate();
+			Date inputStartDate = startDateTimeValidator.getDate();
 			responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
 		}
 		

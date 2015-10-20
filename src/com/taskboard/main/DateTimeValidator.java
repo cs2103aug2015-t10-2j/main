@@ -26,7 +26,7 @@ public class DateTimeValidator {
 	
 	// accessor
 	
-	public Date getInputDate() {
+	public Date getDate() {
 		return _inputDate;
 	}
 	
@@ -45,7 +45,7 @@ public class DateTimeValidator {
 		return responseForDateTime;
 	}
 	
-	public String getDateTimeFormat(String date, String time) {
+	private String getDateTimeFormat(String date, String time) {
 		if (time.isEmpty()) {
 			time = FORMAT_DEFAULT_TIME;
 		}
@@ -55,7 +55,7 @@ public class DateTimeValidator {
 		return dateTime;
 	}
 	
-	public Date getInputDate(String dateTime) {
+	private Date getInputDate(String dateTime) {
 		 try {
 			 DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
 	         dateFormat.setLenient(false);
