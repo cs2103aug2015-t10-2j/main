@@ -39,13 +39,13 @@ public class TaskBoardTest {
 	public void TestParameterParser() {
 		ArrayList<Parameter> expected1 = new ArrayList<Parameter>();
 		expected1.add(new Parameter(ParameterType.NAME, "Hello World!"));
-		Collections.reverse(expected1);
+		
 		assertAddParameters(expected1, "add Hello World!");
 		
 		ArrayList<Parameter> expected2 = new ArrayList<Parameter>();
 		expected2.add(new Parameter(ParameterType.NAME, "Hello again!"));
 		expected2.add(new Parameter(ParameterType.DATE, "12/10/2020"));
-		Collections.reverse(expected2);
+		
 		assertAddParameters(expected2, "add Hello again! at 12/10/2020");
 		
 		ArrayList<Parameter> expected3 = new ArrayList<Parameter>();
@@ -57,7 +57,7 @@ public class TaskBoardTest {
 		expected3.add(new Parameter(ParameterType.START_TIME, "19:00"));
 		expected3.add(new Parameter(ParameterType.END_DATE, defaultDateFormat.format(tomorrow)));
 		expected3.add(new Parameter(ParameterType.END_TIME, "21:00"));
-		Collections.reverse(expected3);
+		
 		assertAddParameters(expected3, "add Meeting with Chris from tomorrow 7pm to tomorrow 9pm");
 		
 		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
@@ -69,59 +69,64 @@ public class TaskBoardTest {
 		expected4.add(new Parameter(ParameterType.DATE, defaultDateFormat.format(monday)));
 		expected4.add(new Parameter(ParameterType.TIME, "23:59"));
 		expected4.add(new Parameter(ParameterType.INDEX, "4"));
-		Collections.reverse(expected4);
+		
 		assertEditParameters(expected4, "edit 4 by monday 23:59");
 		
 		ArrayList<Parameter> expected5 = new ArrayList<Parameter>();
-		expected5.add(new Parameter(ParameterType.NAME, "testName"));
+		expected5.add(new Parameter(ParameterType.NEW_NAME, "testName"));
 		expected5.add(new Parameter(ParameterType.DATE, "13/10/2020"));
 		expected5.add(new Parameter(ParameterType.TIME, "14:00"));
 		expected5.add(new Parameter(ParameterType.PRIORITY, "medium"));
 		expected5.add(new Parameter(ParameterType.INDEX, "12"));
-		Collections.reverse(expected5);
+		
 		assertEditParameters(expected5, "edit 12 testName on 13/10/2020 14:00 pri med");
 		
 		ArrayList<Parameter> expected6 = new ArrayList<Parameter>();
 		expected6.add(new Parameter(ParameterType.NAME, "V0.1 Progress Report"));
 		expected6.add(new Parameter(ParameterType.CATEGORY, "NUS"));
 		expected6.add(new Parameter(ParameterType.PRIORITY, "high"));
-		Collections.reverse(expected6);
+		
 		assertAddParameters(expected6, "add V0.1 Progress Report cat NUS pri h");
 		
 		ArrayList<Parameter> expected7 = new ArrayList<Parameter>();
 		expected7.add(new Parameter(ParameterType.CATEGORY, "other"));
 		expected7.add(new Parameter(ParameterType.PRIORITY, "low"));
-		Collections.reverse(expected7);
+		
 		assertDeleteParameters(expected7, "delete cat other pri low");
 		
 		ArrayList<Parameter> expected8 = new ArrayList<Parameter>();
 		expected8.add(new Parameter(ParameterType.INDEX, "102"));
-		Collections.reverse(expected8);
+		
 		assertDeleteParameters(expected8, "delete 102");
 		
 		ArrayList<Parameter> expected9 = new ArrayList<Parameter>();
+		
 		assertViewParameters(expected9, "view");
 		
 		ArrayList<Parameter> expected10 = new ArrayList<Parameter>();
 		expected10.add(new Parameter(ParameterType.DATE, "25/10/2015"));
 		expected10.add(new Parameter(ParameterType.CATEGORY, "Homework"));
-		Collections.reverse(expected10);
+		
 		assertViewParameters(expected10, "view by 25/10/2015 cat Homework");
 	}
 	
 	private void assertAddParameters(ArrayList<Parameter> expected, String command) {
+		Collections.reverse(expected);
 		assertEquals(toString(expected), toString(new AddParameterParser().parseParameters(command)));
 	}
 	
 	private void assertEditParameters(ArrayList<Parameter> expected, String command) {
+		Collections.reverse(expected);
 		assertEquals(toString(expected), toString(new EditParameterParser().parseParameters(command)));
 	}
 	
 	private void assertDeleteParameters(ArrayList<Parameter> expected, String command) {
+		Collections.reverse(expected);
 		assertEquals(toString(expected), toString(new DeleteParameterParser().parseParameters(command)));
 	}
 	
 	private void assertViewParameters(ArrayList<Parameter> expected, String command) {
+		Collections.reverse(expected);
 		assertEquals(toString(expected), toString(new ViewParameterParser().parseParameters(command)));
 	}
 	
