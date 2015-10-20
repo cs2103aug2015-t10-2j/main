@@ -74,7 +74,7 @@ public class TempStorageManipulator {
 				}
 
 				if (!isDetailPresent) {
-					assert isDetailPresent: false;
+//					assert isDetailPresent: false;
 					Parameter newParameter = new Parameter();
 					newParameter.setParameterType(newFormattedDetail.getParameterType());
 					newParameter.setParameterValue(newFormattedDetail.getParameterValue());
