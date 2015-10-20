@@ -21,7 +21,7 @@ public class DateComparator implements Comparator<Entry>{
 			}
 			dateTimeValidator.validateDateTimeDetails(date, time, null);
 			return dateTimeValidator.getDate();
-		} else {
+		} else if (entry.getStartDateParameter() != null){
 			String date = entry.getStartDateParameter().getParameterValue();
 			String time = new String();
 			if (entry.getStartTimeParameter() != null) {
@@ -29,6 +29,11 @@ public class DateComparator implements Comparator<Entry>{
 			}			
 			dateTimeValidator.validateDateTimeDetails(date, time, null);
 			return dateTimeValidator.getDate();
-		}	
+		}	else {
+			String date = "31/12/2099";
+			String time = "23:59";
+			dateTimeValidator.validateDateTimeDetails(date, time, null);
+			return dateTimeValidator.getDate();
+		}
 	}
 }
