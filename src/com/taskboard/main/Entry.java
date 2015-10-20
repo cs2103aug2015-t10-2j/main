@@ -9,6 +9,7 @@ public class Entry {
 
 	private ArrayList<Parameter> _parameters;
 	private boolean _isCompleted;
+	
 	// constructor
 
 	public Entry() {

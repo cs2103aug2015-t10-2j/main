@@ -18,16 +18,40 @@ public class ViewCommand extends Command {
 	public Response executeCommand() {
 		Response responseForView = new Response();
 		
-		responseForView.setIsSuccess(true);
+		if (isViewWithoutFilter()) {
+			setSuccessResponseForView(responseForView);
+		} else {
+			responseForView = processFilteredView();
+		}
+		
+		return responseForView;
+	}
+	
+	public boolean isViewWithoutFilter() {
+		if (_parameters.isEmpty()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void setSuccessResponseForView(Response response) {
+		response.setIsSuccess(true);
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		responseForView.setEntries(entries);
+		response.setEntries(entries);
 		
 		if (entries.isEmpty()) {
-			responseForView.setFeedback(MESSAGE_EMPTY_FILE);
+			response.setFeedback(MESSAGE_EMPTY_FILE);
 		} else {
-			responseForView.setFeedback(MESSAGE_RETRIEVE_SUCCESS);
+			response.setFeedback(MESSAGE_RETRIEVE_SUCCESS);
 		}
+	}
 	
-		return responseForView;
+	public Response processFilteredView() {
+		Response responseForFilteredView = new Response();
+		
+		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
+		
+		return responseForFilteredView;
 	}
 }

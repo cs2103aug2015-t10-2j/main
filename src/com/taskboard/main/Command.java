@@ -29,6 +29,16 @@ public abstract class Command {
 		return null;
 	}
 	
+	public Parameter getIndexParameter() {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.INDEX) {
+				return _parameters.get(i);
+			}
+		}
+		
+		return null;
+	}
+	
 	public Parameter getNewNameParameter() {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.NEW_NAME) {
@@ -124,13 +134,7 @@ public abstract class Command {
 	public void setParameters(ArrayList<Parameter> newParameters) {
 		_parameters = newParameters;
 	}
-	
-	protected String getFeedbackForUser(String feedbackMessage, String detail) {
-		return String.format(feedbackMessage, detail);
-	}
-	
-	public abstract Response executeCommand(); 
-	
+		
 	public void setNameParameter(Parameter newNameParameter) {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.NAME) {
@@ -211,4 +215,9 @@ public abstract class Command {
 		}
 	}
 	
+	protected String getFeedbackForUser(String feedbackMessage, String detail) {
+		return String.format(feedbackMessage, detail);
+	}
+	
+	public abstract Response executeCommand(); 	
 }
