@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.*;
 
 public class TempStorageManipulator {
@@ -43,6 +44,7 @@ public class TempStorageManipulator {
 
 	public void addToTempStorage(Entry entry) throws IOException {
 		_tempStorage.add(entry);
+		Collections.sort(_tempStorage, new DateComparator());
 		_storageHandler.updateTempStorageToFile(_tempStorage);
 		logger.log(Level.INFO, "Add entry into temp storage.");
 	}
@@ -131,4 +133,5 @@ public class TempStorageManipulator {
 		_archiveHandler.updateTempStorageToFile(entries);
 		logger.log(Level.INFO, "Transfer the temp storage into archive.");
 	}
+
 }
