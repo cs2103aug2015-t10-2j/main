@@ -45,7 +45,8 @@ public class TempStorageManipulator {
 	public void addToTempStorage(Entry entry) throws IOException {
 		_tempStorage.add(entry);
 		Collections.sort(_tempStorage, new DateComparator());
-		_storageHandler.updateTempStorageToFile(_tempStorage);
+		setIndexForAllEntries();
+		setTempStorageToFile(_tempStorage);
 		logger.log(Level.INFO, "Add entry into temp storage.");
 	}
 
@@ -57,6 +58,7 @@ public class TempStorageManipulator {
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
 		Collections.sort(_tempStorage, new DateComparator());
+		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 	}
 
@@ -134,5 +136,11 @@ public class TempStorageManipulator {
 		_archiveHandler.updateTempStorageToFile(entries);
 		logger.log(Level.INFO, "Transfer the temp storage into archive.");
 	}
-
+	
+	public void setIndexForAllEntries() {
+		for (int i = 0; i < _tempStorage.size(); i++) {
+			Parameter indexParameter = new Parameter(ParameterType.valueOf("INDEX"), String.valueOf(i));
+			_tempStorage.get(i).setIndexParameter(indexParameter);
+		}
+	}
 }
