@@ -9,9 +9,10 @@ public class OpenCommand extends Command{
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_OPEN = "Failed to open file.";
 	
-	private static final int INDEX_OF_FILENAME = 0;
+//	private static final int INDEX_OF_FILENAME = 0;
 	
 	public OpenCommand(ArrayList<Parameter> parameters) {
+		assert parameters != null;
 		_parameters = parameters;
 		
 		if (getTempStorageManipulator() == null) {
@@ -20,8 +21,11 @@ public class OpenCommand extends Command{
 	}
 	
 	public Response executeCommand() {
-		Parameter fileNameParameter = _parameters.get(INDEX_OF_FILENAME); 
-		String fileName = fileNameParameter.getParameterValue();
+		assert _parameters.size() > 0;
+		String fileName = getDetailFromParameter(getNameParameter());
+		assert fileName != null;
+//		Parameter fileNameParameter = _parameters.get(INDEX_OF_FILENAME); 
+//		String fileName = fileNameParameter.getParameterValue();
 		
 		return getResponseForLaunch(fileName);
 	}
