@@ -69,8 +69,8 @@ public class DeleteCommand extends Command {
 		int tempStorageIndex = indexValue - 1;
 		
 		try {
-			_tempStorageManipulator.deleteFromTempStorage(tempStorageIndex);
 			String entryName = getEntryName(indexValue);
+			_tempStorageManipulator.deleteFromTempStorage(tempStorageIndex);
 			setSuccessResponseForDeleteByIndex(ResponseForDeleteByIndex, entryName);
 		} catch (IOException ex) {
 			setFailureResponseForDelete(ResponseForDeleteByIndex);
@@ -381,6 +381,6 @@ public class DeleteCommand extends Command {
 		int numOfFilteredEntries = filteredEntries.size();
 		String userFeedback = getFeedbackForUser(MESSAGE_FILTER_RESULTS, String.valueOf(numOfFilteredEntries));
 		response.setFeedback(userFeedback);
-		response.setEntries(filteredEntries);
+		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
 }
