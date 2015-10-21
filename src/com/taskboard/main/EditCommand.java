@@ -40,10 +40,10 @@ public class EditCommand extends Command {
 	private Response processInputIndex() {
 		Response responseForInputIndex = new Response();
 		
-		String inputIndex = getDetailFromParameter(getIndexParameter());
+		String index = getDetailFromParameter(getIndexParameter());
 		IndexValidator indexValidator = new IndexValidator();
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		responseForInputIndex = indexValidator.checkValidityOfInputIndex(inputIndex, entries);
+		responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
 		
 		return responseForInputIndex;
 	}
