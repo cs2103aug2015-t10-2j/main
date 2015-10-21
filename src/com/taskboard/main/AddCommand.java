@@ -44,54 +44,81 @@ public class AddCommand extends Command {
 	}
 	
 	private boolean isAddDeadlineTask() {
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter parameter = _parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
-			
-			if (parameterType == ParameterType.DATE || parameterType == ParameterType.TIME) {
-				return true;
-			}
+		Parameter dateParameter = getDateParameter();
+		Parameter timeParameter = getTimeParameter();
+		
+		if (dateParameter != null || timeParameter != null) {
+			return true;
 		}
 		
 		return false;
+		
+//		for (int i = 0; i < _parameters.size(); i++) {
+//			Parameter parameter = _parameters.get(i);
+//			ParameterType parameterType = parameter.getParameterType();
+//			
+//			if (parameterType == ParameterType.DATE || parameterType == ParameterType.TIME) {
+//				return true;
+//			}
+//		}
+//		
+//		return false;
 	}
 	
 	private boolean isAddEvent() {
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter parameter = _parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
-			
-			if (parameterType == ParameterType.START_DATE || parameterType == ParameterType.START_TIME) {
-				return true;
-			}
+		Parameter startDateParameter = getStartDateParameter();
+		Parameter startTimeParameter = getStartTimeParameter();
+		
+		if (startDateParameter != null || startTimeParameter != null) {
+			return true;
 		}
 		
 		return false;
+		
+//		for (int i = 0; i < _parameters.size(); i++) {
+//			Parameter parameter = _parameters.get(i);
+//			ParameterType parameterType = parameter.getParameterType();
+//			
+//			if (parameterType == ParameterType.START_DATE || parameterType == ParameterType.START_TIME) {
+//				return true;
+//			}
+//		}
+//		
+//		return false;
 	}
 		
 	private Response addFloatingTask() {
 		Response responseForAddFloating = new Response();
 		
-		String taskName = "";
-		String priority = "";
-		String category = "";
+		Parameter taskNameParameter = getNameParameter();
+		String taskName = getDetailFromParameter(taskNameParameter);
 		
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter parameter = _parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
-			
-			switch (parameterType) {
-				case NAME:
-					taskName = parameter.getParameterValue();
-					break;
-				case PRIORITY:
-					priority = parameter.getParameterValue();
-					break;
-				case CATEGORY:
-					category = parameter.getParameterValue();
-					break;
-			}
-		}
+		Parameter priorityParameter = getPriorityParameter();
+		String priority = getDetailFromParameter(priorityParameter);
+		
+		Parameter categoryParameter = getCategoryParameter();
+		String category = getDetailFromParameter(categoryParameter);
+				
+//		String taskName = "";
+//		String priority = "";
+//		String category = "";
+//		
+//		for (int i = 0; i < _parameters.size(); i++) {
+//			Parameter parameter = _parameters.get(i);
+//			ParameterType parameterType = parameter.getParameterType();
+//			
+//			switch (parameterType) {
+//				case NAME:
+//					taskName = parameter.getParameterValue();
+//					break;
+//				case PRIORITY:
+//					priority = parameter.getParameterValue();
+//					break;
+//				case CATEGORY:
+//					category = parameter.getParameterValue();
+//					break;
+//			}
+//		}
 		
 		responseForAddFloating = processFloatingTaskForStorage(taskName, priority, category);
 		
@@ -101,7 +128,7 @@ public class AddCommand extends Command {
 	private Response processFloatingTaskForStorage(String taskName, String priority, String category) {
 		Response responseForAddFloating = new Response();
 		
-		Entry floatingTask = formatFloatingTaskParameters(taskName, priority, category);
+		Entry floatingTask = constructFloatingTaskParameters(taskName, priority, category);
 		
 		try {
 			_tempStorageManipulator.addToTempStorage(floatingTask);
@@ -113,23 +140,37 @@ public class AddCommand extends Command {
 		return responseForAddFloating;
 	}
 	
-	private Entry formatFloatingTaskParameters(String taskName, String priority, String category) {
+	private Entry constructFloatingTaskParameters(String taskName, String priority, String category) {
 		Entry floatingTask = new Entry();
 		
-		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
-		floatingTask.addToParameters(taskNameParameter);
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
+		floatingTask.addToParameters(indexParameter);
 		
-		if (!priority.isEmpty()) {
-			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
-			floatingTask.addToParameters(priorityParameter);
-		}
-		
-		if (!category.isEmpty()) {
-			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
-			floatingTask.addToParameters(categoryParameter);
-		}
+		addParameterToEntry(floatingTask, ParameterType.NAME, taskName);
+		addParameterToEntry(floatingTask, ParameterType.PRIORITY, priority);
+		addParameterToEntry(floatingTask, ParameterType.CATEGORY, category);
+				
+//		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
+//		floatingTask.addToParameters(taskNameParameter);
+//		
+//		if (!priority.isEmpty()) {
+//			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
+//			floatingTask.addToParameters(priorityParameter);
+//		}
+//		
+//		if (!category.isEmpty()) {
+//			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
+//			floatingTask.addToParameters(categoryParameter);
+//		}
 		
 		return floatingTask;
+	}
+	
+	private void addParameterToEntry(Entry entry, ParameterType parameterType, String detail) {
+		if (!detail.isEmpty()) {
+			Parameter parameter = new Parameter(parameterType, detail);
+			entry.addToParameters(parameter);
+		}
 	}
 	
 	private void setSuccessResponseForAdd(Response response, String entryName) {
@@ -148,34 +189,49 @@ public class AddCommand extends Command {
 	private Response addDeadlineTask() {
 		Response responseForAddDeadline = new Response();
 		
-		String taskName = "";
-		String date = "";
-		String time = "";
-		String priority = "";
-		String category = "";
+		Parameter taskNameParameter = getNameParameter();
+		String taskName = getDetailFromParameter(taskNameParameter);
 		
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter parameter = _parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
-			
-			switch (parameterType) {
-				case NAME:
-					taskName = parameter.getParameterValue();
-					break;
-				case DATE:
-					date = parameter.getParameterValue();
-					break;
-				case TIME:
-					time = parameter.getParameterValue();
-					break;
-				case PRIORITY:
-					priority = parameter.getParameterValue();
-					break;
-				case CATEGORY:
-					category = parameter.getParameterValue();
-					break;
-			}
-		}
+		Parameter dateParameter = getDateParameter();
+		String date = getDetailFromParameter(dateParameter);
+		
+		Parameter timeParameter = getTimeParameter();
+		String time = getDetailFromParameter(timeParameter);
+		
+		Parameter priorityParameter = getPriorityParameter();
+		String priority = getDetailFromParameter(priorityParameter);
+		
+		Parameter categoryParameter = getCategoryParameter();
+		String category = getDetailFromParameter(categoryParameter);
+		
+//		String taskName = "";
+//		String date = "";
+//		String time = "";
+//		String priority = "";
+//		String category = "";
+//		
+//		for (int i = 0; i < _parameters.size(); i++) {
+//			Parameter parameter = _parameters.get(i);
+//			ParameterType parameterType = parameter.getParameterType();
+//			
+//			switch (parameterType) {
+//				case NAME:
+//					taskName = parameter.getParameterValue();
+//					break;
+//				case DATE:
+//					date = parameter.getParameterValue();
+//					break;
+//				case TIME:
+//					time = parameter.getParameterValue();
+//					break;
+//				case PRIORITY:
+//					priority = parameter.getParameterValue();
+//					break;
+//				case CATEGORY:
+//					category = parameter.getParameterValue();
+//					break;
+//			}
+//		}
 			
 		responseForAddDeadline = processDateTimeDetailsForDeadlineTask(date, time);
 		
@@ -219,7 +275,7 @@ public class AddCommand extends Command {
 			                                       String category) {
 		Response responseForAddDeadline = new Response();
 		
-		Entry deadlineTask = formatDeadlineTaskParameters(taskName, date, time, priority, category);
+		Entry deadlineTask = constructDeadlineTaskParameters(taskName, date, time, priority, category);
 		
 		try {
 			_tempStorageManipulator.addToTempStorage(deadlineTask);
@@ -231,30 +287,39 @@ public class AddCommand extends Command {
 		return responseForAddDeadline;
 	}
 	
-	private Entry formatDeadlineTaskParameters(String taskName, String date, String time, String priority,
-			                                   String category) {
+	private Entry constructDeadlineTaskParameters(String taskName, String date, String time, String priority,
+			                                      String category) {
 		Entry deadlineTask = new Entry();
 		
-		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
-		deadlineTask.addToParameters(taskNameParameter);
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
+		deadlineTask.addToParameters(indexParameter);
 		
-		Parameter dateParameter = new Parameter(ParameterType.DATE, date);
-		deadlineTask.addToParameters(dateParameter);
+		addParameterToEntry(deadlineTask, ParameterType.NAME, taskName);
+		addParameterToEntry(deadlineTask, ParameterType.DATE, date);
+		addParameterToEntry(deadlineTask, ParameterType.TIME, time);
+		addParameterToEntry(deadlineTask, ParameterType.PRIORITY, priority);
+		addParameterToEntry(deadlineTask, ParameterType.CATEGORY, category);
 		
-		if (!time.isEmpty()) {
-			Parameter timeParameter = new Parameter(ParameterType.TIME, time);
-			deadlineTask.addToParameters(timeParameter);
-		}
-		
-		if (!priority.isEmpty()) {
-			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
-			deadlineTask.addToParameters(priorityParameter);
-		}
-		
-		if (!category.isEmpty()) {
-			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
-			deadlineTask.addToParameters(categoryParameter);
-		}
+//		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
+//		deadlineTask.addToParameters(taskNameParameter);
+//		
+//		Parameter dateParameter = new Parameter(ParameterType.DATE, date);
+//		deadlineTask.addToParameters(dateParameter);
+//		
+//		if (!time.isEmpty()) {
+//			Parameter timeParameter = new Parameter(ParameterType.TIME, time);
+//			deadlineTask.addToParameters(timeParameter);
+//		}
+//		
+//		if (!priority.isEmpty()) {
+//			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
+//			deadlineTask.addToParameters(priorityParameter);
+//		}
+//		
+//		if (!category.isEmpty()) {
+//			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
+//			deadlineTask.addToParameters(categoryParameter);
+//		}
 		
 		return deadlineTask;
 	}
@@ -262,42 +327,63 @@ public class AddCommand extends Command {
 	private Response addEvent() {
 		Response responseForAddEvent = new Response();
 		
-		String eventName = "";
-		String startDate = "";
-		String startTime = "";
-		String endDate = "";
-		String endTime = "";
-		String priority = "";
-		String category = "";
+		Parameter eventNameParameter = getNameParameter();
+		String eventName = getDetailFromParameter(eventNameParameter);
 		
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter parameter = _parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
-			
-			switch (parameterType) {
-				case NAME:
-					eventName = parameter.getParameterValue();
-					break;
-				case START_DATE:
-					startDate = parameter.getParameterValue();
-					break;
-				case START_TIME:
-					startTime = parameter.getParameterValue();
-					break;
-				case END_DATE:
-					endDate = parameter.getParameterValue();
-					break;
-				case END_TIME:
-					endTime = parameter.getParameterValue();
-					break;
-				case PRIORITY:
-					priority = parameter.getParameterValue();
-					break;
-				case CATEGORY:
-					category = parameter.getParameterValue();
-					break;
-			}
-		}
+		Parameter startDateParameter = getStartDateParameter();
+		String startDate = getDetailFromParameter(startDateParameter);
+		
+		Parameter startTimeParameter = getStartTimeParameter();
+		String startTime = getDetailFromParameter(startTimeParameter);
+		
+		Parameter endDateParameter = getEndDateParameter();
+		String endDate = getDetailFromParameter(endDateParameter);
+		
+		Parameter endTimeParameter = getEndTimeParameter();
+		String endTime = getDetailFromParameter(endTimeParameter);
+		
+		Parameter priorityParameter = getPriorityParameter();
+		String priority = getDetailFromParameter(priorityParameter);
+		
+		Parameter categoryParameter = getCategoryParameter();
+		String category = getDetailFromParameter(categoryParameter);
+		
+//		String eventName = "";
+//		String startDate = "";
+//		String startTime = "";
+//		String endDate = "";
+//		String endTime = "";
+//		String priority = "";
+//		String category = "";
+//		
+//		for (int i = 0; i < _parameters.size(); i++) {
+//			Parameter parameter = _parameters.get(i);
+//			ParameterType parameterType = parameter.getParameterType();
+//			
+//			switch (parameterType) {
+//				case NAME:
+//					eventName = parameter.getParameterValue();
+//					break;
+//				case START_DATE:
+//					startDate = parameter.getParameterValue();
+//					break;
+//				case START_TIME:
+//					startTime = parameter.getParameterValue();
+//					break;
+//				case END_DATE:
+//					endDate = parameter.getParameterValue();
+//					break;
+//				case END_TIME:
+//					endTime = parameter.getParameterValue();
+//					break;
+//				case PRIORITY:
+//					priority = parameter.getParameterValue();
+//					break;
+//				case CATEGORY:
+//					category = parameter.getParameterValue();
+//					break;
+//			}
+//		}
 		
 		responseForAddEvent = processDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
 		
@@ -365,8 +451,8 @@ public class AddCommand extends Command {
                                             String endTime, String priority, String category) {
 		Response responseForEvent = new Response();
 		
-		Entry event = formatEventParameters(eventName, startDate, startTime, endDate, endTime,
-				                            priority, category);
+		Entry event = constructEventParameters(eventName, startDate, startTime, endDate, endTime,
+				                               priority, category);
 		
 		try {
 			_tempStorageManipulator.addToTempStorage(event);
@@ -378,38 +464,49 @@ public class AddCommand extends Command {
 		return responseForEvent;
 	}
 	
-	private Entry formatEventParameters(String eventName, String startDate, String startTime, String endDate,
-                                        String endTime, String priority, String category) {
+	private Entry constructEventParameters(String eventName, String startDate, String startTime, String endDate,
+                                           String endTime, String priority, String category) {
 		Entry event = new Entry();
 		
-		Parameter eventNameParameter = new Parameter(ParameterType.NAME, eventName);
-		event.addToParameters(eventNameParameter);
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
+		event.addToParameters(indexParameter);
 		
-		Parameter startDateParameter = new Parameter(ParameterType.START_DATE, startDate);
-		event.addToParameters(startDateParameter);
+		addParameterToEntry(event, ParameterType.NAME, eventName);
+		addParameterToEntry(event, ParameterType.START_DATE, startDate);
+		addParameterToEntry(event, ParameterType.START_TIME, startTime);
+		addParameterToEntry(event, ParameterType.END_DATE, endDate);
+		addParameterToEntry(event, ParameterType.END_TIME, endTime);
+		addParameterToEntry(event, ParameterType.PRIORITY, priority);
+		addParameterToEntry(event, ParameterType.CATEGORY, category);
 		
-		if (!startTime.isEmpty()) {
-			Parameter startTimeParameter = new Parameter(ParameterType.START_TIME, startTime);
-			event.addToParameters(startTimeParameter);
-		}
-		
-		Parameter endDateParameter = new Parameter(ParameterType.END_DATE, endDate);
-		event.addToParameters(endDateParameter);
-		
-		if (!endTime.isEmpty()) {
-			Parameter endTimeParameter = new Parameter(ParameterType.END_TIME, endTime);
-			event.addToParameters(endTimeParameter);
-		}
-		
-		if (!priority.isEmpty()) {
-			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
-			event.addToParameters(priorityParameter);
-		}
-		
-		if (!category.isEmpty()) {
-			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
-			event.addToParameters(categoryParameter);
-		}
+//		Parameter eventNameParameter = new Parameter(ParameterType.NAME, eventName);
+//		event.addToParameters(eventNameParameter);
+//		
+//		Parameter startDateParameter = new Parameter(ParameterType.START_DATE, startDate);
+//		event.addToParameters(startDateParameter);
+//		
+//		if (!startTime.isEmpty()) {
+//			Parameter startTimeParameter = new Parameter(ParameterType.START_TIME, startTime);
+//			event.addToParameters(startTimeParameter);
+//		}
+//		
+//		Parameter endDateParameter = new Parameter(ParameterType.END_DATE, endDate);
+//		event.addToParameters(endDateParameter);
+//		
+//		if (!endTime.isEmpty()) {
+//			Parameter endTimeParameter = new Parameter(ParameterType.END_TIME, endTime);
+//			event.addToParameters(endTimeParameter);
+//		}
+//		
+//		if (!priority.isEmpty()) {
+//			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
+//			event.addToParameters(priorityParameter);
+//		}
+//		
+//		if (!category.isEmpty()) {
+//			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
+//			event.addToParameters(categoryParameter);
+//		}
 		
 		return event;
 	}

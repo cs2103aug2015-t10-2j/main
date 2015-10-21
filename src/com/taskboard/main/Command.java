@@ -143,6 +143,15 @@ public abstract class Command {
 		}
 	}
 	
+	public void setIndexParameter(Parameter newIndexParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.INDEX) {
+				_parameters.set(i, newIndexParameter);
+			}
+		}
+	}
+	
+	
 	public void setNewNameParameter(Parameter newNewNameParameter) {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.NEW_NAME) {
