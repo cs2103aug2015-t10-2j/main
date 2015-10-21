@@ -45,7 +45,6 @@ public class UserInterface extends JFrame {
 		cp.add(_displayArea);
 		
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
-		_displayScroll.setBounds(10,60,390,250);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		_feedbackArea = new JTextArea(1, 50);
