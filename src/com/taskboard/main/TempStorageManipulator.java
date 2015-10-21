@@ -62,51 +62,49 @@ public class TempStorageManipulator {
 		setTempStorageToFile(_tempStorage);
 	}
 
-	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent,
-			boolean isEntryTypeChanged) {
-		boolean isDetailPresent = false;
-
-		for (int i = 0; i < newContent.size(); i++) {
-			Parameter newFormattedDetail = newContent.get(i);
-
-			if (!isEntryTypeChanged) {
-				for (int j = 0; j < entryDetails.size(); j++) {
-					if (entryDetails.get(j).getParameterType() == newFormattedDetail.getParameterType()) {
-						entryDetails.get(j).setParameterValue(newFormattedDetail.getParameterValue());
-						logger.log(Level.INFO, "Entry to be edited found and replaced.");
-						isDetailPresent = true;
-					}
-				}
-
-				if (!isDetailPresent) {
-//					assert isDetailPresent: false;
-					Parameter newParameter = new Parameter();
-					newParameter.setParameterType(newFormattedDetail.getParameterType());
-					newParameter.setParameterValue(newFormattedDetail.getParameterValue());
-					logger.log(Level.INFO, "New parameters added into an existing entry.");
-					entryDetails.add(newParameter);
-				}
-
-				isDetailPresent = false;
-			} else {
-				assert isEntryTypeChanged: true;
-				logger.log(Level.INFO, "Type of Entry is changed.");
-				Entry tempEntry = new Entry();
-				ArrayList<Parameter> tempParameters = tempEntry.getParameters();
-				for (int k = 0; k < entryDetails.size(); k++) {
-					if ((entryDetails.get(k).getParameterType() == ParameterType.valueOf("NAME")) || 
-					(entryDetails.get(k).getParameterType() == ParameterType.valueOf("INDEX")) ||
-					(entryDetails.get(k).getParameterType() == ParameterType.valueOf("CATEGORY")) ||
-					(entryDetails.get(k).getParameterType() == ParameterType.valueOf("PRIORITY"))) {
-						tempParameters.add(entryDetails.get(k));
-					}
-				Parameter newParameter = new Parameter();
-				newParameter.setParameterType(newFormattedDetail.getParameterType());
-				newParameter.setParameterValue(newFormattedDetail.getParameterValue());
-				logger.log(Level.INFO, "New parameters added into an existing entry.");
-				tempParameters.add(newParameter);
+	private void replaceParameters(ArrayList<Parameter> oldParameters, ArrayList<Parameter> newParameters) {
+		for (int i = 0; i < oldParameters.size(); i++) {
+			for (int j = 0; j < newParameters.size(); j++) {
+				if (oldParameters.get(i).getParameterType() == newParameters.get(j).getParameterType()) {
+					oldParameters.get(i).setParameterValue(newParameters.get(j).getParameterValue());
+					logger.log(Level.INFO, "Parameter to be edited found and replaced.");
+					newParameters.remove(j);
+					logger.log(Level.INFO, "Parameter removed from newParameters.");
+					break;
 				}
 			}
+		}
+	}
+
+	private void addParameters(ArrayList<Parameter> oldParameters, ArrayList<Parameter> newParameters) {
+		if (!newParameters.isEmpty()) {
+			for (int i = 0; i < newParameters.size(); i++) {
+				oldParameters.add(newParameters.get(i));
+				logger.log(Level.INFO, "New parameter added to the oldParameters.");
+			}
+		}
+	}
+
+	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent,
+			boolean isEntryTypeChanged) {
+		if (!isEntryTypeChanged) {
+			replaceParameters(entryDetails, newContent);
+			addParameters(entryDetails, newContent);
+		} else {
+			replaceParameters(entryDetails, newContent);
+			//ArrayList<Parameter> tempParameters = new ArrayList<Parameter>();
+			for (int i = 0; i < entryDetails.size(); i++) {
+				if ((entryDetails.get(i).getParameterType() != ParameterType.NAME)
+						&& (entryDetails.get(i).getParameterType() != ParameterType.INDEX)
+						&& (entryDetails.get(i).getParameterType() != ParameterType.CATEGORY)
+						&& (entryDetails.get(i).getParameterType() != ParameterType.PRIORITY)) {
+					//tempParameters.add(entryDetails.get(i));
+					entryDetails.remove(i);
+					logger.log(Level.INFO, "Removing non Name/Index/Category/Priorty.");
+					continue;
+				}
+			}
+			addParameters(entryDetails, newContent);
 		}
 	}
 
@@ -136,10 +134,10 @@ public class TempStorageManipulator {
 		_archiveHandler.updateTempStorageToFile(entries);
 		logger.log(Level.INFO, "Transfer the temp storage into archive.");
 	}
-	
+
 	public void setIndexForAllEntries() {
 		for (int i = 0; i < _tempStorage.size(); i++) {
-			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i+1));
+			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i + 1));
 			_tempStorage.get(i).setIndexParameter(indexParameter);
 		}
 	}
