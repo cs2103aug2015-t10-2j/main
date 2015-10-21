@@ -63,8 +63,8 @@ public class CommandParser {
 				_logger.log(Level.INFO, "Finished parsing ARCHIVE command string");
 				return new ArchiveCommand(null);
 			case HELP:
-				// TBA: implement HelpCommand
-				// return new HelpCommand();
+				_logger.log(Level.INFO, "Finished parsing HELP command string");
+				return new HelpCommand(null);
 			case UNKNOWN:
 				_logger.log(Level.INFO, "Finished parsing UNKNOWN command string");
 				return new InvalidCommand(null);

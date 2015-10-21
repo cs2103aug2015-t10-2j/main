@@ -226,7 +226,12 @@ public class Entry {
 		
 		for (int i = 0; i < _parameters.size(); i++) {
 			Parameter detailParameter = _parameters.get(i);
-			String detailType = detailParameter.getParameterType().name();
+			String detailType;
+			if (detailParameter.getParameterType() != null) {
+				detailType = detailParameter.getParameterType().name();
+			} else {
+				detailType = "";
+			}
 			String detail = detailParameter.getParameterValue();
 			entryDetails = entryDetails.concat(detailType).concat(": ")
 					.concat(detail).concat("\n");
