@@ -44,6 +44,10 @@ public class UserInterface extends JFrame {
 		_displayArea.setEditable(false);
 		cp.add(_displayArea);
 		
+		JScrollPane _displayScroll = new JScrollPane(_displayArea);
+		_displayScroll.setBounds(10,60,390,250);
+		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		
 		_feedbackArea = new JTextArea(1, 50);
 		_feedbackArea.setEditable(false);
 		cp.add(_feedbackArea);
@@ -104,7 +108,7 @@ public class UserInterface extends JFrame {
             }
         });
 		
-		createLayout(new JComponent[]{_title, _displayArea, _feedbackArea, _commandLabel, _commandField});
+		createLayout(new JComponent[]{_title, _displayScroll, _feedbackArea, _commandLabel, _commandField});
 		_commandField.requestFocusInWindow();
 		
 		setTitle(TITLE);
