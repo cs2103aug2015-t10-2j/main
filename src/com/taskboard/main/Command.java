@@ -214,10 +214,20 @@ public abstract class Command {
 			}
 		}
 	}
+
+	protected String getDetailFromParameter(Parameter parameter) {
+		String detail = "";
+		
+		if (parameter != null) {
+			detail = parameter.getParameterValue();
+		}
+		
+		return detail;
+	}
 	
 	protected String getFeedbackForUser(String feedbackMessage, String detail) {
 		return String.format(feedbackMessage, detail);
 	}
-	
+		
 	public abstract Response executeCommand(); 	
 }
