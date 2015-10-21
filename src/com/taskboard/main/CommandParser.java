@@ -49,6 +49,11 @@ public class CommandParser {
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing VIEW command string");
 				return new ViewCommand(newCommandParameters);
+			case CHECK:
+				_parameterParser = new CheckParameterParser();
+				newCommandParameters = _parameterParser.parseParameters(commandString);
+				_logger.log(Level.INFO, "Finished parsing CHECK command string");
+				return new CheckCommand(newCommandParameters);
 			case HELP:
 				// TBA: implement HelpCommand
 				// return new HelpCommand();

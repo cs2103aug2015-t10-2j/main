@@ -18,6 +18,7 @@ import com.taskboard.main.AddParameterParser;
 import com.taskboard.main.EditParameterParser;
 import com.taskboard.main.DeleteParameterParser;
 import com.taskboard.main.ViewParameterParser;
+import com.taskboard.main.CheckParameterParser;
 import com.taskboard.main.ParameterComparator;
 
 public class CommandParserTest {
@@ -73,30 +74,30 @@ public class CommandParserTest {
 		assertAddParameters(expected3, "add Go to School from Home pri hi cat daily");
 		
 		// editing of complex descriptive task, 'multiple constraints' partition
-		ArrayList<Parameter> expected5 = new ArrayList<Parameter>();
-		expected5.add(new Parameter(ParameterType.INDEX, "12"));
-		expected5.add(new Parameter(ParameterType.NEW_NAME, "test at school"));
-		expected5.add(new Parameter(ParameterType.DATE, "13/10/2020"));
-		expected5.add(new Parameter(ParameterType.TIME, "14:00"));
-		expected5.add(new Parameter(ParameterType.PRIORITY, "medium"));
-		expected5.add(new Parameter(ParameterType.CATEGORY, "test"));
+		ArrayList<Parameter> expected4 = new ArrayList<Parameter>();
+		expected4.add(new Parameter(ParameterType.INDEX, "12"));
+		expected4.add(new Parameter(ParameterType.NEW_NAME, "test at school"));
+		expected4.add(new Parameter(ParameterType.DATE, "13/10/2020"));
+		expected4.add(new Parameter(ParameterType.TIME, "14:00"));
+		expected4.add(new Parameter(ParameterType.PRIORITY, "medium"));
+		expected4.add(new Parameter(ParameterType.CATEGORY, "test"));
 		
-		assertEditParameters(expected5, "edit 12 test at school at 13/10/2020 14:00 pri med cat test");
+		assertEditParameters(expected4, "edit 12 test at school at 13/10/2020 14:00 pri med cat test");
 		
 		// deleting of complex descriptive tasks, 'multiple constraints' partition
-		ArrayList<Parameter> expected7 = new ArrayList<Parameter>();
-		expected7.add(new Parameter(ParameterType.CATEGORY, "other"));
-		expected7.add(new Parameter(ParameterType.PRIORITY, "low"));
-		expected7.add(new Parameter(ParameterType.START_DATE, "23/10/2015"));
-		expected7.add(new Parameter(ParameterType.END_DATE, "28/10/2015"));
+		ArrayList<Parameter> expected5 = new ArrayList<Parameter>();
+		expected5.add(new Parameter(ParameterType.CATEGORY, "other"));
+		expected5.add(new Parameter(ParameterType.PRIORITY, "low"));
+		expected5.add(new Parameter(ParameterType.START_DATE, "23/10/2015"));
+		expected5.add(new Parameter(ParameterType.END_DATE, "28/10/2015"));
 		
-		assertDeleteParameters(expected7, "delete cat other pri low from 23/10/2015 to 28/10/2015");
+		assertDeleteParameters(expected5, "delete cat other pri low from 23/10/2015 to 28/10/2015");
 		
 		// deleting task by index
-		ArrayList<Parameter> expected8 = new ArrayList<Parameter>();
-		expected8.add(new Parameter(ParameterType.INDEX, "102"));
+		ArrayList<Parameter> expected6 = new ArrayList<Parameter>();
+		expected6.add(new Parameter(ParameterType.INDEX, "102"));
 		
-		assertDeleteParameters(expected8, "delete 102");
+		assertDeleteParameters(expected6, "delete 102");
 		
 		// viewing of all tasks, 'no constraint' partition
 		ArrayList<Parameter> expected9 = new ArrayList<Parameter>();
@@ -110,6 +111,12 @@ public class CommandParserTest {
 		expected10.add(new Parameter(ParameterType.PRIORITY, "low"));
 		
 		assertViewParameters(expected10, "view by 25/10/2015 cat Homework pri low");
+		
+		// checking/marking of a task
+		ArrayList<Parameter> expected11 = new ArrayList<Parameter>();
+		expected11.add(new Parameter(ParameterType.INDEX, "5"));
+		
+		assertCheckParameters(expected11, "check 5");
 	}
 	
 	private void assertAddParameters(ArrayList<Parameter> expected, String command) {
@@ -136,6 +143,13 @@ public class CommandParserTest {
 	private void assertViewParameters(ArrayList<Parameter> expected, String command) {
 		Collections.sort(expected, new ParameterComparator());
 		ArrayList<Parameter> actual = new ViewParameterParser().parseParameters(command);
+		Collections.sort(actual, new ParameterComparator());
+		assertEquals(toString(expected), toString(actual));
+	}
+	
+	private void assertCheckParameters(ArrayList<Parameter> expected, String command) {
+		Collections.sort(expected, new ParameterComparator());
+		ArrayList<Parameter> actual = new CheckParameterParser().parseParameters(command);
 		Collections.sort(actual, new ParameterComparator());
 		assertEquals(toString(expected), toString(actual));
 	}

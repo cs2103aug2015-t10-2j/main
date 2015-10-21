@@ -28,6 +28,10 @@ public class CommandTypeParser {
 			case "n":
 			case "new":
 				return CommandType.NEW;
+			case "done":
+			case "c":
+			case "check":
+				return CommandType.CHECK;
 			case "h":
 			case "help":
 			case "cmd":
