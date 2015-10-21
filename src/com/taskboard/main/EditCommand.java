@@ -507,9 +507,9 @@ public class EditCommand extends Command {
 		return entryName;
 	}
 	
-	private void setSuccessResponseForEdit(Response response, String eventName) {
+	private void setSuccessResponseForEdit(Response response, String entryName) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_EDIT, eventName);
+		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_EDIT, entryName);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
