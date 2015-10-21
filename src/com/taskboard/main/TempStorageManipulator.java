@@ -90,6 +90,7 @@ public class TempStorageManipulator {
 		if (!isEntryTypeChanged) {
 			replaceParameters(entryDetails, newContent);
 			addParameters(entryDetails, newContent);
+			Collections.sort(entryDetails, new ParameterComparator());
 		} else {
 			replaceParameters(entryDetails, newContent);
 			//ArrayList<Parameter> tempParameters = new ArrayList<Parameter>();
@@ -105,6 +106,7 @@ public class TempStorageManipulator {
 				}
 			}
 			addParameters(entryDetails, newContent);
+			Collections.sort(entryDetails, new ParameterComparator());
 		}
 	}
 
