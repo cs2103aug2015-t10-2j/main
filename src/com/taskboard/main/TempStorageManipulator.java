@@ -116,9 +116,23 @@ public class TempStorageManipulator {
 
 	public void deleteFromTempStorage(int i) throws IOException {
 		_tempStorage.remove(i);
+		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
-		logger.log(Level.INFO, "Delete an entry from temp storage.");
-
+		logger.log(Level.INFO, "Deleted an entry from temp storage.");
+	}
+	
+	public void deleteFromTempStorage(ArrayList<Entry> deletedEntries) throws IOException {
+		for (int i = 0; i < _tempStorage.size(); i++) {
+			Entry currentEntry = _tempStorage.get(i);
+			for (int j = 0; j < deletedEntries.size(); j++) {
+				if (currentEntry.toString().equals(deletedEntries.get(j).toString())) {
+					_tempStorage.remove(i);
+				}
+			}
+		}
+		setIndexForAllEntries();
+		setTempStorageToFile(_tempStorage);
+		logger.log(Level.INFO, "Deleted entries from temp storage.");
 	}
 
 	public void setCompletedInTempStorage(int i) throws IOException {
