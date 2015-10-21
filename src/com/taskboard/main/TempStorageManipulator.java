@@ -29,6 +29,10 @@ public class TempStorageManipulator {
 	public ArrayList<Entry> getTempStorage() {
 		return _tempStorage;
 	}
+	
+	public ArrayList<Entry> getTempArchive() {
+		return _tempArchive;
+	}
 
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
 		_tempStorage = _storageHandler.createNewFile(fileName);
@@ -142,6 +146,11 @@ public class TempStorageManipulator {
 		for (int i = 0; i < _tempStorage.size(); i++) {
 			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i + 1));
 			_tempStorage.get(i).setIndexParameter(indexParameter);
+		}
+		
+		for (int i = 0; i < _tempArchive.size(); i++) {
+			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i + 1));
+			_tempArchive.get(i).setIndexParameter(indexParameter);
 		}
 	}
 }

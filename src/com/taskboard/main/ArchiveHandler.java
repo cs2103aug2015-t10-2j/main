@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class ArchiveHandler {
 	
-	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "Name:";
+	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "INDEX:";
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";

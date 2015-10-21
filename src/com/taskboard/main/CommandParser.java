@@ -54,6 +54,9 @@ public class CommandParser {
 				newCommandParameters = _parameterParser.parseParameters(commandString);
 				_logger.log(Level.INFO, "Finished parsing COMPLETE command string");
 				return new CompleteCommand(newCommandParameters);
+			case ARCHIVE:
+				_logger.log(Level.INFO, "Finished parsing ARCHIVE command string");
+				return new ArchiveCommand(null);
 			case HELP:
 				// TBA: implement HelpCommand
 				// return new HelpCommand();

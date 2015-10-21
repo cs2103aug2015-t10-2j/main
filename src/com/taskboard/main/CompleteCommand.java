@@ -21,7 +21,7 @@ public class CompleteCommand extends Command {
 		try {
 			_tempStorageManipulator.setCompletedInTempStorage(indexToComplete - 1);
 			responseForComplete.setIsSuccess(true);
-			responseForComplete.setFeedback("Succesfully marked index " + indexToComplete + " as completed.\n");
+			responseForComplete.setFeedback("Successfully marked index " + indexToComplete + " as completed.");
 			responseForComplete.setEntries(_tempStorageManipulator.getTempStorage());
 		} catch (IOException ex) {
 			// TBA: Handle IO exception
