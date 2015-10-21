@@ -100,23 +100,23 @@ public class CommandParserTest {
 		assertDeleteParameters(expected6, "delete 102");
 		
 		// viewing of all tasks, 'no constraint' partition
-		ArrayList<Parameter> expected9 = new ArrayList<Parameter>();
+		ArrayList<Parameter> expected7 = new ArrayList<Parameter>();
 		
-		assertViewParameters(expected9, "view");
+		assertViewParameters(expected7, "view");
 		
 		// selective viewing of complex descriptive tasks, 'multiple constraints' partition
-		ArrayList<Parameter> expected10 = new ArrayList<Parameter>();
-		expected10.add(new Parameter(ParameterType.DATE, "25/10/2015"));
-		expected10.add(new Parameter(ParameterType.CATEGORY, "Homework"));
-		expected10.add(new Parameter(ParameterType.PRIORITY, "low"));
+		ArrayList<Parameter> expected8 = new ArrayList<Parameter>();
+		expected8.add(new Parameter(ParameterType.DATE, "25/10/2015"));
+		expected8.add(new Parameter(ParameterType.CATEGORY, "Homework"));
+		expected8.add(new Parameter(ParameterType.PRIORITY, "low"));
 		
-		assertViewParameters(expected10, "view by 25/10/2015 cat Homework pri low");
+		assertViewParameters(expected8, "view by 25/10/2015 cat Homework pri low");
 		
 		// checking/marking of a task
-		ArrayList<Parameter> expected11 = new ArrayList<Parameter>();
-		expected11.add(new Parameter(ParameterType.INDEX, "5"));
+		ArrayList<Parameter> expected9 = new ArrayList<Parameter>();
+		expected9.add(new Parameter(ParameterType.INDEX, "5"));
 		
-		assertCheckParameters(expected11, "check 5");
+		assertCheckParameters(expected9, "check 5");
 	}
 	
 	private void assertAddParameters(ArrayList<Parameter> expected, String command) {
