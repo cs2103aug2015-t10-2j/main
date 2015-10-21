@@ -18,7 +18,7 @@ import com.taskboard.main.AddParameterParser;
 import com.taskboard.main.EditParameterParser;
 import com.taskboard.main.DeleteParameterParser;
 import com.taskboard.main.ViewParameterParser;
-import com.taskboard.main.CheckParameterParser;
+import com.taskboard.main.CompleteParameterParser;
 import com.taskboard.main.ParameterComparator;
 
 public class CommandParserTest {
@@ -149,7 +149,7 @@ public class CommandParserTest {
 	
 	private void assertCheckParameters(ArrayList<Parameter> expected, String command) {
 		Collections.sort(expected, new ParameterComparator());
-		ArrayList<Parameter> actual = new CheckParameterParser().parseParameters(command);
+		ArrayList<Parameter> actual = new CompleteParameterParser().parseParameters(command);
 		Collections.sort(actual, new ParameterComparator());
 		assertEquals(toString(expected), toString(actual));
 	}

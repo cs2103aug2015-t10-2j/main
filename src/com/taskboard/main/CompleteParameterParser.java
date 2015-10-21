@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class CheckParameterParser implements ParameterParser {
+public class CompleteParameterParser implements ParameterParser {
 
 	private Logger _logger;
 	
-	public CheckParameterParser() {
+	public CompleteParameterParser() {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	

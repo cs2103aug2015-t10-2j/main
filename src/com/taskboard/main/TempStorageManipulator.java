@@ -123,6 +123,7 @@ public class TempStorageManipulator {
 		_tempStorage.remove(i);
 		_tempArchive.add(entry);
 		logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
+		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
 	}

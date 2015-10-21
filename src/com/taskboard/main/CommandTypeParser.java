@@ -31,7 +31,8 @@ public class CommandTypeParser {
 			case "done":
 			case "c":
 			case "check":
-				return CommandType.CHECK;
+			case "complete":
+				return CommandType.COMPLETE;
 			case "h":
 			case "help":
 			case "cmd":
