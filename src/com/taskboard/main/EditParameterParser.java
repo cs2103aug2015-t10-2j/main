@@ -56,6 +56,7 @@ public class EditParameterParser implements ParameterParser {
 					if (temporaryString.isEmpty()) {
 						// throw exception here (empty parameter exception)
 					} else {
+						temporaryString = reverseTokens(temporaryString);
 						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
 						if (parametersToAdd.isEmpty()) {
 							temporaryString += tokens[i] + ' ';
