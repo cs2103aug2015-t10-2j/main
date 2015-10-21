@@ -18,13 +18,18 @@ public class CompleteCommand extends Command {
 		Response responseForComplete = new Response();
 		
 		int indexToComplete = Integer.parseInt(_parameters.get(0).getParameterValue());
-		try {
-			_tempStorageManipulator.setCompletedInTempStorage(indexToComplete - 1);
-			responseForComplete.setIsSuccess(true);
-			responseForComplete.setFeedback("Successfully marked index " + indexToComplete + " as completed.");
-			responseForComplete.setEntries(_tempStorageManipulator.getTempStorage());
-		} catch (IOException ex) {
-			// TBA: Handle IO exception
+		if (indexToComplete >= 1 && indexToComplete <= _tempStorageManipulator.getTempStorage().size()) {
+			try {
+				_tempStorageManipulator.setCompletedInTempStorage(indexToComplete - 1);
+				responseForComplete.setIsSuccess(true);
+				responseForComplete.setFeedback("Successfully marked index " + indexToComplete + " as completed.");
+				responseForComplete.setEntries(_tempStorageManipulator.getTempStorage());
+			} catch (IOException ex) {
+				// TBA: Handle IO exception
+			}
+		} else {
+			responseForComplete.setIsSuccess(false);
+			responseForComplete.setException(new IllegalArgumentException("The specified index cannot be found."));
 		}
 		
 		return responseForComplete;

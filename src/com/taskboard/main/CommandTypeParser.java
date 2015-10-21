@@ -33,6 +33,10 @@ public class CommandTypeParser {
 			case "check":
 			case "complete":
 				return CommandType.COMPLETE;
+			case "r":
+			case "restore":
+			case "revert":
+				return CommandType.RESTORE;
 			case "arc":
 			case "arch":
 			case "archive":

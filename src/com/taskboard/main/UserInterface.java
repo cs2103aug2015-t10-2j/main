@@ -97,7 +97,6 @@ public class UserInterface extends JFrame {
                 			logger.log(Level.INFO, "Successfully updated display.");
                 		} else {
                 			String exception = currentResponse.getException().getMessage();
-                			_displayArea.setText("No entry to display");
                 			_feedbackArea.setText(exception);
                 		}
                 	}

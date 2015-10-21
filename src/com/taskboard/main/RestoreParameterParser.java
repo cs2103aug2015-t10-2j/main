@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class CompleteParameterParser implements ParameterParser {
+public class RestoreParameterParser implements ParameterParser {
 
 	private Logger _logger;
 	
-	public CompleteParameterParser() {
+	public RestoreParameterParser() {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) {
-		_logger.log(Level.INFO, "Started parsing parameters of COMPLETE command");
+		_logger.log(Level.INFO, "Started parsing parameters of RESTORE command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
@@ -33,7 +33,7 @@ public class CompleteParameterParser implements ParameterParser {
 			// TBA: index not found exception
 		}
 		
-		_logger.log(Level.INFO, "Finished parsing parameters of COMPLETE command");
+		_logger.log(Level.INFO, "Finished parsing parameters of RESTORE command");
 		_logger.log(Level.INFO, "  Recognized parameters:");
 		for (int i = 0; i < parameters.size(); i++) {
 			_logger.log(Level.INFO, "    " + parameters.get(i).getParameterType().name() + ": " + 

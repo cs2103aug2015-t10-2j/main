@@ -145,6 +145,17 @@ public class TempStorageManipulator {
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
 	}
+	
+	public void restoreToTempStorage(int i) throws IOException {
+		Entry entry = _tempArchive.get(i);
+		entry.setCompleted(false);
+		_tempArchive.remove(i);
+		_tempStorage.add(entry);
+		logger.log(Level.INFO, "Restored entry to storage.");
+		setIndexForAllEntries();
+		setTempStorageToFile(_tempStorage);
+		setTempArchiveToFile(_tempArchive);
+	}
 
 	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		_storageHandler.updateTempStorageToFile(entries);
