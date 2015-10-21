@@ -52,17 +52,6 @@ public class AddCommand extends Command {
 		}
 		
 		return false;
-		
-//		for (int i = 0; i < _parameters.size(); i++) {
-//			Parameter parameter = _parameters.get(i);
-//			ParameterType parameterType = parameter.getParameterType();
-//			
-//			if (parameterType == ParameterType.DATE || parameterType == ParameterType.TIME) {
-//				return true;
-//			}
-//		}
-//		
-//		return false;
 	}
 	
 	private boolean isAddEvent() {
@@ -74,51 +63,14 @@ public class AddCommand extends Command {
 		}
 		
 		return false;
-		
-//		for (int i = 0; i < _parameters.size(); i++) {
-//			Parameter parameter = _parameters.get(i);
-//			ParameterType parameterType = parameter.getParameterType();
-//			
-//			if (parameterType == ParameterType.START_DATE || parameterType == ParameterType.START_TIME) {
-//				return true;
-//			}
-//		}
-//		
-//		return false;
 	}
 		
 	private Response addFloatingTask() {
 		Response responseForAddFloating = new Response();
 		
-		Parameter taskNameParameter = getNameParameter();
-		String taskName = getDetailFromParameter(taskNameParameter);
-		
-		Parameter priorityParameter = getPriorityParameter();
-		String priority = getDetailFromParameter(priorityParameter);
-		
-		Parameter categoryParameter = getCategoryParameter();
-		String category = getDetailFromParameter(categoryParameter);
-				
-//		String taskName = "";
-//		String priority = "";
-//		String category = "";
-//		
-//		for (int i = 0; i < _parameters.size(); i++) {
-//			Parameter parameter = _parameters.get(i);
-//			ParameterType parameterType = parameter.getParameterType();
-//			
-//			switch (parameterType) {
-//				case NAME:
-//					taskName = parameter.getParameterValue();
-//					break;
-//				case PRIORITY:
-//					priority = parameter.getParameterValue();
-//					break;
-//				case CATEGORY:
-//					category = parameter.getParameterValue();
-//					break;
-//			}
-//		}
+		String taskName = getDetailFromParameter(getNameParameter());
+		String priority = getDetailFromParameter(getPriorityParameter());
+		String category = getDetailFromParameter(getCategoryParameter());
 		
 		responseForAddFloating = processFloatingTaskForStorage(taskName, priority, category);
 		
@@ -149,19 +101,6 @@ public class AddCommand extends Command {
 		addParameterToEntry(floatingTask, ParameterType.NAME, taskName);
 		addParameterToEntry(floatingTask, ParameterType.PRIORITY, priority);
 		addParameterToEntry(floatingTask, ParameterType.CATEGORY, category);
-				
-//		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
-//		floatingTask.addToParameters(taskNameParameter);
-//		
-//		if (!priority.isEmpty()) {
-//			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
-//			floatingTask.addToParameters(priorityParameter);
-//		}
-//		
-//		if (!category.isEmpty()) {
-//			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
-//			floatingTask.addToParameters(categoryParameter);
-//		}
 		
 		return floatingTask;
 	}
@@ -189,50 +128,12 @@ public class AddCommand extends Command {
 	private Response addDeadlineTask() {
 		Response responseForAddDeadline = new Response();
 		
-		Parameter taskNameParameter = getNameParameter();
-		String taskName = getDetailFromParameter(taskNameParameter);
+		String taskName = getDetailFromParameter(getNameParameter());
+		String date = getDetailFromParameter(getDateParameter());
+		String time = getDetailFromParameter(getTimeParameter());
+		String priority = getDetailFromParameter(getPriorityParameter());
+		String category = getDetailFromParameter(getCategoryParameter());
 		
-		Parameter dateParameter = getDateParameter();
-		String date = getDetailFromParameter(dateParameter);
-		
-		Parameter timeParameter = getTimeParameter();
-		String time = getDetailFromParameter(timeParameter);
-		
-		Parameter priorityParameter = getPriorityParameter();
-		String priority = getDetailFromParameter(priorityParameter);
-		
-		Parameter categoryParameter = getCategoryParameter();
-		String category = getDetailFromParameter(categoryParameter);
-		
-//		String taskName = "";
-//		String date = "";
-//		String time = "";
-//		String priority = "";
-//		String category = "";
-//		
-//		for (int i = 0; i < _parameters.size(); i++) {
-//			Parameter parameter = _parameters.get(i);
-//			ParameterType parameterType = parameter.getParameterType();
-//			
-//			switch (parameterType) {
-//				case NAME:
-//					taskName = parameter.getParameterValue();
-//					break;
-//				case DATE:
-//					date = parameter.getParameterValue();
-//					break;
-//				case TIME:
-//					time = parameter.getParameterValue();
-//					break;
-//				case PRIORITY:
-//					priority = parameter.getParameterValue();
-//					break;
-//				case CATEGORY:
-//					category = parameter.getParameterValue();
-//					break;
-//			}
-//		}
-			
 		responseForAddDeadline = processDateTimeDetailsForDeadlineTask(date, time);
 		
 		if (responseForAddDeadline.isSuccess() == true) {
@@ -299,93 +200,36 @@ public class AddCommand extends Command {
 		addParameterToEntry(deadlineTask, ParameterType.TIME, time);
 		addParameterToEntry(deadlineTask, ParameterType.PRIORITY, priority);
 		addParameterToEntry(deadlineTask, ParameterType.CATEGORY, category);
-		
-//		Parameter taskNameParameter = new Parameter(ParameterType.NAME, taskName);
-//		deadlineTask.addToParameters(taskNameParameter);
-//		
-//		Parameter dateParameter = new Parameter(ParameterType.DATE, date);
-//		deadlineTask.addToParameters(dateParameter);
-//		
-//		if (!time.isEmpty()) {
-//			Parameter timeParameter = new Parameter(ParameterType.TIME, time);
-//			deadlineTask.addToParameters(timeParameter);
-//		}
-//		
-//		if (!priority.isEmpty()) {
-//			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
-//			deadlineTask.addToParameters(priorityParameter);
-//		}
-//		
-//		if (!category.isEmpty()) {
-//			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
-//			deadlineTask.addToParameters(categoryParameter);
-//		}
-		
+	
 		return deadlineTask;
 	}
 		
 	private Response addEvent() {
 		Response responseForAddEvent = new Response();
 		
-		Parameter eventNameParameter = getNameParameter();
-		String eventName = getDetailFromParameter(eventNameParameter);
+		String eventName = getDetailFromParameter(getNameParameter());
+		String startDate = getDetailFromParameter(getStartDateParameter());
+		String startTime = getDetailFromParameter(getStartTimeParameter());
+		String endDate = getDetailFromParameter(getEndDateParameter());
+		String endTime = getDetailFromParameter(getEndTimeParameter());
+		String priority = getDetailFromParameter(getPriorityParameter());
+		String category = getDetailFromParameter(getCategoryParameter());
 		
-		Parameter startDateParameter = getStartDateParameter();
-		String startDate = getDetailFromParameter(startDateParameter);
+		if (startDate.isEmpty()) {
+			setFailureResponseForNoStartDate(responseForAddEvent);
+			return responseForAddEvent;
+		}
 		
-		Parameter startTimeParameter = getStartTimeParameter();
-		String startTime = getDetailFromParameter(startTimeParameter);
+		if (endDate.isEmpty() && endTime.isEmpty()) {
+			setFailureResponseForNoEndDateTime(responseForAddEvent);
+			return responseForAddEvent;
+		}
 		
-		Parameter endDateParameter = getEndDateParameter();
-		String endDate = getDetailFromParameter(endDateParameter);
-		
-		Parameter endTimeParameter = getEndTimeParameter();
-		String endTime = getDetailFromParameter(endTimeParameter);
-		
-		Parameter priorityParameter = getPriorityParameter();
-		String priority = getDetailFromParameter(priorityParameter);
-		
-		Parameter categoryParameter = getCategoryParameter();
-		String category = getDetailFromParameter(categoryParameter);
-		
-//		String eventName = "";
-//		String startDate = "";
-//		String startTime = "";
-//		String endDate = "";
-//		String endTime = "";
-//		String priority = "";
-//		String category = "";
-//		
-//		for (int i = 0; i < _parameters.size(); i++) {
-//			Parameter parameter = _parameters.get(i);
-//			ParameterType parameterType = parameter.getParameterType();
-//			
-//			switch (parameterType) {
-//				case NAME:
-//					eventName = parameter.getParameterValue();
-//					break;
-//				case START_DATE:
-//					startDate = parameter.getParameterValue();
-//					break;
-//				case START_TIME:
-//					startTime = parameter.getParameterValue();
-//					break;
-//				case END_DATE:
-//					endDate = parameter.getParameterValue();
-//					break;
-//				case END_TIME:
-//					endTime = parameter.getParameterValue();
-//					break;
-//				case PRIORITY:
-//					priority = parameter.getParameterValue();
-//					break;
-//				case CATEGORY:
-//					category = parameter.getParameterValue();
-//					break;
-//			}
-//		}
-		
-		responseForAddEvent = processDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
+		if (endDate.isEmpty()) {
+			endDate = startDate;
+		}
+
+		responseForAddEvent = validateDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
 		
 		if (responseForAddEvent.isSuccess() == true) {
 			responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, endTime, 
@@ -393,29 +237,6 @@ public class AddCommand extends Command {
 		}
 		
 		return responseForAddEvent;
-	}
-	
-	private Response processDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
-			                                        String endTime) {
-		Response responseForDateTime = new Response();
-	
-		if (startDate.isEmpty()) {
-			setFailureResponseForNoStartDate(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		if (endDate.isEmpty() && endTime.isEmpty()) {
-			setFailureResponseForNoEndDateTime(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		if (endDate.isEmpty()) {
-			endDate = startDate;
-		}
-		
-		responseForDateTime = validateDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
-				
-		return responseForDateTime;
 	}
 	
 	private void setFailureResponseForNoStartDate(Response response) {
@@ -478,35 +299,6 @@ public class AddCommand extends Command {
 		addParameterToEntry(event, ParameterType.END_TIME, endTime);
 		addParameterToEntry(event, ParameterType.PRIORITY, priority);
 		addParameterToEntry(event, ParameterType.CATEGORY, category);
-		
-//		Parameter eventNameParameter = new Parameter(ParameterType.NAME, eventName);
-//		event.addToParameters(eventNameParameter);
-//		
-//		Parameter startDateParameter = new Parameter(ParameterType.START_DATE, startDate);
-//		event.addToParameters(startDateParameter);
-//		
-//		if (!startTime.isEmpty()) {
-//			Parameter startTimeParameter = new Parameter(ParameterType.START_TIME, startTime);
-//			event.addToParameters(startTimeParameter);
-//		}
-//		
-//		Parameter endDateParameter = new Parameter(ParameterType.END_DATE, endDate);
-//		event.addToParameters(endDateParameter);
-//		
-//		if (!endTime.isEmpty()) {
-//			Parameter endTimeParameter = new Parameter(ParameterType.END_TIME, endTime);
-//			event.addToParameters(endTimeParameter);
-//		}
-//		
-//		if (!priority.isEmpty()) {
-//			Parameter priorityParameter = new Parameter(ParameterType.PRIORITY, priority);
-//			event.addToParameters(priorityParameter);
-//		}
-//		
-//		if (!category.isEmpty()) {
-//			Parameter categoryParameter = new Parameter(ParameterType.CATEGORY, category);
-//			event.addToParameters(categoryParameter);
-//		}
 		
 		return event;
 	}

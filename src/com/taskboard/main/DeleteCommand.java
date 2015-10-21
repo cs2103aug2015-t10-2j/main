@@ -21,10 +21,10 @@ public class DeleteCommand extends Command {
 		Response responseForDelete = new Response();
 		
 		if (isDeleteByIndex()) {
+			String inputIndex = getDetailFromParameter(getIndexParameter());
 			ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
 			IndexValidator indexValidator = new IndexValidator();
-			
-			responseForDelete = indexValidator.checkValidityOfInputIndex(_parameters, entries);
+			responseForDelete = indexValidator.checkValidityOfInputIndex(inputIndex, entries);
 		}
 		
 		return responseForDelete;

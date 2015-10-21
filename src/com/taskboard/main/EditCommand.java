@@ -28,10 +28,7 @@ public class EditCommand extends Command {
 	public Response executeCommand() {
 		Response responseForEdit = new Response();
 		
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		IndexValidator indexValidator = new IndexValidator();
-		
-		responseForEdit = indexValidator.checkValidityOfInputIndex(_parameters, entries);
+		responseForEdit = processInputIndex();
 		
 		if (responseForEdit.isSuccess() == true) {
 			responseForEdit = processEditedDetailsForStorage();
@@ -39,7 +36,18 @@ public class EditCommand extends Command {
 		 		
 		return responseForEdit;
 	}
+	
+	private Response processInputIndex() {
+		Response responseForInputIndex = new Response();
 		
+		String inputIndex = getDetailFromParameter(getIndexParameter());
+		IndexValidator indexValidator = new IndexValidator();
+		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
+		responseForInputIndex = indexValidator.checkValidityOfInputIndex(inputIndex, entries);
+		
+		return responseForInputIndex;
+	}
+	
 	private Response processEditedDetailsForStorage() {
 		ArrayList<Parameter> editedParameters = new ArrayList<Parameter>();
 		Response responseForEdit = new Response();

@@ -14,7 +14,7 @@ public class StorageHandler {
 
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
-	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "NAME:";
+	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "INDEX:";
 
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final int INDEX_OF_DETAIL_TYPE = 0;
@@ -106,7 +106,7 @@ public class StorageHandler {
 			}
 
 			if (!formattedDetail.isEmpty()) {
-				String[] splitFormattedDetail = formattedDetail.split(":");
+				String[] splitFormattedDetail = formattedDetail.split(": ");
 				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE].trim();
 				String detail = splitFormattedDetail[INDEX_OF_DETAIL].trim();
 

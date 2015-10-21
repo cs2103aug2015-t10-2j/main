@@ -13,19 +13,17 @@ public class IndexValidator {
 		
 	}
 	
-	public Response checkValidityOfInputIndex(ArrayList<Parameter> parameters, ArrayList<Entry> entries) {
+	public Response checkValidityOfInputIndex(String index, ArrayList<Entry> entries) {
 		Response responseForIndex = new Response();
 		
-		String index = "";
-		
-		for (int i = 0; i < parameters.size(); i++) {
-			Parameter parameter = parameters.get(i);
-			ParameterType parameterType = parameter.getParameterType();
-			
-			if (parameterType == ParameterType.INDEX) {
-				index = parameter.getParameterValue();
-			}
-		}
+//		for (int i = 0; i < parameters.size(); i++) {
+//			Parameter parameter = parameters.get(i);
+//			ParameterType parameterType = parameter.getParameterType();
+//			
+//			if (parameterType == ParameterType.INDEX) {
+//				index = parameter.getParameterValue();
+//			}
+//		}
 		
 		int indexValue = Integer.valueOf(index);
 			
