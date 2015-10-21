@@ -139,7 +139,7 @@ public class TempStorageManipulator {
 	
 	public void setIndexForAllEntries() {
 		for (int i = 0; i < _tempStorage.size(); i++) {
-			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i));
+			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i+1));
 			_tempStorage.get(i).setIndexParameter(indexParameter);
 		}
 	}
