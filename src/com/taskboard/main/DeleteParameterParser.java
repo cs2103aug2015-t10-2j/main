@@ -42,7 +42,7 @@ public class DeleteParameterParser implements ParameterParser {
 						temporaryString = reverseTokens(temporaryString);
 						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
 						if (parametersToAdd.isEmpty()) {
-							temporaryString += tokens[i] + ' ';
+							temporaryString += ' ' + tokens[i];
 						} else {
 							parameters.addAll(convertToParameters(temporaryString, expectedDelimiterType));
 							temporaryString = new String();
@@ -58,7 +58,7 @@ public class DeleteParameterParser implements ParameterParser {
 						expectedDelimiterName = new String(); // name does not have delimiter
 					}
 				} else {
-					temporaryString += tokens[i] + ' ';
+					temporaryString += ' ' + tokens[i];
 				}
 			}
 			if (!temporaryString.isEmpty()) {
