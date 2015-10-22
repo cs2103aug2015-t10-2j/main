@@ -27,16 +27,26 @@ public class TempStorageManipulatorTest {
 		File archiveFileOpen = new File("archiveOftestFileOpen.txt");
 		archiveFileOpen.createNewFile();
 		FileWriter writer = new FileWriter(testFileOpen);
+		writer.write("INDEX: 1");
+		writer.write(System.lineSeparator());
 		writer.write("NAME: test1");
+		writer.write(System.lineSeparator());
+		writer.write(System.lineSeparator());
+		writer.write("INDEX: 2");
 		writer.write(System.lineSeparator());
 		writer.write("NAME: test2");
 		writer.write(System.lineSeparator());
+		writer.write(System.lineSeparator());
+		writer.write("INDEX: 3");
+		writer.write(System.lineSeparator());
 		writer.write("NAME: test3");
+		writer.write(System.lineSeparator());
 		writer.write(System.lineSeparator());
 		writer.flush();
 		writer.close();		
 		FileWriter writerArchive = new FileWriter(archiveFileOpen);
 		writerArchive.write("NAME: test2");
+		writerArchive.write(System.lineSeparator());
 		writerArchive.write(System.lineSeparator());
 		writerArchive.flush();
 		writerArchive.close();
@@ -63,10 +73,12 @@ public class TempStorageManipulatorTest {
 		assert newArchive.delete(): true;
 	}
 	
-	public void addEntryToArrayListOfEntries(ArrayList<Entry> entries, String name) {
-		Parameter parameter = new Parameter(ParameterType.valueOf("NAME"), name);
+	public void addEntryToArrayListOfEntries(ArrayList<Entry> entries, String name, int i) {
+		Parameter nameParameter = new Parameter(ParameterType.NAME, name);
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i));
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		parameters.add(parameter);
+		parameters.add(indexParameter);
+		parameters.add(nameParameter);
 		Entry entry = new Entry();
 		entry.setParameters(parameters);
 		entries.add(entry);
@@ -88,9 +100,9 @@ public class TempStorageManipulatorTest {
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		
-		addEntryToArrayListOfEntries(_entries, "test1");
-		addEntryToArrayListOfEntries(_entries, "test2");
-		addEntryToArrayListOfEntries(_entries, "test3");
+		addEntryToArrayListOfEntries(_entries, "test1", 1);
+		addEntryToArrayListOfEntries(_entries, "test2", 2);
+		addEntryToArrayListOfEntries(_entries, "test3", 3);
 		String expected = convertArrayListToString(_entries);
 		String actual = convertArrayListToString(tempStorageManipulator.getTempStorage());
 		assertEquals(expected, actual);
@@ -107,18 +119,20 @@ public class TempStorageManipulatorTest {
 		File newFile = new File("testFileOpen.txt");
 		File newArchive = new File("archiveOftestFileOpen.txt");
 		
-		Parameter parameter = new Parameter(ParameterType.valueOf("NAME"), "test4");
+		Parameter nameParameter = new Parameter(ParameterType.NAME, "test4");
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(4));
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		parameters.add(parameter);
+		parameters.add(indexParameter);
+		parameters.add(nameParameter);
 		Entry entry = new Entry();
 		entry.setParameters(parameters);
 		tempStorageManipulator.repopulate(fileNameOpen);
 		tempStorageManipulator.addToTempStorage(entry);
 		
-		addEntryToArrayListOfEntries(_entries, "test1");
-		addEntryToArrayListOfEntries(_entries, "test2");
-		addEntryToArrayListOfEntries(_entries, "test3");
-		addEntryToArrayListOfEntries(_entries, "test4");
+		addEntryToArrayListOfEntries(_entries, "test1", 1);
+		addEntryToArrayListOfEntries(_entries, "test2", 2);
+		addEntryToArrayListOfEntries(_entries, "test3", 3);
+		addEntryToArrayListOfEntries(_entries, "test4", 4);
 		
 		String expected = convertArrayListToString(_entries);
 		String actual = convertArrayListToString(tempStorageManipulator.getTempStorage());
@@ -138,14 +152,16 @@ public class TempStorageManipulatorTest {
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		int i = 1;
-		Parameter parameter = new Parameter(ParameterType.valueOf("NAME"), "test4");
-		ArrayList<Parameter> newParameters = new ArrayList<Parameter>();
-		newParameters.add(parameter);
-		tempStorageManipulator.editTempStorage(i, newParameters, false);
+		Parameter nameParameter = new Parameter(ParameterType.NAME, "test4");
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(2));
+		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		parameters.add(indexParameter);
+		parameters.add(nameParameter);
+		tempStorageManipulator.editTempStorage(i, parameters, false);
 		
-		addEntryToArrayListOfEntries(_entries, "test1");
-		addEntryToArrayListOfEntries(_entries, "test4");
-		addEntryToArrayListOfEntries(_entries, "test3");
+		addEntryToArrayListOfEntries(_entries, "test1", 1);
+		addEntryToArrayListOfEntries(_entries, "test4", 2);
+		addEntryToArrayListOfEntries(_entries, "test3", 3);
 		String expected = convertArrayListToString(_entries);
 		String actual = convertArrayListToString(tempStorageManipulator.getTempStorage());
 		assertEquals(expected, actual);
@@ -166,8 +182,8 @@ public class TempStorageManipulatorTest {
 		int i = 1;
 		tempStorageManipulator.deleteFromTempStorage(i);
 		
-		addEntryToArrayListOfEntries(_entries, "test1");
-		addEntryToArrayListOfEntries(_entries, "test3");
+		addEntryToArrayListOfEntries(_entries, "test1", 1);
+		addEntryToArrayListOfEntries(_entries, "test3", 2);
 		String expected = convertArrayListToString(_entries);
 		String actual = convertArrayListToString(tempStorageManipulator.getTempStorage());
 		assertEquals(expected, actual);
@@ -188,9 +204,9 @@ public class TempStorageManipulatorTest {
 		int i = 1;
 		tempStorageManipulator.setCompletedInTempStorage(i);
 		
-		addEntryToArrayListOfEntries(_entries, "test1");
-		addEntryToArrayListOfEntries(_entries, "test3");
-		addEntryToArrayListOfEntries(_completedEntries, "test2");
+		addEntryToArrayListOfEntries(_entries, "test1", 1);
+		addEntryToArrayListOfEntries(_entries, "test3", 2);
+		addEntryToArrayListOfEntries(_completedEntries, "test2", 1);
 		
 		String expected = convertArrayListToString(_entries);
 		String actual = convertArrayListToString(tempStorageManipulator.getTempStorage());
