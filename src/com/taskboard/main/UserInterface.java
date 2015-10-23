@@ -73,7 +73,7 @@ public class UserInterface extends JFrame {
             		String userInput = _commandField.getText();
             		
                 	if (userInput.toLowerCase().equals("exit")) {
-                		logger.log(Level.INFO, "Sytem exit.");
+                		logger.log(Level.INFO, "System exit.");
                 		System.exit(0);
                 	} else {
                 		Response currentResponse = getLogic().processCommand(userInput);
