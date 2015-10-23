@@ -14,17 +14,17 @@ import com.taskboard.main.*;
 public class TempStorageManipulatorTest {
 	
 	TempStorageManipulator tempStorageManipulator = new TempStorageManipulator();
-	String fileNameNew = "testFileNew.txt";
-	String fileNameOpen = "testFileOpen.txt";
+	String fileNameNew = "testFileNew";
+	String fileNameOpen = "testFileOpen";
 	StorageHandler storageHandler = new StorageHandler();
 	ArchiveHandler archiveHandler = new ArchiveHandler();
 	ArrayList<Entry> _entries = new ArrayList<Entry>();
 	ArrayList<Entry> _completedEntries = new ArrayList<Entry>();
 	
 	public void createTestFile() throws IOException {
-		File testFileOpen = new File("testFileOpen.txt");
+		File testFileOpen = new File("testFileOpen.str");
 		testFileOpen.createNewFile();
-		File archiveFileOpen = new File("archiveOftestFileOpen.txt");
+		File archiveFileOpen = new File("testFileOpen.arc");
 		archiveFileOpen.createNewFile();
 		FileWriter writer = new FileWriter(testFileOpen);
 		writer.write("INDEX: 1");
@@ -62,8 +62,8 @@ public class TempStorageManipulatorTest {
 	@Test
 	public void testInitialise() throws IllegalArgumentException, IOException {
 		tempStorageManipulator.initialise(fileNameNew);
-		File newFile = new File("testFileNew.txt");
-		File newArchive = new File("archiveOftestFileNew.txt");
+		File newFile = new File("testFileNew.str");
+		File newArchive = new File("testFileNew.arc");
 		ArrayList<Entry> entries = new ArrayList<Entry>();
 		assertEquals(entries, tempStorageManipulator.getTempStorage());
 		
@@ -95,8 +95,8 @@ public class TempStorageManipulatorTest {
 	@Test
 	public void testRepopulate() throws IllegalArgumentException, IOException {
 		createTestFile();
-		File newFile = new File("testFileOpen.txt");
-		File newArchive = new File("archiveOftestFileOpen.txt");
+		File newFile = new File("testFileOpen.str");
+		File newArchive = new File("testFileOpen.arc");
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		
@@ -116,8 +116,8 @@ public class TempStorageManipulatorTest {
 	@Test
 	public void testAddToTempStorage() throws IOException {
 		createTestFile();
-		File newFile = new File("testFileOpen.txt");
-		File newArchive = new File("archiveOftestFileOpen.txt");
+		File newFile = new File("testFileOpen.str");
+		File newArchive = new File("testFileOpen.arc");
 		
 		Parameter nameParameter = new Parameter(ParameterType.NAME, "test4");
 		Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(4));
@@ -147,8 +147,8 @@ public class TempStorageManipulatorTest {
 	@Test
 	public void testEditTempStorage() throws IllegalArgumentException, IOException {
 		createTestFile();
-		File newFile = new File("testFileOpen.txt");
-		File newArchive = new File("archiveOftestFileOpen.txt");
+		File newFile = new File("testFileOpen.str");
+		File newArchive = new File("testFileOpen.arc");
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		int i = 1;
@@ -175,8 +175,8 @@ public class TempStorageManipulatorTest {
 	@Test
 	public void testDeleteFromTempStorage() throws IOException {
 		createTestFile();
-		File newFile = new File("testFileOpen.txt");
-		File newArchive = new File("archiveOftestFileOpen.txt");
+		File newFile = new File("testFileOpen.str");
+		File newArchive = new File("testFileOpen.arc");
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		int i = 1;
@@ -197,8 +197,8 @@ public class TempStorageManipulatorTest {
 	@Test
 	public void testSetCompletedInTempStorage() throws IOException {
 		createTestFile();
-		File newFile = new File("testFileOpen.txt");
-		File newArchive = new File("archiveOftestFileOpen.txt");
+		File newFile = new File("testFileOpen.str");
+		File newArchive = new File("testFileOpen.arc");
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		int i = 1;
