@@ -117,13 +117,13 @@ public class ArchiveHandler {
 		logger.log(Level.INFO, "Copy temp storage to archive.");
 	}
 	
-	public void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> entries) throws IOException {
+	private void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> entries) throws IOException {
 		for (int i = 0; i < entries.size(); i++) {
 			addSingleEntryToFile(fileToAdd, entries.get(i));
 		}
 	}
 	
-	public void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
+	private void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
 		String entrydetails = entry.toString();
 		fileToAdd.write(entrydetails);
 		fileToAdd.write(System.lineSeparator());

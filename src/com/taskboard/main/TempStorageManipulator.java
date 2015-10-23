@@ -175,7 +175,7 @@ public class TempStorageManipulator {
 		logger.log(Level.INFO, "Transfer the temp storage into archive.");
 	}
 
-	public void setIndexForAllEntries() {
+	private void setIndexForAllEntries() {
 		for (int i = 0; i < _tempStorage.size(); i++) {
 			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i + 1));
 			_tempStorage.get(i).setIndexParameter(indexParameter);
