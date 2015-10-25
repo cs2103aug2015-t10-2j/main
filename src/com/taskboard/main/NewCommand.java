@@ -9,8 +9,6 @@ public class NewCommand extends Command {
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
 	
-//	private static final int INDEX_OF_FILENAME = 0;
-	
 	public NewCommand(ArrayList<Parameter> parameters) {
 		assert parameters != null;
 		_parameters = parameters;
@@ -22,8 +20,7 @@ public class NewCommand extends Command {
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
-//		Parameter fileNameParameter = _parameters.get(INDEX_OF_FILENAME); 
-//		assert fileNameParameter != null;
+
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
 		return getResponseForLaunch(fileName);

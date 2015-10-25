@@ -3,16 +3,12 @@ package com.taskboard.main;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class AddCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
-	
+
 	public AddCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
 		
@@ -139,44 +135,20 @@ public class AddCommand extends Command {
 		String priority = getDetailFromParameter(getPriorityParameter());
 		String category = getDetailFromParameter(getCategoryParameter());
 		
-		responseForAddDeadline = processDateTimeDetailsForDeadlineTask(date, time);
+		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
+		responseForAddDeadline = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
 		
 		if (responseForAddDeadline.isSuccess() == true) {
-			responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);
+			responseForAddDeadline = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(date, time);
+			
+			if (responseForAddDeadline.isSuccess() == true) {
+				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);
+			}
 		}
-	
+
 		return responseForAddDeadline;
 	}
 	
-	private Response processDateTimeDetailsForDeadlineTask(String date, String time) {
-		Response responseForDateTime = new Response();
-		
-		if (date.isEmpty()) {
-			setFailureResponseForNoDate(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		responseForDateTime = validateDateTimeDetailsForDeadlineTask(date, time);
-		
-		return responseForDateTime;
-	}
-	
-	private void setFailureResponseForNoDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
-		response.setException(exObj);
-	}
-	
-	private Response validateDateTimeDetailsForDeadlineTask(String date, String time) {
-		Response responseForDateTime = new Response();
-		
-		DateTimeValidator dateTimeValidator = new DateTimeValidator();
-		Date currentDate = new Date();
-		responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, currentDate);
-		
-		return responseForDateTime;
-	}
-		
 	private Response processDeadlineTaskForStorage(String taskName, String date, String time, String priority, 
 			                                       String category) {
 		Response responseForAddDeadline = new Response();
@@ -212,61 +184,29 @@ public class AddCommand extends Command {
 		String priority = getDetailFromParameter(getPriorityParameter());
 		String category = getDetailFromParameter(getCategoryParameter());
 		
-		if (startDate.isEmpty()) {
-			setFailureResponseForNoStartDate(responseForAddEvent);
-			return responseForAddEvent;
-		}
-		
-		if (endDate.isEmpty() && endTime.isEmpty()) {
-			setFailureResponseForNoEndDateTime(responseForAddEvent);
-			return responseForAddEvent;
-		}
-		
-		if (endDate.isEmpty()) {
-			endDate = startDate;
-		}
-
-		responseForAddEvent = validateDateTimeDetailsForEvent(startDate, startTime, endDate, endTime);
+		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
+		responseForAddEvent = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
+				                                                                 endDate, endTime);
 		
 		if (responseForAddEvent.isSuccess() == true) {
-			responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, endTime, 
-					                                     priority, category);
+			endDate = startDate;
 		}
 		
+		if (responseForAddEvent.getException() == null) {
+			responseForAddEvent = eventDateTimeProcessor.validateEventDateTimeDetails(startDate, startTime, 
+					                                                                  endDate, endTime);
+			
+			if (responseForAddEvent.isSuccess() == true) {
+				responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, 
+						                                     endTime, priority, category);
+			}
+		}
+
 		return responseForAddEvent;
 	}
-	
-	private void setFailureResponseForNoStartDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
-		response.setException(exObj);
-	}
-	
-	private void setFailureResponseForNoEndDateTime(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
-		response.setException(exObj);
-	}
-	
-	private Response validateDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
-                                                     String endTime) {
-		Response responseForDateTime = new Response();
 		
-		DateTimeValidator startDateTimeValidator = new DateTimeValidator();
-		Date currentDate = new Date();
-		responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, currentDate);
-		
-		if (responseForDateTime.isSuccess() == true) {
-			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
-			Date inputStartDate = startDateTimeValidator.getDate();
-			responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
-		}
-		
-		return responseForDateTime;
-	}
-	
-	private Response processEventForStorage(String eventName, String startDate, String startTime, String endDate, 
-                                            String endTime, String priority, String category) {
+	private Response processEventForStorage(String eventName, String startDate, String startTime,  
+			                                String endDate, String endTime, String priority, String category) {
 		Response responseForEvent = new Response();
 		
 		Entry event = constructEventParameters(eventName, startDate, startTime, endDate, endTime,
