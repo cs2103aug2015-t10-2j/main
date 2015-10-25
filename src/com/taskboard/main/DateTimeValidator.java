@@ -11,7 +11,7 @@ public class DateTimeValidator {
 	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	
-	private static final String FORMAT_DEFAULT_TIME = "00:00";
+	private static final String FORMAT_DEFAULT_TIME = "23:59";
 	private static final String FORMAT_DATE_TIME = "dd/MM/yyyy'T'HH:mm";
 	
 	// attribute

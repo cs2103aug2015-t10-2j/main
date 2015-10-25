@@ -81,23 +81,17 @@ public class AddCommand extends Command {
 		Response responseForAddFloating = new Response();
 		
 		Entry floatingTask = constructFloatingTaskParameters(taskName, priority, category);
-		
-		try {
-			_tempStorageManipulator.addToTempStorage(floatingTask);
-			setSuccessResponseForAdd(responseForAddFloating, taskName);
-		} catch (IOException ex) {
-			setFailureResponseForAdd(responseForAddFloating);
-		}
+		responseForAddFloating = updateNewEntryToStorage(floatingTask, taskName);
 			
 		return responseForAddFloating;
 	}
-	
+		
 	private Entry constructFloatingTaskParameters(String taskName, String priority, String category) {
 		Entry floatingTask = new Entry();
-		
-		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
-		floatingTask.addToParameters(indexParameter);
-		
+//		
+//		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
+//		floatingTask.addToParameters(indexParameter);
+		addParameterToEntry(floatingTask, ParameterType.INDEX, "");
 		addParameterToEntry(floatingTask, ParameterType.NAME, taskName);
 		addParameterToEntry(floatingTask, ParameterType.PRIORITY, priority);
 		addParameterToEntry(floatingTask, ParameterType.CATEGORY, category);
@@ -106,10 +100,23 @@ public class AddCommand extends Command {
 	}
 	
 	private void addParameterToEntry(Entry entry, ParameterType parameterType, String detail) {
-		if (!detail.isEmpty()) {
+		if (parameterType == ParameterType.INDEX || !detail.isEmpty()) {
 			Parameter parameter = new Parameter(parameterType, detail);
 			entry.addToParameters(parameter);
 		}
+	}
+	
+	private Response updateNewEntryToStorage(Entry entry, String entryName) {
+		Response responseForAdd = new Response();
+		
+		try {
+			_tempStorageManipulator.addToTempStorage(entry);
+			setSuccessResponseForAdd(responseForAdd, entryName);
+		} catch (IOException ex) {
+			setFailureResponseForAdd(responseForAdd);
+		}
+		
+		return responseForAdd;
 	}
 	
 	private void setSuccessResponseForAdd(Response response, String entryName) {
@@ -177,13 +184,7 @@ public class AddCommand extends Command {
 		Response responseForAddDeadline = new Response();
 		
 		Entry deadlineTask = constructDeadlineTaskParameters(taskName, date, time, priority, category);
-		
-		try {
-			_tempStorageManipulator.addToTempStorage(deadlineTask);
-			setSuccessResponseForAdd(responseForAddDeadline, taskName);
-		} catch (IOException ex) {
-			setFailureResponseForAdd(responseForAddDeadline);
-		}
+		responseForAddDeadline = updateNewEntryToStorage(deadlineTask, taskName);
 		
 		return responseForAddDeadline;
 	}
@@ -192,9 +193,7 @@ public class AddCommand extends Command {
 			                                      String category) {
 		Entry deadlineTask = new Entry();
 		
-		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
-		deadlineTask.addToParameters(indexParameter);
-		
+		addParameterToEntry(deadlineTask, ParameterType.INDEX, "");
 		addParameterToEntry(deadlineTask, ParameterType.NAME, taskName);
 		addParameterToEntry(deadlineTask, ParameterType.DATE, date);
 		addParameterToEntry(deadlineTask, ParameterType.TIME, time);
@@ -274,13 +273,7 @@ public class AddCommand extends Command {
 		
 		Entry event = constructEventParameters(eventName, startDate, startTime, endDate, endTime,
 				                               priority, category);
-		
-		try {
-			_tempStorageManipulator.addToTempStorage(event);
-			setSuccessResponseForAdd(responseForEvent, eventName);
-		} catch (IOException ex) {
-			setFailureResponseForAdd(responseForEvent);
-		}
+		responseForEvent = updateNewEntryToStorage(event, eventName);
 		
 		return responseForEvent;
 	}
@@ -288,10 +281,8 @@ public class AddCommand extends Command {
 	private Entry constructEventParameters(String eventName, String startDate, String startTime, String endDate,
                                            String endTime, String priority, String category) {
 		Entry event = new Entry();
-		
-		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
-		event.addToParameters(indexParameter);
-		
+			
+		addParameterToEntry(event, ParameterType.INDEX, "");
 		addParameterToEntry(event, ParameterType.NAME, eventName);
 		addParameterToEntry(event, ParameterType.START_DATE, startDate);
 		addParameterToEntry(event, ParameterType.START_TIME, startTime);
