@@ -88,9 +88,7 @@ public class AddCommand extends Command {
 		
 	private Entry constructFloatingTaskParameters(String taskName, String priority, String category) {
 		Entry floatingTask = new Entry();
-//		
-//		Parameter indexParameter = new Parameter(ParameterType.INDEX, "");
-//		floatingTask.addToParameters(indexParameter);
+
 		addParameterToEntry(floatingTask, ParameterType.INDEX, "");
 		addParameterToEntry(floatingTask, ParameterType.NAME, taskName);
 		addParameterToEntry(floatingTask, ParameterType.PRIORITY, priority);
