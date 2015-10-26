@@ -52,4 +52,37 @@ public class Response {
 	public void setEntries(ArrayList<Entry> entries) {
 		_entries = entries;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Response) {
+			Response response = (Response) obj;
+			
+			boolean isEqual;
+			
+			if (this.isSuccess() == true) {
+				isEqual = this._isSuccess == response._isSuccess && 
+						  this._feedback.equals(response._feedback) &&
+						  this.retrieveEntryDetails(_entries).equals(response.retrieveEntryDetails(_entries));
+			} else {
+				isEqual = this._isSuccess == response._isSuccess &&
+				          this._exObj.getMessage().equals(response._exObj.getMessage());
+			}
+			
+			return isEqual;
+		}
+		
+		return false;
+	}
+	
+	private String retrieveEntryDetails(ArrayList<Entry> entries) {
+		String entryDetails = "";
+		
+		for (int i = 0; i < entries.size(); i++) {
+			Entry entry = entries.get(i);
+			entryDetails = entryDetails.concat(entry.toString());
+		}
+		
+		return entryDetails;
+	}
 }

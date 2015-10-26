@@ -233,8 +233,7 @@ public class Entry {
 				detailType = "";
 			}
 			String detail = detailParameter.getParameterValue();
-			entryDetails = entryDetails.concat(detailType).concat(": ")
-					.concat(detail).concat("\n");
+			entryDetails = entryDetails.concat(detailType).concat(": ").concat(detail).concat("\n");
 		}
 		
 		return entryDetails;
