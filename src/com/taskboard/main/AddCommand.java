@@ -142,7 +142,8 @@ public class AddCommand extends Command {
 			responseForAddDeadline = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(date, time);
 			
 			if (responseForAddDeadline.isSuccess() == true) {
-				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);
+				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, 
+						                                               category);
 			}
 		}
 

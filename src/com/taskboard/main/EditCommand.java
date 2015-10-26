@@ -2,12 +2,7 @@ package com.taskboard.main;
 
 import java.io.IOException;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 public class EditCommand extends Command {
 	
@@ -15,10 +10,7 @@ public class EditCommand extends Command {
 	private static final String MESSAGE_ERROR_FOR_EDIT = "The entry could not be edited.";
 	private static final String MESSAGE_ERROR_FOR_NO_INDEX = "No entry index provided";
 	private static final String MESSAGE_ERROR_FOR_NO_EDIT_DETAILS = "No edit details provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
-	
+
 	public EditCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
 		
@@ -68,6 +60,16 @@ public class EditCommand extends Command {
 		return false;
 	}
 	
+	private Response validateInputIndex(String index) {
+		Response responseForInputIndex = new Response();
+		
+		IndexValidator indexValidator = new IndexValidator();
+		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
+		responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
+		
+		return responseForInputIndex;
+	}
+	
 	private boolean isEditWithDetails() {
 		if (isIndexProvided() && _parameters.size() > 1) {
 			return true;
@@ -87,17 +89,7 @@ public class EditCommand extends Command {
 		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_EDIT_DETAILS);
 		response.setException(exObj);
 	}
-	
-	private Response validateInputIndex(String index) {
-		Response responseForInputIndex = new Response();
 		
-		IndexValidator indexValidator = new IndexValidator();
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
-		
-		return responseForInputIndex;
-	}
-	
 	private Response processEditedDetailsForStorage() {
 		ArrayList<Parameter> editedParameters = new ArrayList<Parameter>();
 		Response responseForEdit = new Response();
@@ -126,7 +118,8 @@ public class EditCommand extends Command {
 		} else if (isEditDateTimeForEvent()) {
 			responseForEdit = processEditedDateTimeDetailsForEvent(editedParameters, indexValue);
 		} else {
-			responseForEdit = updateEditedDetailsToStorage(editedParameters, indexValue, false);
+			boolean isEntryTypeChanged = false;
+			responseForEdit = updateEditedDetailsToStorage(editedParameters, indexValue, isEntryTypeChanged);
 		}
 		
 		return responseForEdit;
@@ -143,7 +136,8 @@ public class EditCommand extends Command {
 		return false;
 	}
 	
-	private Response processEditedDateTimeDetailsForDeadlineTask(ArrayList<Parameter> editedParameters, int index) {
+	private Response processEditedDateTimeDetailsForDeadlineTask(ArrayList<Parameter> editedParameters, 
+			                                                     int index) {
 		Response responseForDateTime = new Response();
 		
 		String newDate = getDetailFromParameter(getDateParameter());
@@ -190,44 +184,29 @@ public class EditCommand extends Command {
 		return false;
 	}
 	
-	private Response processConversionToDeadlineTask(ArrayList<Parameter> editedParameters, int index, String newDate,
-			                                         String newTime) {
+	private Response processConversionToDeadlineTask(ArrayList<Parameter> editedParameters, int index, 
+			                                         String newDate, String newTime) {
 		Response responseForDateTime = new Response();
 		
-		if (newDate.isEmpty()) {
-			setFailureResponseForNoDate(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		responseForDateTime = validateDateTimeDetailsForDeadlineTask(newDate, newTime);	
+		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
+		responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(newDate, newTime);
 		
 		if (responseForDateTime.isSuccess() == true) {
-			boolean isEntryTypeChanged = true;
-			responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, newDate,
-					                                                               newTime, isEntryTypeChanged);
+			responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, newTime);
+			
+			if (responseForDateTime.isSuccess() == true) {
+				boolean isEntryTypeChanged = true;
+				responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, 
+						                                                               newDate, newTime, 
+						                                                               isEntryTypeChanged);
+			}
 		}
 		
 		return responseForDateTime;
 	}
 	
-	private void setFailureResponseForNoDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
-		response.setException(exObj);
-	}
-	
-	private Response validateDateTimeDetailsForDeadlineTask(String date, String time) {
-		Response responseForDateTime = new Response();
-		
-		DateTimeValidator dateTimeValidator = new DateTimeValidator();
-		Date currentDate = new Date();
-		responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, currentDate);
-		
-		return responseForDateTime;
-	}
-	
-	private Response constructEditedDateTimeParametersForDeadlineTask(ArrayList<Parameter> editedParameters, int index,
-			                                                          String newDate, String newTime, 
+	private Response constructEditedDateTimeParametersForDeadlineTask(ArrayList<Parameter> editedParameters, 
+			                                                          int index, String newDate, String newTime, 
 			                                                          boolean isEntryTypeChanged) {
 		Response responseForDateTime = new Response();
 		
@@ -239,16 +218,16 @@ public class EditCommand extends Command {
 		return responseForDateTime;
 	}
 	
-	private void addParameterToEditedParameters(ArrayList<Parameter> editedParameters, ParameterType parameterType,
-			                                    String detail) {
+	private void addParameterToEditedParameters(ArrayList<Parameter> editedParameters, 
+			                                    ParameterType parameterType, String detail) {
 		if (!detail.isEmpty()) {
 			Parameter parameter = new Parameter(parameterType, detail);
 			editedParameters.add(parameter);
 		}
 	}
 	
-	private Response processEditingDeadlineTask(ArrayList<Parameter> editedParameters, int index, String newDate,
-			                                    String newTime) {
+	private Response processEditingDeadlineTask(ArrayList<Parameter> editedParameters, int index, 
+			                                    String newDate, String newTime) {
 		Response responseForDateTime = new Response();
 		
 		if (newDate.isEmpty()) {
@@ -259,12 +238,14 @@ public class EditCommand extends Command {
 			newTime = getTimeFromEntry(index);
 		}
 		
-		responseForDateTime = validateDateTimeDetailsForDeadlineTask(newDate, newTime);
-			
+		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
+		responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, newTime);
+
 		if (responseForDateTime.isSuccess() == true) {
 			boolean isEntryTypeChanged = false;
-			responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, newDate,
-					                                                               newTime, isEntryTypeChanged);
+			responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, 
+					                                                               newDate, newTime, 
+					                                                               isEntryTypeChanged);
 		}
 		
 		return responseForDateTime;
@@ -326,68 +307,39 @@ public class EditCommand extends Command {
 		return responseForDateTime;
 	}
 	
-	private Response processConversionToEvent(ArrayList<Parameter> editedParameters, int index, String newStartDate,
-			                                  String newStartTime, String newEndDate, String newEndTime) {
+	private Response processConversionToEvent(ArrayList<Parameter> editedParameters, int index, 
+			                                  String newStartDate, String newStartTime, String newEndDate, 
+			                                  String newEndTime) {
 		Response responseForDateTime = new Response();
 		
-		if (newStartDate.isEmpty()) {
-			setFailureResponseForNoStartDate(responseForDateTime);
-			return responseForDateTime;
-		}
+		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
+		responseForDateTime = eventDateTimeProcessor.processEventDateTimeDetails(newStartDate, newStartTime, 
+				                                                                 newEndDate, newEndTime);
 		
-		if (newEndDate.isEmpty() && newEndTime.isEmpty()) {
-			setFailureResponseForNoEndDateTime(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		if (newEndDate.isEmpty()) {
+		if (responseForDateTime.isSuccess() == true) {
 			newEndDate = newStartDate;
 		}
 		
-		responseForDateTime = validateDateTimeDetailsForEvent(newStartDate, newStartTime, newEndDate, newEndTime);
-		
-		if (responseForDateTime.isSuccess() == true) {
-			boolean isEntryTypeChanged = true;
-			responseForDateTime = constructEditedDateTimeParametersForEvent(editedParameters, index, newStartDate,  
-					                                                        newStartTime, newEndDate, newEndTime,
-					                                                        isEntryTypeChanged);
-		}
-		
-		return responseForDateTime;
-	}
-	
-	private void setFailureResponseForNoStartDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
-		response.setException(exObj);
-	}
-	
-	private void setFailureResponseForNoEndDateTime(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
-		response.setException(exObj);
-	}
-	
-	private Response validateDateTimeDetailsForEvent(String startDate, String startTime, String endDate, 
-			                                         String endTime) {
-		Response responseForDateTime = new Response();
-		
-		DateTimeValidator startDateTimeValidator = new DateTimeValidator();
-		Date currentDate = new Date();
-		responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, currentDate);
-		
-		if (responseForDateTime.isSuccess() == true) {
-			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
-			Date inputStartDate = startDateTimeValidator.getDate();
-			responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
+		if (responseForDateTime.getException() == null) {
+			responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
+					                                                                  newEndDate, newEndTime);
+			
+			if (responseForDateTime.isSuccess() == true) {
+				boolean isEntryTypeChanged = true;
+				responseForDateTime = constructEditedDateTimeParametersForEvent(editedParameters, index, 
+						                                                        newStartDate, newStartTime, 
+						                                                        newEndDate, newEndTime,
+						                                                        isEntryTypeChanged);
+			}
 		}
 		
 		return responseForDateTime;
 	}
 	
 	private Response constructEditedDateTimeParametersForEvent(ArrayList<Parameter> editedParameters, int index,
-			                                                   String newStartDate, String newStartTime, String newEndDate, 
-			                                                   String newEndTime, boolean isEntryTypeChanged) {                      
+			                                                   String newStartDate, String newStartTime, 
+			                                                   String newEndDate, String newEndTime, 
+			                                                   boolean isEntryTypeChanged) {                      
 		Response responseForDateTime = new Response();
 		
 		addParameterToEditedParameters(editedParameters, ParameterType.START_DATE, newStartDate);
@@ -420,7 +372,9 @@ public class EditCommand extends Command {
 			newEndTime = getEndTimeFromEntry(index);
 		}
 		
-		responseForDateTime = validateDateTimeDetailsForEvent(newStartDate, newStartTime, newEndDate, newEndTime);
+		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
+		responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
+				                                                                  newEndDate, newEndTime);
 		
 		if (responseForDateTime.isSuccess() == true) {
 			boolean isEntryTypeChanged = false;
