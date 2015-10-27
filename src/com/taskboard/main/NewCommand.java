@@ -43,8 +43,7 @@ public class NewCommand extends Command {
 	
 	private void setSuccessResponseForNew(Response response, String fileName) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_WELCOME, fileName);
-		response.setFeedback(userFeedback);
+		response.setFeedback(MESSAGE_WELCOME);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
 	

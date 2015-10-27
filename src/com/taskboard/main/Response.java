@@ -63,7 +63,7 @@ public class Response {
 			if (this.isSuccess() == true) {
 				isEqual = this._isSuccess == response._isSuccess && 
 						  this._feedback.equals(response._feedback) &&
-						  this.retrieveEntryDetails(_entries).equals(response.retrieveEntryDetails(_entries));
+						  this.retrieveEntryDetails(this._entries).equals(response.retrieveEntryDetails(response._entries));
 			} else {
 				isEqual = this._isSuccess == response._isSuccess &&
 				          this._exObj.getMessage().equals(response._exObj.getMessage());
