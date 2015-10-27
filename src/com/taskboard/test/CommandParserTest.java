@@ -43,7 +43,7 @@ public class CommandParserTest {
 	}
 	
 	@Test
-	public void TestParameterParser() {
+	public void testParameterParser() {
 		// floating task adding test, 'multiple tokens' partition
 		ArrayList<Parameter> expected1 = new ArrayList<Parameter>();
 		expected1.add(new Parameter(ParameterType.NAME, "Hello again World!"));
