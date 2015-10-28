@@ -239,4 +239,24 @@ public class Entry {
 		return entryDetails;
 	}
 	
+	public String toUIString() {
+		String entryDetails = "<html>";
+		
+		for (int i = 0; i < _parameters.size(); i++) {
+			Parameter detailParameter = _parameters.get(i);
+			String detailType;
+			if (detailParameter.getParameterType() != null) {
+				detailType = detailParameter.getParameterType().name();
+			} else {
+				detailType = "";
+			}
+			String detail = detailParameter.getParameterValue();
+			entryDetails += detailType + ": " + detail + "<br>";
+		}
+		
+		entryDetails += "</html>";
+		
+		return entryDetails;
+	}
+	
 }
