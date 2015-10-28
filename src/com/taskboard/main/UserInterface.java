@@ -27,7 +27,7 @@ public class UserInterface extends JFrame {
 	private JTextField _commandField;
 	private JLabel _title;
 
-	private static Logger logger = Logger.getLogger("UserInterface");
+	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 
 	public UserInterface() {
 		JFrame frame = new JFrame(TITLE);
@@ -163,7 +163,7 @@ public class UserInterface extends JFrame {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				UserInterface _userInterface = new UserInterface();
+				new UserInterface();
 			}
 		});
 	}
@@ -172,7 +172,7 @@ public class UserInterface extends JFrame {
 		String userInput = _commandField.getText();
 
 		if (userInput.toLowerCase().equals("exit")) {
-			logger.log(Level.INFO, "System exit.");
+			_logger.log(Level.INFO, "System exit.");
 			System.exit(0);
 		} else {
 			Response currentResponse = getLogic().processCommand(userInput);
@@ -183,17 +183,23 @@ public class UserInterface extends JFrame {
 				if (currentResponse.getFeedback() != null) {
 					String feedback = currentResponse.getFeedback().trim();
 					_feedbackArea.setText(feedback);
+					
+					_logger.log(Level.INFO, "Successfully updated feedback area.");
 				}
 
 				if (entries != null) {
 					GridBagConstraints constraints = new GridBagConstraints();
 					constraints.anchor = GridBagConstraints.PAGE_START;
-					constraints.insets = new Insets(2, 5, 2, 5);
+					constraints.insets = new Insets(2, 2, 2, 2);
+					constraints.fill = GridBagConstraints.NONE;
 					
 					for (int i = 0; i < entries.size(); i++) {
 						Entry currentEntry = entries.get(i);
 						constraints.gridx = 0;
 						constraints.gridy = i;
+						if (i == entries.size() - 1) {
+							constraints.weighty = 1;
+						}
 						JLabel indexLabel = new JLabel();
 						if (currentEntry.getIndexParameter() != null) {
 							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
@@ -254,10 +260,12 @@ public class UserInterface extends JFrame {
 					
 				}
 
-				logger.log(Level.INFO, "Successfully updated display.");
+				_logger.log(Level.INFO, "Successfully updated display.");
 			} else {
 				String exception = currentResponse.getException().getMessage();
 				_feedbackArea.setText(exception);
+				
+				_logger.log(Level.INFO, "Successfully updated feedback area.");
 			}
 		}
 
