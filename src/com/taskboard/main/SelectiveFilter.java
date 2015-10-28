@@ -62,36 +62,36 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
-	public ArrayList<Entry> filterByDate(ArrayList<Entry> entries, String searchDate) {
-		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-		
-		for (int i = 0; i < entries.size(); i++) {
-			Entry entry = entries.get(i);
-			Parameter dateParameter = entry.getDateParameter();
-			Parameter startDateParameter = entry.getStartDateParameter();
-			
-			boolean hasDeadlineDateMatched = hasEntryDateMatched(dateParameter, searchDate); 
-		    boolean hasEventDateMatched = hasEntryDateMatched(startDateParameter, searchDate); 
-		    
-		    if (hasDeadlineDateMatched || hasEventDateMatched) {
-		    	filteredEntries.add(entry);
-		    }
-		} 
-		
-		return filteredEntries;
-	}
-	
-	private boolean hasEntryDateMatched(Parameter dateParameter, String referenceDate) {
-		if (dateParameter != null) {
-			String date = dateParameter.getParameterValue();
-			
-			if (date.equals(referenceDate)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
+//	public ArrayList<Entry> filterByDate(ArrayList<Entry> entries, String searchDate) {
+//		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
+//		
+//		for (int i = 0; i < entries.size(); i++) {
+//			Entry entry = entries.get(i);
+//			Parameter dateParameter = entry.getDateParameter();
+//			Parameter startDateParameter = entry.getStartDateParameter();
+//			
+//			boolean hasDeadlineDateMatched = hasEntryDateMatched(dateParameter, searchDate); 
+//		    boolean hasEventDateMatched = hasEntryDateMatched(startDateParameter, searchDate); 
+//		    
+//		    if (hasDeadlineDateMatched || hasEventDateMatched) {
+//		    	filteredEntries.add(entry);
+//		    }
+//		} 
+//		
+//		return filteredEntries;
+//	}
+//	
+//	private boolean hasEntryDateMatched(Parameter dateParameter, String referenceDate) {
+//		if (dateParameter != null) {
+//			String date = dateParameter.getParameterValue();
+//			
+//			if (date.equals(referenceDate)) {
+//				return true;
+//			}
+//		}
+//		
+//		return false;
+//	}
 	
 	public ArrayList<Entry> filterByDateTime(ArrayList<Entry> entries, Date inputDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
@@ -102,10 +102,22 @@ public class SelectiveFilter {
 			Parameter timeParameter = entry.getTimeParameter();
 			Parameter startDateParameter = entry.getStartDateParameter();
 			Parameter startTimeParameter = entry.getStartTimeParameter();
+			Parameter endDateParameter = entry.getEndDateParameter();
+			Parameter endTimeParameter = entry.getEndTimeParameter();
 			
-			boolean hasDeadlineDateTimeMatched = hasEntryDateTimeMatched(dateParameter, timeParameter, inputDate);
-			boolean hasEventDateTimeMatched = hasEntryDateTimeMatched(startDateParameter, startTimeParameter, 
-					                                                  inputDate);
+			boolean hasDeadlineDateTimeMatched = false;
+			boolean hasEventDateTimeMatched = false;
+			
+			if (dateParameter != null) {
+				hasDeadlineDateTimeMatched = hasDeadlineDateTimeMatched(dateParameter, timeParameter, 
+						                                                inputDate); 
+						
+			} else if (startDateParameter != null) {
+				hasEventDateTimeMatched = hasEventDateTimeMatched(startDateParameter, startTimeParameter, 
+						                                          endDateParameter, endTimeParameter, 
+						                                          inputDate); 
+						                                         
+			}
 			
 			if (hasDeadlineDateTimeMatched || hasEventDateTimeMatched) {
 				filteredEntries.add(entry);
@@ -115,21 +127,24 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
-	private boolean hasEntryDateTimeMatched(Parameter dateParameter, Parameter timeParameter, Date referenceDate) {
-		if (dateParameter != null && timeParameter != null) {
-			String date = dateParameter.getParameterValue();
-			String time = timeParameter.getParameterValue();
-		
-			Date entryDate = retrieveDateFromDateTimeDetails(date, time);
-		
-			if (entryDate.equals(referenceDate)) {
-				return true;
-			}
+	private boolean hasDeadlineDateTimeMatched(Parameter dateParameter, Parameter timeParameter, 
+			                                   Date referenceDate) {
+		String date = dateParameter.getParameterValue();
+		String time = "";
+			
+		if (timeParameter != null) {
+			time = timeParameter.getParameterValue();
 		}
 		
+		Date deadlineDate = retrieveDateFromDateTimeDetails(date, time);
+		
+		if (deadlineDate.equals(referenceDate)) {
+			return true;
+		}
+	
 		return false;
 	}
-		
+			
 	private Date retrieveDateFromDateTimeDetails(String date, String time) {
 		DateTimeValidator dateTimeValidator = new DateTimeValidator();
 		dateTimeValidator.validateDateTimeDetails(date, time, null);
@@ -138,7 +153,37 @@ public class SelectiveFilter {
 		return convertedDate;
 	}
 	
-	public ArrayList<Entry> filterByDateTimeRange(ArrayList<Entry> entries, Date inputStartDate, Date inputEndDate) {
+	private boolean hasEventDateTimeMatched(Parameter startDateParameter, Parameter startTimeParameter,
+			                                Parameter endDateParameter, Parameter endTimeParameter, 
+			                                Date referenceDate) {
+		String startDate = startDateParameter.getParameterValue();
+		String startTime = "";
+		
+		if (startTimeParameter != null) {
+			startTime = startTimeParameter.getParameterValue();
+		}
+		
+		String endDate = endDateParameter.getParameterValue();
+		String endTime = "";
+		
+		if (endTimeParameter != null) {
+			endTime = endTimeParameter.getParameterValue();
+		}
+		
+		Date eventStartDate = retrieveDateFromDateTimeDetails(startDate, startTime);
+		Date eventEndDate = retrieveDateFromDateTimeDetails(endDate, endTime);
+		int referenceDateIndicatorForEventStartDate = eventStartDate.compareTo(referenceDate);
+		int referenceDateIndicatorForEventEndDate = eventEndDate.compareTo(referenceDate);
+		
+		if (referenceDateIndicatorForEventStartDate <= 0 && referenceDateIndicatorForEventEndDate >= 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public ArrayList<Entry> filterByDateTimeRange(ArrayList<Entry> entries, Date inputStartDate, 
+			                                      Date inputEndDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		
 		for (int i = 0; i < entries.size(); i++) {
@@ -147,11 +192,20 @@ public class SelectiveFilter {
 			Parameter timeParameter = entry.getTimeParameter();
 			Parameter startDateParameter = entry.getStartDateParameter();
 			Parameter startTimeParameter = entry.getStartTimeParameter();
+			Parameter endDateParameter = entry.getEndDateParameter();
+			Parameter endTimeParameter = entry.getEndTimeParameter();
 			
-			boolean isDeadlineDateTimeInRange = isEntryDateTimeInRange(dateParameter, timeParameter, inputStartDate, 
-					                                                   inputEndDate);
-			boolean isEventDateTimeInRange = isEntryDateTimeInRange(startDateParameter, startTimeParameter,  
-					                                                inputStartDate,  inputEndDate);
+			boolean isDeadlineDateTimeInRange = false;
+			boolean isEventDateTimeInRange = false;
+			
+			if (dateParameter != null) {
+				isDeadlineDateTimeInRange = isDeadlineDateTimeInRange(dateParameter, timeParameter,  
+						                                              inputStartDate, inputEndDate);
+			} else if (startDateParameter != null) {
+				isEventDateTimeInRange = isEventDateTimeInRange(startDateParameter, startTimeParameter,  
+				                                                endDateParameter, endTimeParameter,
+				                                                inputStartDate,  inputEndDate);
+			}
 			
 			if (isDeadlineDateTimeInRange || isEventDateTimeInRange) {
 				filteredEntries.add(entry);
@@ -161,24 +215,62 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 		
-	private boolean isEntryDateTimeInRange(Parameter dateParameter, Parameter timeParameter, Date referenceStartDate,
-			                               Date referenceEndDate) {
-		if (dateParameter != null) {
-			String date = dateParameter.getParameterValue();
-			String time = "";
+	private boolean isDeadlineDateTimeInRange(Parameter dateParameter, Parameter timeParameter, 
+			                                  Date referenceStartDate, Date referenceEndDate) {
+		String date = dateParameter.getParameterValue();
+		String time = "";
 			
-			if (timeParameter != null) {
-				time = timeParameter.getParameterValue();
-			}
-			
-			Date deadlineDate = retrieveDateFromDateTimeDetails(date, time);
-			int startDateIndicator = deadlineDate.compareTo(referenceStartDate);
-			int endDateIndicator = deadlineDate.compareTo(referenceEndDate);
-			
-			if (startDateIndicator >= 0 && endDateIndicator <= 0) {
-				return true;
-			}
+		if (timeParameter != null) {
+			time = timeParameter.getParameterValue();
 		}
+			
+		Date deadlineDate = retrieveDateFromDateTimeDetails(date, time);
+		int referenceStartDateIndicator = deadlineDate.compareTo(referenceStartDate);
+		int referenceEndDateIndicator = deadlineDate.compareTo(referenceEndDate);
+			
+		if (referenceStartDateIndicator >= 0 && referenceEndDateIndicator <= 0) {
+			return true;
+		}
+	
+		return false;
+	}
+	
+	private boolean isEventDateTimeInRange(Parameter startDateParameter, Parameter startTimeParameter,
+			                               Parameter endDateParameter, Parameter endTimeParameter, 
+			                               Date referenceStartDate, Date referenceEndDate) {
+		String startDate = startDateParameter.getParameterValue();
+		String startTime = "";
+		
+		if (startTimeParameter != null) {
+			startTime = startTimeParameter.getParameterValue();
+		}
+		
+		String endDate = endDateParameter.getParameterValue();
+		String endTime = "";
+		
+		if (endTimeParameter != null) {
+			endTime = endTimeParameter.getParameterValue();
+		}
+		
+		Date eventStartDate = retrieveDateFromDateTimeDetails(startDate, startTime);
+		int referenceStartDateIndicatorForEventStartDate = eventStartDate.compareTo(referenceStartDate);
+		int referenceEndDateIndicatorForEventStartDate = eventStartDate.compareTo(referenceEndDate);
+		boolean isEventStartDateInSearchRange = referenceStartDateIndicatorForEventStartDate >= 0 && 
+				                                referenceEndDateIndicatorForEventStartDate <= 0;
+		
+		Date eventEndDate = retrieveDateFromDateTimeDetails(endDate, endTime);
+		int referenceStartDateIndicatorForEventEndDate = eventEndDate.compareTo(referenceStartDate);
+		int referenceEndDateIndicatorForEventEndDate = eventEndDate.compareTo(referenceEndDate);
+		boolean isEventEndDateInSearchRange = referenceStartDateIndicatorForEventEndDate >= 0 && 
+				                              referenceEndDateIndicatorForEventEndDate <= 0;
+		
+		boolean isSearchRangeInEventRange = referenceStartDateIndicatorForEventStartDate < 0 && 
+			                            	referenceEndDateIndicatorForEventEndDate > 0;
+		
+		if (isEventStartDateInSearchRange || isEventEndDateInSearchRange || isSearchRangeInEventRange) {
+			return true;
+		}
+		
 		
 		return false;
 	}
