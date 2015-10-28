@@ -6,19 +6,17 @@ public interface ParameterParser {
 	
 	public ArrayList<Parameter> parseParameters(String commandString);
 	
-	static Parameter getIndex(String parameterString, FormatValidator indexFormatValidator) {
+	static Parameter getIndex(String parameterString, FormatValidator indexFormatValidator) throws IllegalArgumentException {
 		String trimmedParameterString = parameterString.trim();
 		if (trimmedParameterString.split(" ").length == 1) {
 			if (indexFormatValidator.isValidFormat(parameterString)) {
 				String index = indexFormatValidator.toDefaultFormat(parameterString);
 				return new Parameter(ParameterType.INDEX, index);
 			} else {
-				// TBA: throw exception here
-				return null;
+				throw new IllegalArgumentException("Invalid index format provided.");
 			}
 		} else {
-			// TBA: throw exception here
-			return null;
+			throw new IllegalArgumentException("Invalid index format provided.");
 		}
 	}
 	
@@ -82,19 +80,17 @@ public interface ParameterParser {
 		return new Parameter(ParameterType.CATEGORY, trimmedParameterString);
 	}
 
-	static Parameter getPriority(String parameterString, FormatValidator priorityFormatValidator) {
+	static Parameter getPriority(String parameterString, FormatValidator priorityFormatValidator) throws IllegalArgumentException {
 		String trimmedParameterString = parameterString.trim();
 		if (trimmedParameterString.split(" ").length == 1) {
 			if (priorityFormatValidator.isValidFormat(trimmedParameterString)) {
 				String priority = priorityFormatValidator.toDefaultFormat(trimmedParameterString);
 				return new Parameter(ParameterType.PRIORITY, priority);
 			} else {
-				// TBA: throw exception here
-				return null;
+				throw new IllegalArgumentException("Invalid priority format provided.");
 			}
 		} else {
-			// TBA: throw exception here
-			return null;
+			throw new IllegalArgumentException("Invalid priority format provided.");
 		}
 	}
 	

@@ -21,7 +21,7 @@ public class EditParameterParser implements ParameterParser {
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
-			throw new IllegalArgumentException("No command type provided.");
+			throw new IllegalArgumentException("No parameters provided.");
 		}
 		
 		if (parameterString.trim().indexOf(" ") != -1) {
@@ -54,7 +54,7 @@ public class EditParameterParser implements ParameterParser {
 			for (int i = tokens.length - 1; i >= 0; i--) {
 				if (tokens[i].toLowerCase().equals(expectedDelimiterName)) {
 					if (temporaryString.isEmpty()) {
-						throw new IllegalArgumentException("No edited details provided.");
+						throw new IllegalArgumentException("Empty " + expectedDelimiterName + " parameter provided.");
 					} else {
 						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
 						if (parametersToAdd.isEmpty()) {
@@ -89,6 +89,10 @@ public class EditParameterParser implements ParameterParser {
 		for (int i = 0; i < parameters.size(); i++) {
 			_logger.log(Level.INFO, "    " + parameters.get(i).getParameterType().name() + ": " + 
 						parameters.get(i).getParameterValue());
+		}
+		
+		if (!isParameterExists(parameters, ParameterType.INDEX)) {
+			throw new IllegalArgumentException("No entry index provided.");
 		}
 		
 		return parameters;
@@ -168,6 +172,15 @@ public class EditParameterParser implements ParameterParser {
 		}
 
 		return parameters;
+	}
+	
+	private boolean isParameterExists(ArrayList<Parameter> parameters, ParameterType parameterType) {
+		for (int i = 0; i < parameters.size(); i++) {
+			if (parameters.get(i).getParameterType() == parameterType) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

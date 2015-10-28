@@ -12,11 +12,11 @@ public class ViewParameterParser implements ParameterParser {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
-	public ArrayList<Parameter> parseParameters(String commandString) {
+	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
 		_logger.log(Level.INFO, "Started parsing parameters of VIEW command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
+		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
 		String parameterString = new String();
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
@@ -38,7 +38,7 @@ public class ViewParameterParser implements ParameterParser {
 			for (int i = tokens.length - 1; i >= 0; i--) {
 				if (tokens[i].toLowerCase().equals(expectedDelimiterName)) {
 					if (temporaryString.isEmpty()) {
-						// throw exception here (empty parameter exception)
+						throw new IllegalArgumentException("Empty " + expectedDelimiterName + " parameter provided.");
 					} else {
 						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
 						if (parametersToAdd.isEmpty()) {

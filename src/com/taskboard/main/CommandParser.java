@@ -15,7 +15,7 @@ public class CommandParser {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
-	public Command parseCommand(String commandString) {
+	public Command parseCommand(String commandString) throws IllegalArgumentException {
 		_logger.log(Level.INFO, "Started parsing command string: " + commandString);
 		CommandType newCommandType = _commandTypeParser.parseCommandType(commandString);
 		switch (newCommandType) {

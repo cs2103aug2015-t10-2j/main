@@ -12,26 +12,20 @@ public class CompleteParameterParser implements ParameterParser {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
-	public ArrayList<Parameter> parseParameters(String commandString) {
+	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
 		_logger.log(Level.INFO, "Started parsing parameters of COMPLETE command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
+		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
 		String parameterString = new String();
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("No parameters provided.");
 		}
 		
 		FormatValidator indexFormatValidator =  new IndexFormatValidator();
-		
-		if (indexFormatValidator.isValidFormat(parameterString)) {
-			parameterString = indexFormatValidator.toDefaultFormat(parameterString);
-			parameters.add(new Parameter(ParameterType.INDEX, parameterString));
-		} else {
-			// TBA: index not found exception
-		}
+		parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
 		
 		_logger.log(Level.INFO, "Finished parsing parameters of COMPLETE command");
 		_logger.log(Level.INFO, "  Recognized parameters:");

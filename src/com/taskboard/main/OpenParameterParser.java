@@ -12,16 +12,16 @@ public class OpenParameterParser implements ParameterParser {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
-	public ArrayList<Parameter> parseParameters(String commandString) {
+	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
 		_logger.log(Level.INFO, "Started parsing parameters of OPEN command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
+		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
 		String parameterString = new String();
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("No parameters provided.");
 		}
 		parameters.add(new Parameter(ParameterType.NAME, parameterString));
 		

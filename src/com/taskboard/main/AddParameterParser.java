@@ -12,16 +12,16 @@ public class AddParameterParser implements ParameterParser {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 	
-	public ArrayList<Parameter> parseParameters(String commandString) {
+	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
 		_logger.log(Level.INFO, "Started parsing parameters of ADD command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
+		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
 		String parameterString = new String();
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("No parameters provided.");
 		}
 		
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
@@ -37,7 +37,7 @@ public class AddParameterParser implements ParameterParser {
 			for (int i = tokens.length - 1; i >= 0; i--) {
 				if (tokens[i].toLowerCase().equals(expectedDelimiterName)) {
 					if (temporaryString.isEmpty()) {
-						// throw exception here (empty parameter exception)
+						throw new IllegalArgumentException("Empty " + expectedDelimiterName + " parameter provided.");
 					} else {
 						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
 						if (parametersToAdd.isEmpty()) {
@@ -72,6 +72,10 @@ public class AddParameterParser implements ParameterParser {
 		for (int i = 0; i < parameters.size(); i++) {
 			_logger.log(Level.INFO, "    " + parameters.get(i).getParameterType().name() + ": " + 
 						parameters.get(i).getParameterValue());
+		}
+		
+		if (!isParameterExists(parameters, ParameterType.NAME)) {
+			throw new IllegalArgumentException("No entry name provided.");
 		}
 		
 		return parameters;
@@ -148,6 +152,15 @@ public class AddParameterParser implements ParameterParser {
 		}
 		
 		return parameters;
+	}
+	
+	private boolean isParameterExists(ArrayList<Parameter> parameters, ParameterType parameterType) {
+		for (int i = 0; i < parameters.size(); i++) {
+			if (parameters.get(i).getParameterType() == parameterType) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
