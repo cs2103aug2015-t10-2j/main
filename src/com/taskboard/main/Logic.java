@@ -13,9 +13,15 @@ public class Logic {
 	}
 		
 	public Response processCommand(String userInput) {
-		Command commandInput = _commandParser.parseCommand(userInput);
+		Response responseForOperations = new Response();
 		
-		Response responseForOperations = commandInput.executeCommand();
+		try {
+			Command commandInput = _commandParser.parseCommand(userInput);
+			responseForOperations = commandInput.executeCommand();
+		} catch (IllegalArgumentException ex) {
+			responseForOperations.setIsSuccess(false);
+			responseForOperations.setException(ex);
+		}
 		
 		return responseForOperations; 
 	}
