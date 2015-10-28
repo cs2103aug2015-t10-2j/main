@@ -1,6 +1,7 @@
 package com.taskboard.main;
 
 import javax.swing.*;
+import javax.swing.border.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -25,6 +26,7 @@ public class UserInterface extends JFrame {
 	public UserInterface() {
 		JFrame frame = new JFrame("TaskBoard");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setPreferredSize(new Dimension(1024, 768));
 
 		initComponents(frame.getContentPane());
 		
@@ -57,7 +59,7 @@ public class UserInterface extends JFrame {
 		_displayArea.setBackground(Color.WHITE);
 		_displayArea.setOpaque(true);
 		_displayArea.setLayout(new GridBagLayout());
-		_displayArea.setPreferredSize(new Dimension(800, 600));
+		_displayArea.setAutoscrolls(true);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.5;
 		constraints.insets = new Insets(7,7,7,7);
@@ -68,8 +70,10 @@ public class UserInterface extends JFrame {
 		pane.add(_displayArea, constraints);		
 
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
-		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.add(_displayScroll, constraints);
+		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		_displayScroll.getViewport().setPreferredSize(new Dimension(800, 600));
+		pane.add(_displayScroll);
 		
 		_feedbackArea = new JTextArea(1, 50);
 		_feedbackArea.setEditable(false);
@@ -131,28 +135,35 @@ public class UserInterface extends JFrame {
 							if (entries != null) {
 								for (int i = 0; i < entries.size(); i++) {
 									Entry currentEntry = entries.get(i);
-									constraints.weightx = 0.0;
-									constraints.weighty = 0.5;
-									constraints.insets = new Insets(2,1,2,1);
+//									constraints.weightx = 1.0;
+//									constraints.weighty = 1.0;
+//									constraints.fill = GridBagConstraints.BOTH;
 									constraints.gridx = 0;
 									constraints.gridy = i;
+									
 									if (currentEntry.getDateParameter() != null) {
 										JLabel deadlineLabel = new JLabel();
-										deadlineLabel.setText(currentEntry.toString());
+										deadlineLabel.setText(currentEntry.toUIString());
 										deadlineLabel.setBackground(Color.RED);
 										deadlineLabel.setOpaque(true);
+										//deadlineLabel.setPreferredSize(new Dimension(320,160));
+										deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));	
 										_displayArea.add(deadlineLabel, constraints);
 									} else if (currentEntry.getStartDateParameter() != null) {
 										JLabel eventLabel = new JLabel();
-										eventLabel.setText(currentEntry.toString());
+										eventLabel.setText(currentEntry.toUIString());
 										eventLabel.setBackground(Color.GREEN);
 										eventLabel.setOpaque(true);
+										//eventLabel.setPreferredSize(new Dimension(320,160));
+										eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 										_displayArea.add(eventLabel, constraints);
 									} else {
 										JLabel floatLabel = new JLabel();
-										floatLabel.setText(currentEntry.toString());
+										floatLabel.setText(currentEntry.toUIString());
 										floatLabel.setBackground(Color.CYAN);
 										floatLabel.setOpaque(true);
+										//floatLabel.setPreferredSize(new Dimension(320,160));
+										floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 										_displayArea.add(floatLabel, constraints);
 									}
 								}
