@@ -27,7 +27,7 @@ public class UserInterface extends JFrame {
 	public UserInterface() {
 		JFrame frame = new JFrame(TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(1024, 800));
+		frame.setPreferredSize(new Dimension(900, 900));
 
 		initComponents(frame.getContentPane());
 		
