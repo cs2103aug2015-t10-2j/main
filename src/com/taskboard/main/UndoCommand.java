@@ -27,12 +27,12 @@ public class UndoCommand extends Command {
 			responseForUndo.setIsSuccess(true);
 			responseForUndo.setFeedback(MESSAGE_UNDO_SUCCESS);
 			responseForUndo.setEntries(lastTempStorage);
+			// Only updates the lastTempStorage upon successful execution.
+			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 		} else {
 			responseForUndo.setIsSuccess(false);
 			responseForUndo.setException(new IllegalThreadStateException(MESSAGE_UNDO_FAILED));
 		}
-		
-		_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 		
 		return responseForUndo;
 	}
