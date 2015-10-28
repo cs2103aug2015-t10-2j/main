@@ -46,6 +46,7 @@ public class UserInterface extends JFrame {
 		_displayArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.5;
+		constraints.insets = new Insets(7,7,7,7);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.gridx = 0;
@@ -60,6 +61,7 @@ public class UserInterface extends JFrame {
 		_feedbackArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
+		constraints.insets = new Insets(2,5,2,5);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 1;
@@ -110,7 +112,7 @@ public class UserInterface extends JFrame {
 								_feedbackArea.setText(feedback);
 							}
 
-							if (currentResponse.getEntries() != null) {
+							if (entries != null) {
 								String entriesString = "";
 								for (int i = 0; i < entries.size(); i++) {
 									entriesString += entries.get(i).toString();
