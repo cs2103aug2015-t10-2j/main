@@ -8,7 +8,7 @@ public class EditCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_EDIT = "\"%1$s\" updated!";
 	private static final String MESSAGE_ERROR_FOR_EDIT = "The entry could not be edited.";
-	private static final String MESSAGE_ERROR_FOR_NO_INDEX = "No entry index provided";
+	private static final String MESSAGE_ERROR_FOR_NO_INDEX = "No entry index provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_EDIT_DETAILS = "No edit details provided.";
 
 	public EditCommand(ArrayList<Parameter> parameters) {
