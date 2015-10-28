@@ -15,7 +15,7 @@ public class UserInterface extends JFrame {
 
 	private Logic _logic;
 
-	private JTextArea _displayArea;
+	private JPanel _displayArea;
 	private JTextArea _feedbackArea;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
@@ -42,7 +42,7 @@ public class UserInterface extends JFrame {
 
 		_logic = new Logic();
 
-		_displayArea = new JTextArea(20, 50);
+		/*_displayArea = new JTextArea(20, 50);
 		_displayArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.5;
@@ -51,7 +51,21 @@ public class UserInterface extends JFrame {
 		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		pane.add(_displayArea, constraints);
+		pane.add(_displayArea, constraints);*/
+		
+		_displayArea = new JPanel();
+		_displayArea.setBackground(Color.WHITE);
+		_displayArea.setOpaque(true);
+		_displayArea.setLayout(new GridBagLayout());
+		_displayArea.setPreferredSize(new Dimension(800, 600));
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.5;
+		constraints.insets = new Insets(7,7,7,7);
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.PAGE_START;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		pane.add(_displayArea, constraints);		
 
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -106,6 +120,8 @@ public class UserInterface extends JFrame {
 					} else {
 						Response currentResponse = getLogic().processCommand(userInput);
 						if (currentResponse.isSuccess()) {
+							_displayArea.removeAll();
+							
 							ArrayList<Entry> entries = currentResponse.getEntries();
 							if (currentResponse.getFeedback() != null) {
 								String feedback = currentResponse.getFeedback().trim();
@@ -113,13 +129,37 @@ public class UserInterface extends JFrame {
 							}
 
 							if (entries != null) {
-								String entriesString = "";
 								for (int i = 0; i < entries.size(); i++) {
-									entriesString += entries.get(i).toString();
-									entriesString += "\n";
+									Entry currentEntry = entries.get(i);
+									constraints.weightx = 0.0;
+									constraints.weighty = 0.5;
+									constraints.insets = new Insets(2,1,2,1);
+									constraints.gridx = 0;
+									constraints.gridy = i;
+									if (currentEntry.getDateParameter() != null) {
+										JLabel deadlineLabel = new JLabel();
+										deadlineLabel.setText(currentEntry.toString());
+										deadlineLabel.setBackground(Color.RED);
+										deadlineLabel.setOpaque(true);
+										_displayArea.add(deadlineLabel, constraints);
+									} else if (currentEntry.getStartDateParameter() != null) {
+										JLabel eventLabel = new JLabel();
+										eventLabel.setText(currentEntry.toString());
+										eventLabel.setBackground(Color.GREEN);
+										eventLabel.setOpaque(true);
+										_displayArea.add(eventLabel, constraints);
+									} else {
+										JLabel floatLabel = new JLabel();
+										floatLabel.setText(currentEntry.toString());
+										floatLabel.setBackground(Color.CYAN);
+										floatLabel.setOpaque(true);
+										_displayArea.add(floatLabel, constraints);
+									}
 								}
-
-								_displayArea.setText(entriesString);
+								
+								_displayArea.revalidate();
+								_displayArea.repaint();
+								
 							}
 
 							logger.log(Level.INFO, "Successfully updated display.");
@@ -180,18 +220,7 @@ public class UserInterface extends JFrame {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				UserInterface _userInterface = new UserInterface();
-//				_userInterface.pack();
-//				_userInterface.setVisible(true);
 			}
 		});
 	}
-	/*EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				logger.log(Level.INFO, "Program is running");
-				UserInterface _userInterface = new UserInterface();
-				_userInterface.pack();
-				_userInterface.setVisible(true);
-			}
-		});*/
 }
