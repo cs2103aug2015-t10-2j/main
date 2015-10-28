@@ -252,7 +252,21 @@ public class Entry {
 			}
 			String detail = detailParameter.getParameterValue();
 			if (!detailType.equals("INDEX")) {
-				entryDetails += detailType + ": " + detail + "<br>";
+				if (detailType.equals("DATE") && getTimeParameter() != null) {
+					entryDetails += "by " + detail + " ";
+				} else if (detailType.equals("TIME")) {
+					entryDetails += detail + "<br>";
+				} else if (detailType.equals("START_DATE") && getStartTimeParameter() != null) {
+					entryDetails += "from " + detail + " ";
+				} else if (detailType.equals("START_TIME")) {
+					entryDetails += detail + " to ";
+				} else if (detailType.equals("END_DATE") && getStartTimeParameter() != null) {
+					entryDetails += detail + " ";
+				} else if (detailType.equals("END_TIME")) {
+					entryDetails += detail + "<br>";
+				} else {
+					entryDetails += detailType + ": " + detail + "<br>";
+				}
 			}
 		}
 		

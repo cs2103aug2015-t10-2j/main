@@ -88,6 +88,7 @@ public class UserInterface extends JFrame {
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 420));
+		_displayScroll.getVerticalScrollBar().setUnitIncrement(16);
 		pane.add(_displayScroll, constraints);
 		
 		_feedbackArea = new JTextArea(2, 50);
@@ -193,18 +194,46 @@ public class UserInterface extends JFrame {
 					constraints.insets = new Insets(2, 2, 2, 2);
 					constraints.fill = GridBagConstraints.NONE;
 					
+					String lastDate = "";
+					
+					int curGridY = 0;
 					for (int i = 0; i < entries.size(); i++) {
 						Entry currentEntry = entries.get(i);
 						constraints.gridx = 0;
-						constraints.gridy = i;
+						constraints.gridy = curGridY;
+						
+						String pivotDate = "";
+						if (currentEntry.getDateParameter() != null) {
+							pivotDate = currentEntry.getDateParameter().getParameterValue();
+						} else if (currentEntry.getStartDateParameter() != null) {
+							pivotDate = currentEntry.getStartDateParameter().getParameterValue();
+						} else {
+							pivotDate = "Side Tasks";
+						}
+						
+						if (!lastDate.equals(pivotDate)) {
+							constraints.gridwidth = 2;
+							JLabel dateLabel = new JLabel();
+							dateLabel.setText(pivotDate);
+							dateLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+							dateLabel.setBackground(Color.WHITE);
+							dateLabel.setOpaque(true);
+							_displayArea.add(dateLabel, constraints);
+							lastDate = pivotDate;
+							constraints.gridx = 0;
+							constraints.gridy = ++curGridY;
+							constraints.gridwidth = 1;
+						}
+						
 						if (i == entries.size() - 1) {
 							constraints.weighty = 1;
 						}
+						
 						JLabel indexLabel = new JLabel();
 						if (currentEntry.getIndexParameter() != null) {
 							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
 						}
-						indexLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+						indexLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 						indexLabel.setOpaque(true);
 						
 						if (currentEntry.getDateParameter() != null) {
@@ -212,14 +241,14 @@ public class UserInterface extends JFrame {
 							_displayArea.add(indexLabel, constraints);
 							
 							constraints.gridx = 1;
-							constraints.gridy = i;
+							constraints.gridy = curGridY++;
 							JLabel deadlineLabel = new JLabel();
 							deadlineLabel.setText(currentEntry.toUIString());
 							deadlineLabel.setBackground(Color.PINK);
 							deadlineLabel.setOpaque(true);
-							deadlineLabel.setPreferredSize(new Dimension(480, 160));
+							deadlineLabel.setPreferredSize(new Dimension(480, 80));
 							//deadlineLabel.setMinimumSize(new Dimension(640, 80));
-							deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+							deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							deadlineLabel.setVerticalAlignment(JLabel.TOP);
 							_displayArea.add(deadlineLabel, constraints);
 						} else if (currentEntry.getStartDateParameter() != null) {
@@ -227,14 +256,14 @@ public class UserInterface extends JFrame {
 							_displayArea.add(indexLabel, constraints);
 							
 							constraints.gridx = 1;
-							constraints.gridy = i;
+							constraints.gridy = curGridY++;
 							JLabel eventLabel = new JLabel();
 							eventLabel.setText(currentEntry.toUIString());
 							eventLabel.setBackground(new Color (175, 255, 163));
 							eventLabel.setOpaque(true);
-							eventLabel.setPreferredSize(new Dimension(480, 160));
+							eventLabel.setPreferredSize(new Dimension(480, 80));
 							//eventLabel.setMinimumSize(new Dimension(640, 80));
-							eventLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							eventLabel.setVerticalAlignment(JLabel.TOP);
 							_displayArea.add(eventLabel, constraints);
 						} else {
@@ -242,14 +271,14 @@ public class UserInterface extends JFrame {
 							_displayArea.add(indexLabel, constraints);
 							
 							constraints.gridx = 1;
-							constraints.gridy = i;
+							constraints.gridy = curGridY++;
 							JLabel floatLabel = new JLabel();
 							floatLabel.setText(currentEntry.toUIString());
 							floatLabel.setBackground(new Color (198, 255, 250));
 							floatLabel.setOpaque(true);
-							floatLabel.setPreferredSize(new Dimension(480, 160));
+							floatLabel.setPreferredSize(new Dimension(480, 80));
 							//floatLabel.setMinimumSize(new Dimension(640, 80));
-							floatLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							floatLabel.setVerticalAlignment(JLabel.TOP);
 							_displayArea.add(floatLabel, constraints);
 						}
