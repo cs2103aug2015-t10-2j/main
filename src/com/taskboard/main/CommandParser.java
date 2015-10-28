@@ -12,7 +12,7 @@ public class CommandParser {
 	
 	public CommandParser() {
 		_commandTypeParser = new CommandTypeParser();
-		_logger = ParserLogger.getInstance().getLogger();
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Command parseCommand(String commandString) throws IllegalArgumentException {

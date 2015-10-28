@@ -9,7 +9,7 @@ public class AddParameterParser implements ParameterParser {
 	private Logger _logger;
 	
 	public AddParameterParser() {
-		_logger = ParserLogger.getInstance().getLogger();
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
