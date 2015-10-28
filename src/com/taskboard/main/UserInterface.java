@@ -19,7 +19,6 @@ public class UserInterface extends JFrame {
 	private JTextArea _feedbackArea;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
-	private JButton _submitButton;
 
 	private static Logger logger = Logger.getLogger("UserInterface");
 
@@ -28,6 +27,9 @@ public class UserInterface extends JFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		initComponents(frame.getContentPane());
+		
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 	public Logic getLogic() {
@@ -42,51 +44,43 @@ public class UserInterface extends JFrame {
 
 		_displayArea = new JTextArea(20, 50);
 		_displayArea.setEditable(false);
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.5;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.gridwidth = 2;
 		pane.add(_displayArea, constraints);
 
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
+		pane.add(_displayScroll, constraints);
+		
 		_feedbackArea = new JTextArea(1, 50);
 		_feedbackArea.setEditable(false);
 		constraints.weightx = 0.0;
-		constraints.weighty = 0.5;
+		constraints.weighty = 0.1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		constraints.gridwidth = 2;
 		pane.add(_feedbackArea, constraints);
 
 		_commandLabel = new JLabel("Enter command below:");
 		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
-		constraints.weighty = 0.5;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.1;
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		pane.add(_commandLabel, constraints);
 
 		_commandField = new JTextField();
 		_commandField.setEditable(true);
-		constraints.weightx = 0.5;
-		constraints.weighty = 0.5;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 3;
-		constraints.gridwidth = 2;
 		pane.add(_commandField, constraints);
-
-		_submitButton = new JButton("Submit");
-		constraints.weightx = 0.5;
-		constraints.weighty = 0.5;
-		constraints.gridx = 1;
-		constraints.gridy = 3;
-		pane.add(_submitButton, constraints);
 
 		_commandField.addKeyListener(new KeyListener() {
 			@Override
@@ -184,8 +178,8 @@ public class UserInterface extends JFrame {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				UserInterface _userInterface = new UserInterface();
-				_userInterface.pack();
-				_userInterface.setVisible(true);
+//				_userInterface.pack();
+//				_userInterface.setVisible(true);
 			}
 		});
 	}
