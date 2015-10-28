@@ -9,6 +9,11 @@ import java.awt.event.*;
 import java.util.logging.*;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import java.io.File;
+import java.io.IOException;
+
 public class UserInterface extends JFrame {
 
 	private static final long serialVersionUID = 1;
@@ -26,6 +31,15 @@ public class UserInterface extends JFrame {
 
 	public UserInterface() {
 		JFrame frame = new JFrame(TITLE);
+		JLabel backgroundPane = new JLabel();
+		try {
+			backgroundPane.setIcon(new ImageIcon(ImageIO.read(new File("resources/images/space-wallpaper-download-800x640.jpg"))));
+		} catch (IOException e) {
+			// Handle IOException
+		}
+		backgroundPane.setLayout(new BorderLayout());
+		frame.setContentPane(backgroundPane);
+		frame.getContentPane().setBackground(Color.BLACK);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(800, 640));
 
@@ -49,6 +63,7 @@ public class UserInterface extends JFrame {
 		_title = new JLabel();
 		_title.setText("TaskBoard V0.3");
 		_title.setFont(new Font("Sans-Serif", Font.BOLD, 25));
+		_title.setForeground(Color.WHITE);
 		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
@@ -72,10 +87,10 @@ public class UserInterface extends JFrame {
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 480));
+		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 420));
 		pane.add(_displayScroll, constraints);
 		
-		_feedbackArea = new JTextArea(1, 50);
+		_feedbackArea = new JTextArea(2, 50);
 		_feedbackArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
@@ -87,6 +102,7 @@ public class UserInterface extends JFrame {
 
 		_commandLabel = new JLabel("Enter command below:");
 		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
+		_commandLabel.setForeground(Color.WHITE);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
 		constraints.gridx = 0;
@@ -137,33 +153,55 @@ public class UserInterface extends JFrame {
 									Entry currentEntry = entries.get(i);
 									constraints.gridx = 0;
 									constraints.gridy = i;
+									JLabel indexLabel = new JLabel();
+									indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
+									indexLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+									indexLabel.setOpaque(true);
 									
 									if (currentEntry.getDateParameter() != null) {
+										indexLabel.setBackground(Color.PINK);
+										_displayArea.add(indexLabel, constraints);
+										
+										constraints.gridx = 1;
+										constraints.gridy = i;
 										JLabel deadlineLabel = new JLabel();
 										deadlineLabel.setText(currentEntry.toUIString());
 										deadlineLabel.setBackground(Color.PINK);
 										deadlineLabel.setOpaque(true);
-										deadlineLabel.setPreferredSize(new Dimension(600, 160));
+										deadlineLabel.setPreferredSize(new Dimension(480, 160));
 										//deadlineLabel.setMinimumSize(new Dimension(640, 80));
-										deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));	
+										deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+										deadlineLabel.setVerticalAlignment(JLabel.TOP);
 										_displayArea.add(deadlineLabel, constraints);
 									} else if (currentEntry.getStartDateParameter() != null) {
+										indexLabel.setBackground(new Color (175, 255, 163));
+										_displayArea.add(indexLabel, constraints);
+										
+										constraints.gridx = 1;
+										constraints.gridy = i;
 										JLabel eventLabel = new JLabel();
 										eventLabel.setText(currentEntry.toUIString());
 										eventLabel.setBackground(new Color (175, 255, 163));
 										eventLabel.setOpaque(true);
-										eventLabel.setPreferredSize(new Dimension(600, 160));
+										eventLabel.setPreferredSize(new Dimension(480, 160));
 										//eventLabel.setMinimumSize(new Dimension(640, 80));
 										eventLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+										eventLabel.setVerticalAlignment(JLabel.TOP);
 										_displayArea.add(eventLabel, constraints);
 									} else {
+										indexLabel.setBackground(new Color (198, 255, 250));
+										_displayArea.add(indexLabel, constraints);
+										
+										constraints.gridx = 1;
+										constraints.gridy = i;
 										JLabel floatLabel = new JLabel();
 										floatLabel.setText(currentEntry.toUIString());
 										floatLabel.setBackground(new Color (198, 255, 250));
 										floatLabel.setOpaque(true);
-										floatLabel.setPreferredSize(new Dimension(600, 160));
+										floatLabel.setPreferredSize(new Dimension(480, 160));
 										//floatLabel.setMinimumSize(new Dimension(640, 80));
 										floatLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+										floatLabel.setVerticalAlignment(JLabel.TOP);
 										_displayArea.add(floatLabel, constraints);
 									}
 								}
