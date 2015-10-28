@@ -139,9 +139,17 @@ public class UserInterface extends JFrame {
 					executeInputCommand();
 				} else if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
 					pressed.add(new Integer(KeyEvent.VK_CONTROL));
-				} else if (arg0.getKeyCode() == KeyEvent.VK_Z && pressed.contains(new Integer(KeyEvent.VK_CONTROL))) {
-					_commandField.setText("undo");
-					executeInputCommand();
+				} else if (pressed.contains(new Integer(KeyEvent.VK_CONTROL))) {
+					if (arg0.getKeyCode() == KeyEvent.VK_Z) {
+						_commandField.setText("undo");
+						executeInputCommand();
+					} else if (arg0.getKeyCode() == KeyEvent.VK_Q) {
+						_commandField.setText("exit");
+						executeInputCommand();
+					} else if (arg0.getKeyCode() == KeyEvent.VK_H) {
+						_commandField.setText("help");
+						executeInputCommand();
+					}
 				}
 			}
 		});
@@ -187,7 +195,9 @@ public class UserInterface extends JFrame {
 						constraints.gridx = 0;
 						constraints.gridy = i;
 						JLabel indexLabel = new JLabel();
-						indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
+						if (currentEntry.getIndexParameter() != null) {
+							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
+						}
 						indexLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
 						indexLabel.setOpaque(true);
 						
