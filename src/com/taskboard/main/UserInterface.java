@@ -27,7 +27,7 @@ public class UserInterface extends JFrame {
 	public UserInterface() {
 		JFrame frame = new JFrame(TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(900, 900));
+		frame.setPreferredSize(new Dimension(800, 640));
 
 		initComponents(frame.getContentPane());
 		
@@ -72,7 +72,7 @@ public class UserInterface extends JFrame {
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		_displayScroll.getViewport().setPreferredSize(new Dimension(800, 600));
+		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 480));
 		pane.add(_displayScroll, constraints);
 		
 		_feedbackArea = new JTextArea(1, 50);
@@ -143,7 +143,7 @@ public class UserInterface extends JFrame {
 										deadlineLabel.setText(currentEntry.toUIString());
 										deadlineLabel.setBackground(Color.PINK);
 										deadlineLabel.setOpaque(true);
-										deadlineLabel.setPreferredSize(new Dimension(640, 160));
+										deadlineLabel.setPreferredSize(new Dimension(600, 160));
 										//deadlineLabel.setMinimumSize(new Dimension(640, 80));
 										deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));	
 										_displayArea.add(deadlineLabel, constraints);
@@ -152,7 +152,7 @@ public class UserInterface extends JFrame {
 										eventLabel.setText(currentEntry.toUIString());
 										eventLabel.setBackground(new Color (175, 255, 163));
 										eventLabel.setOpaque(true);
-										eventLabel.setPreferredSize(new Dimension(640, 160));
+										eventLabel.setPreferredSize(new Dimension(600, 160));
 										//eventLabel.setMinimumSize(new Dimension(640, 80));
 										eventLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
 										_displayArea.add(eventLabel, constraints);
@@ -161,7 +161,7 @@ public class UserInterface extends JFrame {
 										floatLabel.setText(currentEntry.toUIString());
 										floatLabel.setBackground(new Color (198, 255, 250));
 										floatLabel.setOpaque(true);
-										floatLabel.setPreferredSize(new Dimension(640, 160));
+										floatLabel.setPreferredSize(new Dimension(600, 160));
 										//floatLabel.setMinimumSize(new Dimension(640, 80));
 										floatLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
 										_displayArea.add(floatLabel, constraints);
