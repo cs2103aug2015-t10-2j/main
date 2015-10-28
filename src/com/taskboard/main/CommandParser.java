@@ -62,6 +62,12 @@ public class CommandParser {
 			case ARCHIVE:
 				_logger.log(Level.INFO, "Finished parsing ARCHIVE command string");
 				return new ArchiveCommand(null);
+			case UNDO:
+				_logger.log(Level.INFO, "Finished parsing UNDO command string");
+				return new UndoCommand(null);
+			case REDO:
+				_logger.log(Level.INFO, "Finished parsing REDO command string");
+				return new RedoCommand(null);
 			case HELP:
 				_logger.log(Level.INFO, "Finished parsing HELP command string");
 				return new HelpCommand(null);

@@ -41,6 +41,13 @@ public class CommandTypeParser {
 			case "arch":
 			case "archive":
 				return CommandType.ARCHIVE;
+			case "undo":
+			case "un":
+			case "u":
+				return CommandType.UNDO;
+			case "redo":
+			case "re":
+				return CommandType.REDO;
 			case "h":
 			case "help":
 			case "cmd":

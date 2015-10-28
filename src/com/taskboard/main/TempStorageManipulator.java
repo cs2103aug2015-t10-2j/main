@@ -13,6 +13,8 @@ public class TempStorageManipulator {
 
 	private ArrayList<Entry> _tempStorage;
 	private ArrayList<Entry> _tempArchive;
+	private ArrayList<Entry> _lastTempStorage;
+	private ArrayList<Entry> _lastTempArchive;
 	StorageHandler _storageHandler;
 	ArchiveHandler _archiveHandler;
 
@@ -24,7 +26,7 @@ public class TempStorageManipulator {
 		_archiveHandler = new ArchiveHandler();
 	}
 
-	// accessor
+	// accessors
 
 	public ArrayList<Entry> getTempStorage() {
 		return _tempStorage;
@@ -33,7 +35,33 @@ public class TempStorageManipulator {
 	public ArrayList<Entry> getTempArchive() {
 		return _tempArchive;
 	}
+	
+	public ArrayList<Entry> getLastTempStorage() {
+		return _lastTempStorage;
+	}
+	
+	public ArrayList<Entry> getLastTempArchive() {
+		return _lastTempArchive;
+	}
 
+	// mutators
+	
+	public void setTempStorage(ArrayList<Entry> newTempStorage) {
+		_tempStorage = newTempStorage;
+	}
+	
+	public void setTempArchive(ArrayList<Entry> newTempArchive) {
+		_tempArchive = newTempArchive;
+	}
+	
+	public void setLastTempStorage(ArrayList<Entry> newLastTempStorage) {
+		_lastTempStorage = newLastTempStorage;
+	}
+	
+	public void setLastTempArchive(ArrayList<Entry> newLastTempArchive) {
+		_lastTempArchive = newLastTempArchive;
+	}
+	
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
 		_tempStorage = _storageHandler.createNewFile(fileName);
 		_tempArchive = _archiveHandler.createNewFile(fileName);
