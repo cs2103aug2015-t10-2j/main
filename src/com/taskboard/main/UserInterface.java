@@ -15,23 +15,25 @@ public class UserInterface extends JFrame {
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
 
 	private Logic _logic;
-
-	private JPanel _displayArea;
+	
 	private JTextArea _feedbackArea;
+	private JPanel _displayArea;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
+	private JLabel _title;
 
 	private static Logger logger = Logger.getLogger("UserInterface");
 
 	public UserInterface() {
-		JFrame frame = new JFrame("TaskBoard");
+		JFrame frame = new JFrame(TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(1024, 768));
+		frame.setPreferredSize(new Dimension(1024, 800));
 
 		initComponents(frame.getContentPane());
 		
 		frame.pack();
 		frame.setVisible(true);
+		_commandField.requestFocus();
 	}
 
 	public Logic getLogic() {
@@ -43,17 +45,16 @@ public class UserInterface extends JFrame {
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		_logic = new Logic();
-
-		/*_displayArea = new JTextArea(20, 50);
-		_displayArea.setEditable(false);
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.5;
-		constraints.insets = new Insets(7,7,7,7);
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		
+		_title = new JLabel();
+		_title.setText("TaskBoard V0.3");
+		_title.setFont(new Font("Sans-Serif", Font.BOLD, 25));
 		constraints.anchor = GridBagConstraints.PAGE_START;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.1;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		pane.add(_displayArea, constraints);*/
+		pane.add(_title, constraints);
 		
 		_displayArea = new JPanel();
 		_displayArea.setBackground(Color.WHITE);
@@ -62,18 +63,17 @@ public class UserInterface extends JFrame {
 		_displayArea.setAutoscrolls(true);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.5;
-		constraints.insets = new Insets(7,7,7,7);
+		constraints.insets = new Insets(7, 7, 7, 7);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.gridx = 0;
-		constraints.gridy = 0;
+		constraints.gridy = 1;
 		pane.add(_displayArea, constraints);		
 
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
-		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_displayScroll.getViewport().setPreferredSize(new Dimension(800, 600));
-		pane.add(_displayScroll);
+		pane.add(_displayScroll, constraints);
 		
 		_feedbackArea = new JTextArea(1, 50);
 		_feedbackArea.setEditable(false);
@@ -82,7 +82,7 @@ public class UserInterface extends JFrame {
 		constraints.insets = new Insets(2,5,2,5);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridy = 2;
 		pane.add(_feedbackArea, constraints);
 
 		_commandLabel = new JLabel("Enter command below:");
@@ -90,7 +90,7 @@ public class UserInterface extends JFrame {
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
 		constraints.gridx = 0;
-		constraints.gridy = 2;
+		constraints.gridy = 3;
 		pane.add(_commandLabel, constraints);
 
 		_commandField = new JTextField();
@@ -99,7 +99,7 @@ public class UserInterface extends JFrame {
 		constraints.weighty = 0.1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints.gridy = 4;
 		pane.add(_commandField, constraints);
 
 		_commandField.addKeyListener(new KeyListener() {
@@ -135,35 +135,35 @@ public class UserInterface extends JFrame {
 							if (entries != null) {
 								for (int i = 0; i < entries.size(); i++) {
 									Entry currentEntry = entries.get(i);
-//									constraints.weightx = 1.0;
-//									constraints.weighty = 1.0;
-//									constraints.fill = GridBagConstraints.BOTH;
 									constraints.gridx = 0;
 									constraints.gridy = i;
 									
 									if (currentEntry.getDateParameter() != null) {
 										JLabel deadlineLabel = new JLabel();
 										deadlineLabel.setText(currentEntry.toUIString());
-										deadlineLabel.setBackground(Color.RED);
+										deadlineLabel.setBackground(Color.PINK);
 										deadlineLabel.setOpaque(true);
-										//deadlineLabel.setPreferredSize(new Dimension(320,160));
-										deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));	
+										deadlineLabel.setPreferredSize(new Dimension(640, 160));
+										//deadlineLabel.setMinimumSize(new Dimension(640, 80));
+										deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));	
 										_displayArea.add(deadlineLabel, constraints);
 									} else if (currentEntry.getStartDateParameter() != null) {
 										JLabel eventLabel = new JLabel();
 										eventLabel.setText(currentEntry.toUIString());
-										eventLabel.setBackground(Color.GREEN);
+										eventLabel.setBackground(new Color (175, 255, 163));
 										eventLabel.setOpaque(true);
-										//eventLabel.setPreferredSize(new Dimension(320,160));
-										eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+										eventLabel.setPreferredSize(new Dimension(640, 160));
+										//eventLabel.setMinimumSize(new Dimension(640, 80));
+										eventLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
 										_displayArea.add(eventLabel, constraints);
 									} else {
 										JLabel floatLabel = new JLabel();
 										floatLabel.setText(currentEntry.toUIString());
-										floatLabel.setBackground(Color.CYAN);
+										floatLabel.setBackground(new Color (198, 255, 250));
 										floatLabel.setOpaque(true);
-										//floatLabel.setPreferredSize(new Dimension(320,160));
-										floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+										floatLabel.setPreferredSize(new Dimension(640, 160));
+										//floatLabel.setMinimumSize(new Dimension(640, 80));
+										floatLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
 										_displayArea.add(floatLabel, constraints);
 									}
 								}
@@ -185,47 +185,11 @@ public class UserInterface extends JFrame {
 			}
 		});
 
-		//createLayout(new JComponent[]{_title, _displayScroll, _feedbackArea, _commandLabel, _commandField});
-		_commandField.requestFocusInWindow();
-
 		setTitle(TITLE);
-		setSize(800, 600);
+		//setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
-
-	/*	private void createLayout(JComponent... arg) {
-
-        Container pane = getContentPane();
-        GroupLayout gl = new GroupLayout(pane);
-        pane.setLayout(gl);
-
-        gl.setAutoCreateContainerGaps(true);
-
-	    gl.setHorizontalGroup(gl.createSequentialGroup()
-	    		.addGroup(gl.createParallelGroup()
-	    			.addComponent(arg[0])
-	    			.addComponent(arg[1])
-	    			.addComponent(arg[2])
-	    			.addComponent(arg[3])
-	    			.addComponent(arg[4])
-		    	)
-	    );
-
-	    gl.setVerticalGroup(gl.createSequentialGroup()
-	    		.addComponent(arg[0])
-	    		.addGap(10)
-			    .addComponent(arg[1])
-			    .addGap(10)
-			    .addComponent(arg[2])
-			    .addGap(10)
-			    .addComponent(arg[3])
-			    .addGap(10)
-			    .addComponent(arg[4])
-	    );
-
-	    pack();
-    }*/
 
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {

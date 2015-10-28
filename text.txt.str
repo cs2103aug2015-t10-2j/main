@@ -1,45 +1,31 @@
 INDEX: 1
-NAME: hehe
+NAME: math's test
+START_DATE: 29/10/2015
+START_TIME: 13:00
+END_DATE: 29/10/2015
+END_TIME: 15:00
+PRIORITY: high
+CATEGORY: test
 
 INDEX: 2
-NAME: hhe
+NAME: test
+DATE: 29/10/2015
 
 INDEX: 3
-NAME: hoho
+NAME: a
 
 INDEX: 4
-NAME: lol
+NAME: haha
 
 INDEX: 5
 NAME: test
 
 INDEX: 6
-NAME: aaaaa
+NAME: haha
 
 INDEX: 7
-NAME: a
+NAME: hohoo
 
 INDEX: 8
-NAME: a
-
-INDEX: 9
-NAME: a
-
-INDEX: 10
-NAME: a
-
-INDEX: 11
-NAME: a
-
-INDEX: 12
-NAME: a
-
-INDEX: 13
-NAME: a
-
-INDEX: 14
-NAME: a
-
-INDEX: 15
-NAME: a
+NAME: yeah
 
