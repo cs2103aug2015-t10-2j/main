@@ -1,22 +1,26 @@
 package com.taskboard.main;
 
 import java.io.IOException;
+
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.Date;
 
-public class ParserLogger {
+import java.text.SimpleDateFormat;
+
+public class GlobalLogger {
 	
 	private static final String logDirectory = "logs/";
-	private static final String logFileName = "CommandParserLog";
+	private static final String logFileName = new SimpleDateFormat("dd-MM-yyyy_hh.mm.ss").format(new Date());
 	private static final String logFileFormat = ".log";
 	
-	private static ParserLogger _instance = null;
+	private static GlobalLogger _instance = null;
 	private static Logger _logger;
 	private static FileHandler _loggerFileHandler;
 	private static SimpleFormatter _loggerFormatter;
 	
-	private ParserLogger() {
+	private GlobalLogger() {
 		try {
 			_loggerFileHandler = new FileHandler(logDirectory + logFileName + logFileFormat, true);
 		} catch (IOException exception) {
@@ -28,9 +32,9 @@ public class ParserLogger {
 		_logger.addHandler(_loggerFileHandler);
 	}
 	
-	public static ParserLogger getInstance() {
+	public static GlobalLogger getInstance() {
 		if (_instance == null) {
-			_instance = new ParserLogger();
+			_instance = new GlobalLogger();
 		}
 		return _instance;
 	}

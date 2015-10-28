@@ -12,7 +12,7 @@ public class CommandParser {
 	
 	public CommandParser() {
 		_commandTypeParser = new CommandTypeParser();
-		_logger = ParserLogger.getInstance().getLogger();
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Command parseCommand(String commandString) throws IllegalArgumentException {
@@ -65,9 +65,6 @@ public class CommandParser {
 			case UNDO:
 				_logger.log(Level.INFO, "Finished parsing UNDO command string");
 				return new UndoCommand(null);
-			case REDO:
-				_logger.log(Level.INFO, "Finished parsing REDO command string");
-				return new RedoCommand(null);
 			case HELP:
 				_logger.log(Level.INFO, "Finished parsing HELP command string");
 				return new HelpCommand(null);

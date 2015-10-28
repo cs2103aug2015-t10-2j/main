@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class StorageHandler {
 
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
@@ -28,7 +29,7 @@ public class StorageHandler {
 
 	private File _original;
 
-	private static Logger logger = Logger.getLogger("StorageHandler");
+	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 
 	// constructor
 
@@ -64,7 +65,7 @@ public class StorageHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
-		logger.log(Level.INFO, "Create a new file.");
+		_logger.log(Level.INFO, "Create a new file.");
 		return entries;
 	}
 
@@ -82,7 +83,7 @@ public class StorageHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);
 		}
-		logger.log(Level.INFO, "Open an existing file.");
+		_logger.log(Level.INFO, "Open an existing file.");
 		return entries;
 	}
 
@@ -90,7 +91,7 @@ public class StorageHandler {
 		if (fileToCheck.exists()) {
 			return true;
 		}
-		logger.log(Level.INFO, "Check whether if a file already exists.");
+		_logger.log(Level.INFO, "Check whether if a file already exists.");
 		return false;
 	}
 
@@ -124,7 +125,7 @@ public class StorageHandler {
 			entries.add(entry);
 			entries.remove(INDEX_OF_EMPTY_ENTRY);
 		}
-		logger.log(Level.INFO, "Copy data from file to temp storage.");
+		_logger.log(Level.INFO, "Copy data from file to temp storage.");
 		return entries;
 	}
 
@@ -132,7 +133,7 @@ public class StorageHandler {
 		FileWriter fileToAdd = new FileWriter(_original);
 		copyAllEntriesToFile(fileToAdd, entries);
 		fileToAdd.close();
-		logger.log(Level.INFO, "Copy data from temp storage to file.");
+		_logger.log(Level.INFO, "Copy data from temp storage to file.");
 	}
 	//
 	// public boolean isAddToFileSuccessful(Entry entry) {

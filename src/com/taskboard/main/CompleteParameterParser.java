@@ -9,7 +9,7 @@ public class CompleteParameterParser implements ParameterParser {
 	private Logger _logger;
 	
 	public CompleteParameterParser() {
-		_logger = ParserLogger.getInstance().getLogger();
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {

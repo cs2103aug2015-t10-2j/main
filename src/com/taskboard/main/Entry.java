@@ -251,7 +251,9 @@ public class Entry {
 				detailType = "";
 			}
 			String detail = detailParameter.getParameterValue();
-			entryDetails += detailType + ": " + detail + "<br>";
+			if (!detailType.equals("INDEX")) {
+				entryDetails += detailType + ": " + detail + "<br>";
+			}
 		}
 		
 		entryDetails += "</html>";
