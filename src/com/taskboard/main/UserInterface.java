@@ -94,7 +94,7 @@ public class UserInterface extends JFrame {
 		_feedbackArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
-		constraints.insets = new Insets(2,5,2,5);
+		constraints.insets = new Insets(2, 5, 2, 5);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -118,6 +118,8 @@ public class UserInterface extends JFrame {
 		constraints.gridy = 4;
 		pane.add(_commandField, constraints);
 
+		final ArrayList<Integer> pressed = new ArrayList<Integer>();
+		
 		_commandField.addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
@@ -126,99 +128,20 @@ public class UserInterface extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
+				if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
+					pressed.remove(new Integer(KeyEvent.VK_CONTROL));
+				}
 			}
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
-					String userInput = _commandField.getText();
-
-					if (userInput.toLowerCase().equals("exit")) {
-						logger.log(Level.INFO, "System exit.");
-						System.exit(0);
-					} else {
-						Response currentResponse = getLogic().processCommand(userInput);
-						if (currentResponse.isSuccess()) {
-							_displayArea.removeAll();
-							
-							ArrayList<Entry> entries = currentResponse.getEntries();
-							if (currentResponse.getFeedback() != null) {
-								String feedback = currentResponse.getFeedback().trim();
-								_feedbackArea.setText(feedback);
-							}
-
-							if (entries != null) {
-								for (int i = 0; i < entries.size(); i++) {
-									Entry currentEntry = entries.get(i);
-									constraints.gridx = 0;
-									constraints.gridy = i;
-									JLabel indexLabel = new JLabel();
-									indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
-									indexLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
-									indexLabel.setOpaque(true);
-									
-									if (currentEntry.getDateParameter() != null) {
-										indexLabel.setBackground(Color.PINK);
-										_displayArea.add(indexLabel, constraints);
-										
-										constraints.gridx = 1;
-										constraints.gridy = i;
-										JLabel deadlineLabel = new JLabel();
-										deadlineLabel.setText(currentEntry.toUIString());
-										deadlineLabel.setBackground(Color.PINK);
-										deadlineLabel.setOpaque(true);
-										deadlineLabel.setPreferredSize(new Dimension(480, 160));
-										//deadlineLabel.setMinimumSize(new Dimension(640, 80));
-										deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
-										deadlineLabel.setVerticalAlignment(JLabel.TOP);
-										_displayArea.add(deadlineLabel, constraints);
-									} else if (currentEntry.getStartDateParameter() != null) {
-										indexLabel.setBackground(new Color (175, 255, 163));
-										_displayArea.add(indexLabel, constraints);
-										
-										constraints.gridx = 1;
-										constraints.gridy = i;
-										JLabel eventLabel = new JLabel();
-										eventLabel.setText(currentEntry.toUIString());
-										eventLabel.setBackground(new Color (175, 255, 163));
-										eventLabel.setOpaque(true);
-										eventLabel.setPreferredSize(new Dimension(480, 160));
-										//eventLabel.setMinimumSize(new Dimension(640, 80));
-										eventLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
-										eventLabel.setVerticalAlignment(JLabel.TOP);
-										_displayArea.add(eventLabel, constraints);
-									} else {
-										indexLabel.setBackground(new Color (198, 255, 250));
-										_displayArea.add(indexLabel, constraints);
-										
-										constraints.gridx = 1;
-										constraints.gridy = i;
-										JLabel floatLabel = new JLabel();
-										floatLabel.setText(currentEntry.toUIString());
-										floatLabel.setBackground(new Color (198, 255, 250));
-										floatLabel.setOpaque(true);
-										floatLabel.setPreferredSize(new Dimension(480, 160));
-										//floatLabel.setMinimumSize(new Dimension(640, 80));
-										floatLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
-										floatLabel.setVerticalAlignment(JLabel.TOP);
-										_displayArea.add(floatLabel, constraints);
-									}
-								}
-								
-								_displayArea.revalidate();
-								_displayArea.repaint();
-								
-							}
-
-							logger.log(Level.INFO, "Successfully updated display.");
-						} else {
-							String exception = currentResponse.getException().getMessage();
-							_feedbackArea.setText(exception);
-						}
-					}
-
-					_commandField.setText("");
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					executeInputCommand();
+				} else if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
+					pressed.add(new Integer(KeyEvent.VK_CONTROL));
+				} else if (arg0.getKeyCode() == KeyEvent.VK_Z && pressed.contains(new Integer(KeyEvent.VK_CONTROL))) {
+					_commandField.setText("undo");
+					executeInputCommand();
 				}
 			}
 		});
@@ -236,4 +159,99 @@ public class UserInterface extends JFrame {
 			}
 		});
 	}
+	
+	public void executeInputCommand() {
+		String userInput = _commandField.getText();
+
+		if (userInput.toLowerCase().equals("exit")) {
+			logger.log(Level.INFO, "System exit.");
+			System.exit(0);
+		} else {
+			Response currentResponse = getLogic().processCommand(userInput);
+			if (currentResponse.isSuccess()) {
+				_displayArea.removeAll();
+				
+				ArrayList<Entry> entries = currentResponse.getEntries();
+				if (currentResponse.getFeedback() != null) {
+					String feedback = currentResponse.getFeedback().trim();
+					_feedbackArea.setText(feedback);
+				}
+
+				if (entries != null) {
+					GridBagConstraints constraints = new GridBagConstraints();
+					constraints.anchor = GridBagConstraints.PAGE_START;
+					constraints.insets = new Insets(2, 5, 2, 5);
+					
+					for (int i = 0; i < entries.size(); i++) {
+						Entry currentEntry = entries.get(i);
+						constraints.gridx = 0;
+						constraints.gridy = i;
+						JLabel indexLabel = new JLabel();
+						indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
+						indexLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+						indexLabel.setOpaque(true);
+						
+						if (currentEntry.getDateParameter() != null) {
+							indexLabel.setBackground(Color.PINK);
+							_displayArea.add(indexLabel, constraints);
+							
+							constraints.gridx = 1;
+							constraints.gridy = i;
+							JLabel deadlineLabel = new JLabel();
+							deadlineLabel.setText(currentEntry.toUIString());
+							deadlineLabel.setBackground(Color.PINK);
+							deadlineLabel.setOpaque(true);
+							deadlineLabel.setPreferredSize(new Dimension(480, 160));
+							//deadlineLabel.setMinimumSize(new Dimension(640, 80));
+							deadlineLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+							deadlineLabel.setVerticalAlignment(JLabel.TOP);
+							_displayArea.add(deadlineLabel, constraints);
+						} else if (currentEntry.getStartDateParameter() != null) {
+							indexLabel.setBackground(new Color (175, 255, 163));
+							_displayArea.add(indexLabel, constraints);
+							
+							constraints.gridx = 1;
+							constraints.gridy = i;
+							JLabel eventLabel = new JLabel();
+							eventLabel.setText(currentEntry.toUIString());
+							eventLabel.setBackground(new Color (175, 255, 163));
+							eventLabel.setOpaque(true);
+							eventLabel.setPreferredSize(new Dimension(480, 160));
+							//eventLabel.setMinimumSize(new Dimension(640, 80));
+							eventLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+							eventLabel.setVerticalAlignment(JLabel.TOP);
+							_displayArea.add(eventLabel, constraints);
+						} else {
+							indexLabel.setBackground(new Color (198, 255, 250));
+							_displayArea.add(indexLabel, constraints);
+							
+							constraints.gridx = 1;
+							constraints.gridy = i;
+							JLabel floatLabel = new JLabel();
+							floatLabel.setText(currentEntry.toUIString());
+							floatLabel.setBackground(new Color (198, 255, 250));
+							floatLabel.setOpaque(true);
+							floatLabel.setPreferredSize(new Dimension(480, 160));
+							//floatLabel.setMinimumSize(new Dimension(640, 80));
+							floatLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
+							floatLabel.setVerticalAlignment(JLabel.TOP);
+							_displayArea.add(floatLabel, constraints);
+						}
+					}
+					
+					_displayArea.revalidate();
+					_displayArea.repaint();
+					
+				}
+
+				logger.log(Level.INFO, "Successfully updated display.");
+			} else {
+				String exception = currentResponse.getException().getMessage();
+				_feedbackArea.setText(exception);
+			}
+		}
+
+		_commandField.setText("");
+	}
+	
 }
