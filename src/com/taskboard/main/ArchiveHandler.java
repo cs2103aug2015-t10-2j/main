@@ -22,7 +22,7 @@ public class ArchiveHandler {
 	// attributes
 	private File _archive;
 //	private ArrayList<Entry> _completedEntries;
-	private static Logger logger = Logger.getLogger("StorageHandler");
+	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
 	// constructor
 	public ArchiveHandler() {
@@ -46,7 +46,7 @@ public class ArchiveHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
-		logger.log(Level.INFO, "Create a new archive.");
+		_logger.log(Level.INFO, "Create a new archive.");
 		return completedEntries;
 	}
 	
@@ -64,7 +64,7 @@ public class ArchiveHandler {
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);
 		}
-		logger.log(Level.INFO, "Open an existing archive.");
+		_logger.log(Level.INFO, "Open an existing archive.");
 		return completedEntries;
 	}
 	
@@ -98,7 +98,7 @@ public class ArchiveHandler {
 			entries.add(entry);
 			entries.remove(INDEX_OF_EMPTY_ENTRY);
 		}
-		logger.log(Level.INFO, "Copy data from file to temp storage.");
+		_logger.log(Level.INFO, "Copy data from file to temp storage.");
 		return entries;
 	}
 	
@@ -106,7 +106,7 @@ public class ArchiveHandler {
 		if (!fileToCheck.exists()) {
 			return false;
 		}		
-		logger.log(Level.INFO, "Check whether a file already exists.");
+		_logger.log(Level.INFO, "Check whether a file already exists.");
 		return true;
 	}
 	
@@ -114,7 +114,7 @@ public class ArchiveHandler {
 		FileWriter fileToAdd = new FileWriter(_archive);
 		copyAllEntriesToFile(fileToAdd, entries);
 		fileToAdd.close();
-		logger.log(Level.INFO, "Copy temp storage to archive.");
+		_logger.log(Level.INFO, "Copy temp storage to archive.");
 	}
 	
 	private void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> entries) throws IOException {

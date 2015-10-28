@@ -18,7 +18,7 @@ public class TempStorageManipulator {
 	StorageHandler _storageHandler;
 	ArchiveHandler _archiveHandler;
 
-	private static Logger logger = Logger.getLogger("TempStorageManipulator");
+	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	// constructor
 
 	public TempStorageManipulator() {
@@ -65,13 +65,13 @@ public class TempStorageManipulator {
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
 		_tempStorage = _storageHandler.createNewFile(fileName);
 		_tempArchive = _archiveHandler.createNewFile(fileName);
-		logger.log(Level.INFO, "Initialise a new temporary storage.");
+		_logger.log(Level.INFO, "Initialise a new temporary storage.");
 	}
 
 	public void repopulate(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		_tempStorage = _storageHandler.openExistingFile(fileName);
 		_tempArchive = _archiveHandler.openExistingFile(fileName);
-		logger.log(Level.INFO, "Repopulate a temporary storage.");
+		_logger.log(Level.INFO, "Repopulate a temporary storage.");
 	}
 
 	public void addToTempStorage(Entry entry) throws IOException {
@@ -79,14 +79,14 @@ public class TempStorageManipulator {
 		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
-		logger.log(Level.INFO, "Add entry into temp storage.");
+		_logger.log(Level.INFO, "Add entry into temp storage.");
 	}
 
 	public void editTempStorage(int i, ArrayList<Parameter> newContent, boolean isEntryTypeChanged) throws IOException {
 		Entry editedEntry = _tempStorage.get(i);
 		ArrayList<Parameter> entryDetails = editedEntry.getParameters();
 		replaceWithNewContent(entryDetails, newContent, isEntryTypeChanged);
-		logger.log(Level.INFO, "Replace old entries with new ones.");
+		_logger.log(Level.INFO, "Replace old entries with new ones.");
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
 		Collections.sort(_tempStorage, new DateComparator());
@@ -99,9 +99,9 @@ public class TempStorageManipulator {
 			for (int j = 0; j < newParameters.size(); j++) {
 				if (oldParameters.get(i).getParameterType() == newParameters.get(j).getParameterType()) {
 					oldParameters.get(i).setParameterValue(newParameters.get(j).getParameterValue());
-					logger.log(Level.INFO, "Parameter to be edited found and replaced.");
+					_logger.log(Level.INFO, "Parameter to be edited found and replaced.");
 					newParameters.remove(j);
-					logger.log(Level.INFO, "Parameter removed from newParameters.");
+					_logger.log(Level.INFO, "Parameter removed from newParameters.");
 					break;
 				}
 			}
@@ -112,7 +112,7 @@ public class TempStorageManipulator {
 		if (!newParameters.isEmpty()) {
 			for (int i = 0; i < newParameters.size(); i++) {
 				oldParameters.add(newParameters.get(i));
-				logger.log(Level.INFO, "New parameter added to the oldParameters.");
+				_logger.log(Level.INFO, "New parameter added to the oldParameters.");
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class TempStorageManipulator {
 					&& (entryDetails.get(i).getParameterType() != ParameterType.CATEGORY)
 					&& (entryDetails.get(i).getParameterType() != ParameterType.PRIORITY)) {
 				entryDetails.remove(i);
-				logger.log(Level.INFO, "Removing non Name/Index/Category/Priorty.");
+				_logger.log(Level.INFO, "Removing non Name/Index/Category/Priorty.");
 				break;
 			}
 		}
@@ -166,7 +166,7 @@ public class TempStorageManipulator {
 		_tempStorage.remove(i);
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
-		logger.log(Level.INFO, "Deleted an entry from temp storage.");
+		_logger.log(Level.INFO, "Deleted an entry from temp storage.");
 	}
 
 	public void deleteFromTempStorage(ArrayList<Entry> deletedEntries) throws IOException {
@@ -188,7 +188,7 @@ public class TempStorageManipulator {
 		_tempStorage = tempEntries;
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
-		logger.log(Level.INFO, "Deleted entries from temp storage.");
+		_logger.log(Level.INFO, "Deleted entries from temp storage.");
 	}
 
 	public void setCompletedInTempStorage(int i) throws IOException {
@@ -196,7 +196,7 @@ public class TempStorageManipulator {
 		entry.setCompleted(true);
 		_tempStorage.remove(i);
 		_tempArchive.add(entry);
-		logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
+		_logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
@@ -207,7 +207,7 @@ public class TempStorageManipulator {
 		entry.setCompleted(false);
 		_tempArchive.remove(i);
 		_tempStorage.add(entry);
-		logger.log(Level.INFO, "Restored entry to storage.");
+		_logger.log(Level.INFO, "Restored entry to storage.");
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
@@ -215,12 +215,12 @@ public class TempStorageManipulator {
 
 	public void setTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		_storageHandler.updateTempStorageToFile(entries);
-		logger.log(Level.INFO, "Transfer the temp storage into file.");
+		_logger.log(Level.INFO, "Transfer the temp storage into file.");
 	}
 
 	public void setTempArchiveToFile(ArrayList<Entry> entries) throws IOException {
 		_archiveHandler.updateTempStorageToFile(entries);
-		logger.log(Level.INFO, "Transfer the temp storage into archive.");
+		_logger.log(Level.INFO, "Transfer the temp storage into archive.");
 	}
 
 	private void setIndexForAllEntries() {
