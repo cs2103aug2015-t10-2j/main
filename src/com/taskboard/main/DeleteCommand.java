@@ -10,9 +10,6 @@ public class DeleteCommand extends Command {
 	private static final String MESSAGE_AFTER_DELETE = "\"%1$s\" deleted!";
 	private static final String MESSAGE_ERROR_FOR_DELETE = "The deletion was unsuccessful.";
 	private static final String MESSAGE_FILTER_RESULTS = "\"%1$s\" entries deleted based on search results!";
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
 	
 	public DeleteCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
@@ -34,7 +31,7 @@ public class DeleteCommand extends Command {
 			
 			responseForDelete = processDeleteByIndex();
 		} else {
-			responseForDelete = processDeleteByFilteredView();
+			responseForDelete = processDeleteByFiltering();
 		}
 		
 		return responseForDelete;
@@ -51,14 +48,14 @@ public class DeleteCommand extends Command {
 	}
 	
 	private Response checkValidityOfInputIndex() {
-		Response responseForIndex = new Response();
+		Response responseForInputIndex = new Response();
 		
 		String index = getDetailFromParameter(getIndexParameter());
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
 		IndexValidator indexValidator = new IndexValidator();
-		responseForIndex = indexValidator.checkValidityOfInputIndex(index, entries);
+		responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
 		
-		return responseForIndex;
+		return responseForInputIndex;
 	}
 	
 	private Response processDeleteByIndex() {
@@ -101,8 +98,8 @@ public class DeleteCommand extends Command {
 		response.setException(exobj);
 	}
 	
-	private Response processDeleteByFilteredView() {
-		Response responseForFilteredView = new Response();
+	private Response processDeleteByFiltering() {
+		Response responseForFiltering = new Response();
 		
 		ArrayList<Entry> filteredEntries = _tempStorageManipulator.getTempStorage();
 		
@@ -119,32 +116,35 @@ public class DeleteCommand extends Command {
 		}
 		
 		if (isFilterByDate()) {
-			responseForFilteredView = checkForDateValidity();
+			responseForFiltering = checkForDateValidity();
 			
-			if (responseForFilteredView.getException() != null) {
-				return responseForFilteredView;
+			if (responseForFiltering.getException() != null) {
+				return responseForFiltering;
 			}
+			
 			filteredEntries = processFilterByDate(filteredEntries);
 		}
 		
 		if (isFilterByDateTime()) {
 			DateTimeValidator dateTimeValidator = new DateTimeValidator();
-			responseForFilteredView = checkForDateTimeValidity(dateTimeValidator);
+			responseForFiltering = checkForDateTimeValidity(dateTimeValidator);
 			
-			if (responseForFilteredView.getException() != null) {
-				return responseForFilteredView;
+			if (responseForFiltering.getException() != null) {
+				return responseForFiltering;
 			}
+			
 			filteredEntries = processFilterByDateTime(filteredEntries, dateTimeValidator); 
 		}
 		
 		if (isFilterByDateTimeRange()) {
 			DateTimeValidator startDateTimeValidator = new DateTimeValidator();
 			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
-			responseForFilteredView = checkForDateTimeValidity(startDateTimeValidator, endDateTimeValidator);
+			responseForFiltering = checkForDateTimeValidity(startDateTimeValidator, endDateTimeValidator);
 			
-			if (responseForFilteredView.getException() != null) {
-				return responseForFilteredView;
+			if (responseForFiltering.getException() != null) {
+				return responseForFiltering;
 			}
+			
 			filteredEntries = processFilterByDateTimeRange(filteredEntries, startDateTimeValidator, 
 					                                       endDateTimeValidator);
 		}
@@ -154,12 +154,12 @@ public class DeleteCommand extends Command {
 				_tempStorageManipulator.deleteFromTempStorage(filteredEntries);
 			}
 			
-			setSuccessResponseForDeleteByFilter(responseForFilteredView, filteredEntries);
+			setSuccessResponseForDeleteByFilter(responseForFiltering, filteredEntries);
 		} catch (IOException ex) {
-			setFailureResponseForDelete(responseForFilteredView);
+			setFailureResponseForDelete(responseForFiltering);
 		}
 		
-		return responseForFilteredView;
+		return responseForFiltering;
 	}
 	
 	private boolean isFilterByName() {
@@ -269,23 +269,18 @@ public class DeleteCommand extends Command {
 		String date = getDetailFromParameter(getDateParameter());
 		String time = getDetailFromParameter(getTimeParameter());
 		
-		if (date.isEmpty()) {
-			setFailureResponseForNoDate(responseForDateTime);
-			return responseForDateTime;
-		}
+		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
+		responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
 		
-		responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, null);
+		if (responseForDateTime.isSuccess() == true) {
+			responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, null);
+		}
 		
 		return responseForDateTime;
 	}
 	
-	private void setFailureResponseForNoDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
-		response.setException(exObj);
-	}
-	
-	private ArrayList<Entry> processFilterByDateTime(ArrayList<Entry> entries, DateTimeValidator dateTimeValidator) {
+	private ArrayList<Entry> processFilterByDateTime(ArrayList<Entry> entries, 
+			                                         DateTimeValidator dateTimeValidator) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		
 		Date inputDate = dateTimeValidator.getDate();
@@ -318,60 +313,37 @@ public class DeleteCommand extends Command {
 		String endDate = getDetailFromParameter(getEndDateParameter());
 		String endTime = getDetailFromParameter(getEndTimeParameter());
 		
-		if (startDate.isEmpty()) {
-			setFailureResponseForNoStartDate(responseForDateTime);
-			return responseForDateTime;
-		}
+		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
+		responseForDateTime = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
+				                                                                 endDate, endTime);
 		
-		if (endDate.isEmpty() && endTime.isEmpty()) {
-			setFailureResponseForNoEndDateTime(responseForDateTime);
-			return responseForDateTime;
-		}
-		
-		if (endDate.isEmpty()) {
+		if (responseForDateTime.isSuccess() == true) {
 			endDate = startDate;
 		}
 		
-		responseForDateTime = validateDateTimeDetails(startDate, startTime, endDate, endTime, startDateTimeValidator,
-				                                      endDateTimeValidator);
-		
-		return responseForDateTime;
-	}
-	
-	private void setFailureResponseForNoStartDate(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
-		response.setException(exObj);
-	}
-	
-	private void setFailureResponseForNoEndDateTime(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
-		response.setException(exObj);
-	}
-	
-	private Response validateDateTimeDetails(String startDate, String startTime, String endDate, String endTime,
-			                                 DateTimeValidator startDateTimeValidator, DateTimeValidator endDateTimeValidator) { 
-                                             
-		Response responseForDateTime = new Response();
-		responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, null);
-		
 		if (responseForDateTime.getException() == null) {
-			Date inputStartDate = startDateTimeValidator.getDate();
-			responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, inputStartDate);
+			responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, null);
+			
+			if (responseForDateTime.getException() == null) {
+				Date inputStartDate = startDateTimeValidator.getDate();
+				responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, 
+						                                                           inputStartDate);
+			}
 		}
 		
 		return responseForDateTime;
 	}
-	
-	private ArrayList<Entry> processFilterByDateTimeRange(ArrayList<Entry> entries, DateTimeValidator startDateTimeValidator,
+		
+	private ArrayList<Entry> processFilterByDateTimeRange(ArrayList<Entry> entries, 
+			                                              DateTimeValidator startDateTimeValidator,
 			                                              DateTimeValidator endDateTimeValidator) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		
 		Date inputStartDate = startDateTimeValidator.getDate();
 		Date inputEndDate = endDateTimeValidator.getDate();
 		SelectiveFilter selectiveFilterByDateTimeRange = new SelectiveFilter();
-		filteredEntries = selectiveFilterByDateTimeRange.filterByDateTimeRange(entries, inputStartDate, inputEndDate);
+		filteredEntries = selectiveFilterByDateTimeRange.filterByDateTimeRange(entries, inputStartDate, 
+				                                                               inputEndDate);
 		
 		return filteredEntries;
 	}
