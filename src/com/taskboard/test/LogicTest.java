@@ -24,17 +24,31 @@ public class LogicTest {
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
+	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
 	
 	@Test
 	public void testLogicComponent() {
-		ArrayList<Parameter> expectedParameters = new ArrayList<Parameter>();
-		expectedParameters.add(new Parameter(ParameterType.NAME, "myFile"));
-		Command command = new NewCommand(expectedParameters);
+		ArrayList<Parameter> testParameters = new ArrayList<Parameter>();
+		testParameters.add(new Parameter(ParameterType.NAME, "myFile"));
+		Command command = new NewCommand(testParameters);
 		Response actualResponse = command.executeCommand();
 		
 		ArrayList<Entry> expectedEntries = new ArrayList<Entry>();
-		Response expectedResponse = createSuccessResponse(true, MESSAGE_WELCOME, expectedEntries);
-		testResponseEquality("Success response for creating new file", expectedResponse, actualResponse);
+		Response expectedSuccessResponse = createSuccessResponse(true, MESSAGE_WELCOME, expectedEntries);
+		testResponseEquality("Success response for creating new file", expectedSuccessResponse, actualResponse);
+		
+		testParameters.clear();
+		Parameter nameParameter = new Parameter(ParameterType.NAME, "MA3264 Revision");
+		testParameters.add(nameParameter);
+		command = new AddCommand(testParameters);
+		actualResponse = command.executeCommand();
+		
+		Entry entry = new Entry();
+		entry.addToParameters(nameParameter);
+		expectedEntries.add(entry);
+		String completedMessage = String.format(MESSAGE_AFTER_ADD, "MA3264 Revision");
+		expectedSuccessResponse = createSuccessResponse(true, completedMessage, expectedEntries);
+		testResponseEquality("Success response for adding floating task", expectedSuccessResponse, actualResponse);		
 	}
 	
 	private Response createSuccessResponse(boolean isSuccess, String feedback, ArrayList<Entry> entries) {
