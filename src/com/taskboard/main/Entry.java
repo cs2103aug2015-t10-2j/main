@@ -16,6 +16,14 @@ public class Entry {
 		_isCompleted = false;
 	}
 	
+	public Entry(Entry oldEntry) {
+		_parameters = new ArrayList<Parameter>();
+		for (Parameter currentParameter: oldEntry.getParameters()) {
+			_parameters.add(new Parameter(currentParameter));
+		}
+		_isCompleted = oldEntry.isCompleted();
+	}
+	
 	// accessors
 	
 	public ArrayList<Parameter> getParameters() {

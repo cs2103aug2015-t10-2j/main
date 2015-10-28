@@ -3,6 +3,7 @@ package com.taskboard.main;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EditCommand extends Command {
 	
@@ -20,6 +21,17 @@ public class EditCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
+		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
+		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
+			initialTempStorage.add(new Entry(entry));
+		}
+		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
+			initialTempArchive.add(new Entry(entry));
+		}
+		
+		System.out.println(initialTempStorage.toString());
+		
 		Response responseForEdit = new Response();
 		
 		responseForEdit = processInputIndex();
@@ -32,7 +44,14 @@ public class EditCommand extends Command {
 			
 			responseForEdit = processEditedDetailsForStorage();
 		}
-		 		
+		
+		if (responseForEdit.isSuccess()) {
+			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
+			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
+		}
+		
+		System.out.println(_tempStorageManipulator.getLastTempStorage().toString());
+		
 		return responseForEdit;
 	}
 	

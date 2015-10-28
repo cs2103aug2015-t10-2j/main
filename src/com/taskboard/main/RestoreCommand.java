@@ -14,6 +14,15 @@ public class RestoreCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
+		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
+		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
+			initialTempStorage.add(new Entry(entry));
+		}
+		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
+			initialTempArchive.add(new Entry(entry));
+		}
+		
 		Response responseForRestore = new Response();
 		
 		int indexToRestore = Integer.parseInt(_parameters.get(0).getParameterValue());
@@ -29,6 +38,11 @@ public class RestoreCommand extends Command {
 		} else {
 			responseForRestore.setIsSuccess(false);
 			responseForRestore.setException(new IllegalArgumentException("The specified index cannot be found."));
+		}
+		
+		if (responseForRestore.isSuccess()) {
+			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
+			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
 		}
 		
 		return responseForRestore;

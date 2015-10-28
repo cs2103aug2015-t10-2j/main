@@ -1,7 +1,6 @@
 package com.taskboard.main;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 
 public class DeleteCommand extends Command {
@@ -18,6 +17,15 @@ public class DeleteCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
+		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
+		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
+			initialTempStorage.add(new Entry(entry));
+		}
+		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
+			initialTempArchive.add(new Entry(entry));
+		}
+		
 		Response responseForDelete = new Response();
 		
 		if (isDeleteByIndex()) {
@@ -30,6 +38,11 @@ public class DeleteCommand extends Command {
 			responseForDelete = processDeleteByIndex();
 		} else {
 			responseForDelete = processDeleteByFiltering();
+		}
+		
+		if (responseForDelete.isSuccess()) {
+			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
+			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
 		}
 		
 		return responseForDelete;

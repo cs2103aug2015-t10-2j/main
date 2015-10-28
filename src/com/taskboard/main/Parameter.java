@@ -18,6 +18,11 @@ public class Parameter {
 		_parameterValue = parameterValue;
 	}
 	
+	public Parameter(Parameter oldParameter) {
+		_parameterType = oldParameter.getParameterType();
+		_parameterValue = oldParameter.getParameterValue();
+	}
+	
 	// accessors
 	
 	public ParameterType getParameterType() {

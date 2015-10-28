@@ -46,12 +46,18 @@ public class TempStorageManipulator {
 
 	// mutators
 	
-	public void setTempStorage(ArrayList<Entry> newTempStorage) {
+	public void setTempStorage(ArrayList<Entry> newTempStorage) throws IOException {
 		_tempStorage = newTempStorage;
+		Collections.sort(_tempStorage, new DateComparator());
+		setIndexForAllEntries();
+		setTempStorageToFile(_tempStorage);
 	}
 	
-	public void setTempArchive(ArrayList<Entry> newTempArchive) {
+	public void setTempArchive(ArrayList<Entry> newTempArchive) throws IOException {
 		_tempArchive = newTempArchive;
+		Collections.sort(_tempArchive, new DateComparator());
+		setIndexForAllEntries();
+		setTempArchiveToFile(_tempArchive);
 	}
 	
 	public void setLastTempStorage(ArrayList<Entry> newLastTempStorage) {
@@ -186,6 +192,7 @@ public class TempStorageManipulator {
 			}
 		}
 		_tempStorage = tempEntries;
+		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		_logger.log(Level.INFO, "Deleted entries from temp storage.");
@@ -197,6 +204,7 @@ public class TempStorageManipulator {
 		_tempStorage.remove(i);
 		_tempArchive.add(entry);
 		_logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
+		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
@@ -208,6 +216,7 @@ public class TempStorageManipulator {
 		_tempArchive.remove(i);
 		_tempStorage.add(entry);
 		_logger.log(Level.INFO, "Restored entry to storage.");
+		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
