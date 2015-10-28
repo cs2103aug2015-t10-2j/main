@@ -12,16 +12,16 @@ public class EditParameterParser implements ParameterParser {
 		_logger = ParserLogger.getInstance().getLogger();
 	}
 
-	public ArrayList<Parameter> parseParameters(String commandString) {
+	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
 		_logger.log(Level.INFO, "Started parsing parameters of EDIT command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespaces
+		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
 		String parameterString = "";
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("No command type provided.");
 		}
 		
 		if (parameterString.trim().indexOf(" ") != -1) {
@@ -32,12 +32,12 @@ public class EditParameterParser implements ParameterParser {
 				indexString = indexFormatValidator.toDefaultFormat(indexString);
 				parameters.add(new Parameter(ParameterType.INDEX, indexString));
 			} else {
-				// TBA: index not found exception
+				throw new IllegalArgumentException("No index provided.");
 			}
 			
 			parameterString = parameterString.substring(parameterString.indexOf(" ")).trim();
 		} else {
-			// TBA: index not found exception
+			throw new IllegalArgumentException("No edited details provided.");
 		}
 		
 		
@@ -54,7 +54,7 @@ public class EditParameterParser implements ParameterParser {
 			for (int i = tokens.length - 1; i >= 0; i--) {
 				if (tokens[i].toLowerCase().equals(expectedDelimiterName)) {
 					if (temporaryString.isEmpty()) {
-						// throw exception here (empty parameter exception)
+						throw new IllegalArgumentException("No edited details provided.");
 					} else {
 						ArrayList<Parameter> parametersToAdd = convertToParameters(temporaryString, expectedDelimiterType);
 						if (parametersToAdd.isEmpty()) {
