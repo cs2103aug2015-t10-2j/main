@@ -29,7 +29,7 @@ public class TempStorageManipulator {
 	public ArrayList<Entry> getTempStorage() {
 		return _tempStorage;
 	}
-	
+
 	public ArrayList<Entry> getTempArchive() {
 		return _tempArchive;
 	}
@@ -97,21 +97,41 @@ public class TempStorageManipulator {
 			Collections.sort(entryDetails, new ParameterComparator());
 		} else {
 			replaceParameters(entryDetails, newContent);
-			//ArrayList<Parameter> tempParameters = new ArrayList<Parameter>();
-			for (int i = 0; i < entryDetails.size(); i++) {
-				if ((entryDetails.get(i).getParameterType() != ParameterType.NAME)
-						&& (entryDetails.get(i).getParameterType() != ParameterType.INDEX)
-						&& (entryDetails.get(i).getParameterType() != ParameterType.CATEGORY)
-						&& (entryDetails.get(i).getParameterType() != ParameterType.PRIORITY)) {
-					//tempParameters.add(entryDetails.get(i));
-					entryDetails.remove(i);
-					logger.log(Level.INFO, "Removing non Name/Index/Category/Priorty.");
-					continue;
-				}
+			while (!checkParameter(entryDetails)) {
+				removingSomeContent(entryDetails);
 			}
 			addParameters(entryDetails, newContent);
 			Collections.sort(entryDetails, new ParameterComparator());
 		}
+	}
+
+	// Removing non Name/Index/Category/Priorty
+	private void removingSomeContent(ArrayList<Parameter> entryDetails) {
+		for (int i = 0; i < entryDetails.size(); i++) {
+			if ((entryDetails.get(i).getParameterType() != ParameterType.NAME)
+					&& (entryDetails.get(i).getParameterType() != ParameterType.INDEX)
+					&& (entryDetails.get(i).getParameterType() != ParameterType.CATEGORY)
+					&& (entryDetails.get(i).getParameterType() != ParameterType.PRIORITY)) {
+				entryDetails.remove(i);
+				logger.log(Level.INFO, "Removing non Name/Index/Category/Priorty.");
+				break;
+			}
+		}
+	}
+
+	// Check if there is any parameter which is not NAME, INDEX, CAT or PRIORITY
+	private boolean checkParameter(ArrayList<Parameter> entryDetails) {
+		boolean result = true;
+		for (int i = 0; i < entryDetails.size(); i++) {
+			if ((entryDetails.get(i).getParameterType() != ParameterType.NAME)
+					&& (entryDetails.get(i).getParameterType() != ParameterType.INDEX)
+					&& (entryDetails.get(i).getParameterType() != ParameterType.CATEGORY)
+					&& (entryDetails.get(i).getParameterType() != ParameterType.PRIORITY)) {
+				result = false;
+				break;
+			}
+		}
+		return result;
 	}
 
 	public void deleteFromTempStorage(int i) throws IOException {
@@ -120,10 +140,10 @@ public class TempStorageManipulator {
 		setTempStorageToFile(_tempStorage);
 		logger.log(Level.INFO, "Deleted an entry from temp storage.");
 	}
-	
+
 	public void deleteFromTempStorage(ArrayList<Entry> deletedEntries) throws IOException {
 		ArrayList<Entry> tempEntries = new ArrayList<Entry>();
-		
+
 		for (int i = 0; i < _tempStorage.size(); i++) {
 			Entry currentEntry = _tempStorage.get(i);
 			boolean isDeleted = false;
@@ -153,7 +173,7 @@ public class TempStorageManipulator {
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
 	}
-	
+
 	public void restoreToTempStorage(int i) throws IOException {
 		Entry entry = _tempArchive.get(i);
 		entry.setCompleted(false);
@@ -180,7 +200,7 @@ public class TempStorageManipulator {
 			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i + 1));
 			_tempStorage.get(i).setIndexParameter(indexParameter);
 		}
-		
+
 		for (int i = 0; i < _tempArchive.size(); i++) {
 			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i + 1));
 			_tempArchive.get(i).setIndexParameter(indexParameter);
