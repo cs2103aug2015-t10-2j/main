@@ -260,16 +260,28 @@ public class Entry {
 			}
 			String detail = detailParameter.getParameterValue();
 			if (!detailType.equals("INDEX")) {
-				if (detailType.equals("DATE") && getTimeParameter() != null) {
-					entryDetails += "by " + detail + " ";
+				if (detailType.equals("DATE")) {
+					if (getTimeParameter() != null) {
+						entryDetails += "by " + detail + " ";
+					} else {
+						entryDetails += "by " + detail + "<br>";
+					}
 				} else if (detailType.equals("TIME")) {
 					entryDetails += detail + "<br>";
-				} else if (detailType.equals("START_DATE") && getStartTimeParameter() != null) {
-					entryDetails += "from " + detail + " ";
+				} else if (detailType.equals("START_DATE")) {
+					if (getStartTimeParameter() != null) {
+						entryDetails += "from " + detail + " ";
+					} else {
+						entryDetails += "from " + detail + " to ";
+					}
 				} else if (detailType.equals("START_TIME")) {
 					entryDetails += detail + " to ";
-				} else if (detailType.equals("END_DATE") && getStartTimeParameter() != null) {
-					entryDetails += detail + " ";
+				} else if (detailType.equals("END_DATE")) {
+					if (getEndTimeParameter() != null) {
+						entryDetails += detail + " ";
+					} else {
+						entryDetails += detail + "<br>";
+					}
 				} else if (detailType.equals("END_TIME")) {
 					entryDetails += detail + "<br>";
 				} else {
