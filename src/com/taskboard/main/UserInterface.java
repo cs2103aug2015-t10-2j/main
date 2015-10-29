@@ -60,10 +60,13 @@ public class UserInterface extends JFrame {
 
 		_logic = new Logic();
 		
-		_title = new JLabel();
-		_title.setText("TaskBoard V0.3");
-		_title.setFont(new Font("Sans-Serif", Font.BOLD, 25));
-		_title.setForeground(Color.WHITE);
+		ImageIcon titleImage = new ImageIcon("resources/images/TaskBoard-title2-v03.png");
+		// another alternative for title's image:
+		// ImageIcon titleImage = new ImageIcon("resources/images/TaskBoard-title1-v03.png");
+		_title = new JLabel(titleImage);
+		//_title.setText("TaskBoard V0.3");
+		//_title.setFont(new Font("Sans-Serif", Font.BOLD, 25));
+		//_title.setForeground(Color.WHITE);
 		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
