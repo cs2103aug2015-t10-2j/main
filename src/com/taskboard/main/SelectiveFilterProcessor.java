@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class SelectiveFilterProcessor {
 	
-	private static final String MESSAGE_FILTER_RESULTS = "\"%1$s\" entries found based on search results!";
+	private static final String MESSAGE_FILTER_RESULTS = "entries found based on search results!";
 	
 	// attribute
 	
@@ -359,7 +359,8 @@ public class SelectiveFilterProcessor {
 	private void setSuccessResponseForViewWithFilter(Response response) {
 		response.setIsSuccess(true);
 		int numOfFilteredEntries = _filteredEntries.size();
-		String userFeedback = getFeedbackForUser(MESSAGE_FILTER_RESULTS, String.valueOf(numOfFilteredEntries));
+		String userFeedback = String.valueOf(numOfFilteredEntries);
+		userFeedback = userFeedback.concat(" ").concat(MESSAGE_FILTER_RESULTS);
 		response.setFeedback(userFeedback);
 		response.setEntries(_filteredEntries);
 	}
