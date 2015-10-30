@@ -11,14 +11,14 @@ public class NewCommand extends Command {
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
 	
 	public NewCommand(ArrayList<Parameter> parameters) {
-		_logger = GlobalLogger.getInstance().getLogger();
-		
 		assert parameters != null;
 		_parameters = parameters;
 		
 		if (getTempStorageManipulator() == null) {
 			_tempStorageManipulator = new TempStorageManipulator();
 		}
+		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Response executeCommand() {

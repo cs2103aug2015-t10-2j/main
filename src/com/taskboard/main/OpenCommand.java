@@ -3,6 +3,7 @@ package com.taskboard.main;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class OpenCommand extends Command{
 	
@@ -16,12 +17,17 @@ public class OpenCommand extends Command{
 		if (getTempStorageManipulator() == null) {
 			_tempStorageManipulator = new TempStorageManipulator();
 		}
+		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
+		
+		_logger.log(Level.INFO, "Commenced execution of OpenCommand");
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
+		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 	
 		return getResponseForLaunch(fileName);
 	}
@@ -32,10 +38,13 @@ public class OpenCommand extends Command{
 		try {
 			_tempStorageManipulator.repopulate(fileName);
 			setSuccessResponseForOpen(responseForOpen, fileName);
+			_logger.log(Level.INFO, "Generated success response for opening existing file");
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidOpen(responseForOpen, ex);
+			_logger.log(Level.INFO, "Generated failure response for opening non-existent file");
 		} catch (IOException ex) {
 			setFailureResponseForLaunchOpen(responseForOpen);
+			_logger.log(Level.INFO, "Generated failure response for opening existing file");
 		}
 	
 		return responseForOpen;
