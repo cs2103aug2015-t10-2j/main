@@ -27,7 +27,7 @@ public class LogicTest {
 	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
 	
 	@Test
-	public void testLogicComponent() {
+	public void testValidNewAndAdd() {
 		ArrayList<Parameter> testParameters = new ArrayList<Parameter>();
 		testParameters.add(new Parameter(ParameterType.NAME, "myFile"));
 		Command command = new NewCommand(testParameters);
@@ -52,6 +52,8 @@ public class LogicTest {
 		expectedSuccessResponse = createSuccessResponse(true, completedMessage, expectedEntries);
 		testResponseEquality("Success response for adding floating task", expectedSuccessResponse, actualResponse);		
 	}
+	
+	public void 
 	
 	private Response createSuccessResponse(boolean isSuccess, String feedback, ArrayList<Entry> entries) {
 		Response response = new Response();

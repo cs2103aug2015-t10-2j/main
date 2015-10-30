@@ -3,6 +3,7 @@ package com.taskboard.main;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class NewCommand extends Command {
 	
@@ -10,6 +11,8 @@ public class NewCommand extends Command {
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
 	
 	public NewCommand(ArrayList<Parameter> parameters) {
+		_logger = GlobalLogger.getInstance().getLogger();
+		
 		assert parameters != null;
 		_parameters = parameters;
 		
@@ -20,9 +23,12 @@ public class NewCommand extends Command {
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
-
+		
+		_logger.log(Level.INFO, "Commenced execution of NewCommand");
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
+		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
+		
 		return getResponseForLaunch(fileName);
 	}
 	
@@ -32,10 +38,13 @@ public class NewCommand extends Command {
 		try {
 			_tempStorageManipulator.initialise(fileName);
 			setSuccessResponseForNew(responseForNew, fileName);
+			_logger.log(Level.INFO, "Generated success response for creating new file");
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidNew(responseForNew, ex);
+			_logger.log(Level.INFO, "Generated failure response for creating new file with existing filename");
 		} catch (IOException ex) {
 			setFailureResponseForLaunchNew(responseForNew);
+			_logger.log(Level.INFO, "Generated failure response for creating new file");
 		}
 		
 		return responseForNew;
