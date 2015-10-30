@@ -44,6 +44,8 @@ public class LogicTest {
 		actualResponse = command.executeCommand();
 		
 		Entry entry = new Entry();
+		Parameter indexParameter = new Parameter(ParameterType.INDEX, "1");
+		entry.addToParameters(indexParameter);
 		entry.addToParameters(nameParameter);
 		expectedEntries.add(entry);
 		String completedMessage = String.format(MESSAGE_AFTER_ADD, "MA3264 Revision");

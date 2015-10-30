@@ -41,7 +41,7 @@ public class UserInterface extends JFrame {
 		frame.setContentPane(backgroundPane);
 		frame.getContentPane().setBackground(Color.BLACK);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(800, 640));
+		frame.setPreferredSize(new Dimension(800, 650));
 
 		initComponents(frame.getContentPane());
 		
