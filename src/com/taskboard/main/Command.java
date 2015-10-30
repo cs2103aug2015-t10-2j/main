@@ -7,10 +7,9 @@ public abstract class Command {
 	
 	// attributes
 	
+	protected static Logger _logger;
 	protected static TempStorageManipulator _tempStorageManipulator;
 	protected ArrayList<Parameter> _parameters;
-	
-	protected static Logger _logger;
 	
 	// accessors
 		

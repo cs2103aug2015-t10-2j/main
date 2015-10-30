@@ -23,8 +23,8 @@ public class OpenCommand extends Command{
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
-		
 		_logger.log(Level.INFO, "Commenced execution of OpenCommand");
+		
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);

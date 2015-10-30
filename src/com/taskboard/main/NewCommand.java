@@ -23,8 +23,8 @@ public class NewCommand extends Command {
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
-		
 		_logger.log(Level.INFO, "Commenced execution of NewCommand");
+		
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
@@ -41,7 +41,8 @@ public class NewCommand extends Command {
 			_logger.log(Level.INFO, "Generated success response for creating new file");
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidNew(responseForNew, ex);
-			_logger.log(Level.INFO, "Generated failure response for creating new file with existing filename");
+			_logger.log(Level.INFO, "Generated failure response for creating new file with "
+					                 + "existing filename");
 		} catch (IOException ex) {
 			setFailureResponseForLaunchNew(responseForNew);
 			_logger.log(Level.INFO, "Generated failure response for creating new file");
