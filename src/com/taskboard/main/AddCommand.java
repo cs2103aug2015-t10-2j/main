@@ -159,8 +159,10 @@ public class AddCommand extends Command {
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
 		Response responseForAddDeadline = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
 		if (responseForAddDeadline.isSuccess() == true) {
+			_logger.log(Level.INFO, "Start validating date time details for deadline task");
 			responseForAddDeadline = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(date, time);
 			if (responseForAddDeadline.isSuccess() == true) {
+				_logger.log(Level.INFO, "Process deadline task for storage");
 				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);  	                                               
 			}
 		}
@@ -206,12 +208,15 @@ public class AddCommand extends Command {
 		Response responseForAddEvent = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
 				                                                                          endDate, endTime);
 		if (responseForAddEvent.isSuccess() == true) {
+			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
 		}
 		if (responseForAddEvent.getException() == null) {
+			_logger.log(Level.INFO, "Start validating date time details for event");
 			responseForAddEvent = eventDateTimeProcessor.validateEventDateTimeDetails(startDate, startTime, 
 					                                                                  endDate, endTime);	
 			if (responseForAddEvent.isSuccess() == true) {
+				_logger.log(Level.INFO, "Process event for storage");
 				responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, 
 						                                     endTime, priority, category);
 			}

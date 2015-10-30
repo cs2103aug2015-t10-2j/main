@@ -1,12 +1,18 @@
 package com.taskboard.main;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DateTimeProcessor {
 	
 	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
+	
+	// attribute
+	
+	private Logger _logger;
 	
 	// constructor
 	
@@ -16,9 +22,9 @@ public class DateTimeProcessor {
 	
 	public Response processDeadlineDateTimeDetails(String date, String time) {
 		Response responseForDateTime = new Response();
-		
 		if (date.isEmpty()) {
 			setFailureResponseForNoDate(responseForDateTime);
+			_logger.log(Level.INFO, "Generated failure response for no date");
 		} else {
 			responseForDateTime.setIsSuccess(true);
 		}
@@ -33,11 +39,9 @@ public class DateTimeProcessor {
 	}
 	
 	public Response validateDeadlineDateTimeDetails(String date, String time) {
-		Response responseForDateTime = new Response();
-		
-		DateTimeValidator dateTimeValidator = new DateTimeValidator();
+		DateTimeValidator deadlineDateTimeValidator = new DateTimeValidator();
 		Date currentDate = new Date();
-		responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, currentDate);
+		Response responseForDateTime = deadlineDateTimeValidator.validateDateTimeDetails(date, time, currentDate);
 		
 		return responseForDateTime;
 	}
@@ -45,11 +49,12 @@ public class DateTimeProcessor {
 	public Response processEventDateTimeDetails(String startDate, String startTime, String endDate, 
 			                                    String endTime) {
 		Response responseForDateTime = new Response();
-		
 		if (startDate.isEmpty()) {
 			setFailureResponseForNoStartDate(responseForDateTime);
+			_logger.log(Level.INFO, "Generated failure response for no start date");
 		} else if (endDate.isEmpty() && endTime.isEmpty()) {
 			setFailureResponseForNoEndDateTime(responseForDateTime);
+			_logger.log(Level.INFO, "Generated failure response for no end date time");
 		} else if (endDate.isEmpty()) {
 			responseForDateTime.setIsSuccess(true);
 		}
@@ -70,13 +75,11 @@ public class DateTimeProcessor {
 	}
 	
 	public Response validateEventDateTimeDetails(String startDate, String startTime, String endDate, 
-			                                      String endTime) {
-		Response responseForDateTime = new Response();
-		
+			                                     String endTime) {
 		DateTimeValidator startDateTimeValidator = new DateTimeValidator();
 		Date currentDate = new Date();
-		responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, currentDate);
-		
+		Response responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, 
+				                                                                      currentDate);
 		if (responseForDateTime.isSuccess() == true) {
 			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
 			Date inputStartDate = startDateTimeValidator.getDate();

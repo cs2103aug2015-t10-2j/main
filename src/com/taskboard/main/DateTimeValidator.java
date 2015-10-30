@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DateTimeValidator {
 	
@@ -17,6 +19,7 @@ public class DateTimeValidator {
 	// attribute
 	
 	private Date _inputDate;
+	private Logger _logger;
 	
 	// constructor
 	
@@ -35,9 +38,9 @@ public class DateTimeValidator {
 		
 		String dateTime = getDateTimeFormat(date, time);
 		_inputDate = getInputDate(dateTime);
-		
 		if (_inputDate == null) {
 			setFailureResponseForInvalidDateTime(responseForDateTime);
+			_logger.log(Level.INFO, "Generated failure response for invalid date time");
 		} else if (referenceDate != null){
 			responseForDateTime = checkValidityOfInputDate(referenceDate);
 		}
@@ -49,7 +52,6 @@ public class DateTimeValidator {
 		if (time.isEmpty()) {
 			time = FORMAT_DEFAULT_TIME;
 		}
-		
 		String dateTime = date.concat("T").concat(time);
 		
 		return dateTime;
@@ -75,11 +77,11 @@ public class DateTimeValidator {
 	
 	private Response checkValidityOfInputDate(Date referenceDate) {
 		Response responseForInputDate = new Response();
-			
 		if (_inputDate.after(referenceDate)) {
 			responseForInputDate.setIsSuccess(true);
 		} else {
 			setFailureResponseForPastDateTime(responseForInputDate);
+			_logger.log(Level.INFO, "Generated failure response for past date time");
 		}
 			
 		return responseForInputDate;
