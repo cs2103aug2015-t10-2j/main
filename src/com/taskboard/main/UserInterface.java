@@ -46,8 +46,10 @@ public class UserInterface extends JFrame {
 	private Logic _logic;
 	private JFrame _frame;
 	private JLabel _backgroundPane;
-	private JTextArea _feedbackArea;
 	private JPanel _displayArea;
+	private JScrollPane _displayScroll;
+	private JTextArea _feedbackArea;
+	private JScrollPane _feedbackScroll;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
 	private JLabel _title;
@@ -66,7 +68,6 @@ public class UserInterface extends JFrame {
 		}
 		_backgroundPane.setLayout(new BorderLayout());
 		_frame.setContentPane(_backgroundPane);
-		_frame.getContentPane().setBackground(Color.BLACK);
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		_frame.setPreferredSize(new Dimension(800, 720));
 
@@ -109,7 +110,6 @@ public class UserInterface extends JFrame {
 		
 		_displayArea = new TransparentPanel(DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayArea.setBackground(Color.WHITE);
-		//_displayArea.setOpaque(true);
 		_displayArea.setLayout(new GridBagLayout());
 		_displayArea.setAutoscrolls(true);
 		constraints.weightx = 0.0;
@@ -120,7 +120,7 @@ public class UserInterface extends JFrame {
 		constraints.gridy = 1;
 		pane.add(_displayArea, constraints);
 
-		JScrollPane _displayScroll = new TransparentScrollPane(_displayArea, DISPLAY_AREA_RELATIVE_TRANSPARENCY);
+		_displayScroll = new TransparentScrollPane(_displayArea, DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 400));
@@ -144,7 +144,7 @@ public class UserInterface extends JFrame {
 		constraints.gridy = 2;
 		pane.add(_feedbackArea, constraints);
 		
-		JScrollPane _feedbackScroll = new JScrollPane(_feedbackArea);
+		_feedbackScroll = new JScrollPane(_feedbackArea);
 		_feedbackScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_feedbackScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_feedbackScroll.getViewport().setPreferredSize(new Dimension(640, 100));
@@ -234,8 +234,6 @@ public class UserInterface extends JFrame {
 		} else {
 			Response currentResponse = getLogic().processCommand(userInput);
 			if (currentResponse.isSuccess()) {
-				_displayArea.removeAll();
-				
 				ArrayList<Entry> entries = currentResponse.getEntries();
 				if (currentResponse.getFeedback() != null) {
 					String feedback = currentResponse.getFeedback().trim();
@@ -249,6 +247,8 @@ public class UserInterface extends JFrame {
 				}
 
 				if (entries != null) {
+					_displayArea.removeAll();
+					
 					GridBagConstraints constraints = new GridBagConstraints();
 					constraints.anchor = GridBagConstraints.PAGE_START;
 					constraints.insets = new Insets(2, 2, 2, 2);
@@ -309,7 +309,6 @@ public class UserInterface extends JFrame {
 							deadlineLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
 							deadlineLabel.setOpaque(true);
 							deadlineLabel.setPreferredSize(new Dimension(480, 80));
-							//deadlineLabel.setMinimumSize(new Dimension(640, 80));
 							deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							deadlineLabel.setVerticalAlignment(JLabel.TOP);
 							
@@ -327,7 +326,6 @@ public class UserInterface extends JFrame {
 							eventLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
 							eventLabel.setOpaque(true);
 							eventLabel.setPreferredSize(new Dimension(480, 80));
-							//eventLabel.setMinimumSize(new Dimension(640, 80));
 							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							eventLabel.setVerticalAlignment(JLabel.TOP);
 
@@ -345,7 +343,6 @@ public class UserInterface extends JFrame {
 							floatLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 							floatLabel.setOpaque(true);
 							floatLabel.setPreferredSize(new Dimension(480, 80));
-							//floatLabel.setMinimumSize(new Dimension(640, 80));
 							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							floatLabel.setVerticalAlignment(JLabel.TOP);
 							
@@ -370,7 +367,8 @@ public class UserInterface extends JFrame {
 					
 					_displayArea.revalidate();
 					_displayArea.repaint();
-					
+					_displayScroll.revalidate();
+					_displayScroll.repaint();
 				}
 
 				_logger.log(Level.INFO, "Successfully updated display.");
