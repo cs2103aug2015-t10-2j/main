@@ -235,9 +235,9 @@ public abstract class Command {
 		return detail;
 	}
 	
-	protected String getFeedbackForUser(String feedbackMessage, String detail) {
-		return String.format(feedbackMessage, detail);
-	}
+//	protected String getFeedbackForUser(String feedbackMessage, String detail) {
+//		return String.format(feedbackMessage, detail);
+//	}
 		
 	public abstract Response executeCommand(); 	
 }

@@ -373,9 +373,10 @@ public class EditCommand extends Command {
 		Response responseForEdit = new Response();
 		try {
 			int tempStorageIndex = index - 1;
-			Entry entryBeforeUpdate = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
-			_tempStorageManipulator.editTempStorage(tempStorageIndex, editedParameters, isEntryTypeChanged);
-			Entry entryAfterUpdate = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
+			Entry oldEntry = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
+			Entry entryBeforeUpdate = new Entry(oldEntry);
+			Entry entryAfterUpdate = _tempStorageManipulator.editTempStorage(tempStorageIndex, editedParameters,
+					                                                         isEntryTypeChanged); 
 			setSuccessResponseForEdit(responseForEdit, entryBeforeUpdate, entryAfterUpdate);
 			_logger.log(Level.INFO, "Generated success response for editing entry");
 		} catch (IOException ex) {
