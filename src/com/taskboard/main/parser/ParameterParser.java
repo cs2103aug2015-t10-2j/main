@@ -2,9 +2,9 @@ package com.taskboard.main.parser;
 
 import java.util.ArrayList;
 
-import com.taskboard.main.FormatValidator;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.ParameterType;
+import com.taskboard.main.formatvalidator.FormatValidator;
 
 public interface ParameterParser {
 	

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import com.taskboard.main.FormatValidator;
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.IndexFormatValidator;
 import com.taskboard.main.Parameter;
+import com.taskboard.main.formatvalidator.FormatValidator;
+import com.taskboard.main.formatvalidator.IndexFormatValidator;
 
 public class RestoreParameterParser implements ParameterParser {
 

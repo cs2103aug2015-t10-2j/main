@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.main.formatvalidator;
 
 public class IndexFormatValidator implements FormatValidator {
 	

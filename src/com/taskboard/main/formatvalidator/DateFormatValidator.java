@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.main.formatvalidator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import com.taskboard.main.DateFormatValidator;
 import com.taskboard.main.DelimiterType;
-import com.taskboard.main.FormatValidator;
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.IndexFormatValidator;
 import com.taskboard.main.Parameter;
-import com.taskboard.main.PriorityFormatValidator;
-import com.taskboard.main.TimeFormatValidator;
+import com.taskboard.main.formatvalidator.DateFormatValidator;
+import com.taskboard.main.formatvalidator.FormatValidator;
+import com.taskboard.main.formatvalidator.IndexFormatValidator;
+import com.taskboard.main.formatvalidator.PriorityFormatValidator;
+import com.taskboard.main.formatvalidator.TimeFormatValidator;
 
 public class DeleteParameterParser implements ParameterParser {
 	
