@@ -222,19 +222,21 @@ public class UserInterface extends JFrame {
 			System.exit(0);
 		} else {
 			Response currentResponse = getLogic().processCommand(userInput);
+			
+			if (currentResponse.getFeedback() != null) {
+				String feedback = currentResponse.getFeedback().trim();
+				_feedbackArea.setText(feedback);
+				
+				_logger.log(Level.INFO, "Successfully updated feedback area.");
+			} else {
+				_feedbackArea.setText(MESSAGE_NO_FEEDBACK);
+				
+				_logger.log(Level.INFO, "Successfully updated feedback area.");
+			}
+
 			if (currentResponse.isSuccess()) {
 				ArrayList<Entry> entries = currentResponse.getEntries();
-				if (currentResponse.getFeedback() != null) {
-					String feedback = currentResponse.getFeedback().trim();
-					_feedbackArea.setText(feedback);
-					
-					_logger.log(Level.INFO, "Successfully updated feedback area.");
-				} else {
-					_feedbackArea.setText(MESSAGE_NO_FEEDBACK);
-					
-					_logger.log(Level.INFO, "Successfully updated feedback area.");
-				}
-
+				
 				if (entries != null) {
 					_displayArea.removeAll();
 					
@@ -361,12 +363,7 @@ public class UserInterface extends JFrame {
 					_displayScroll.repaint();
 				}
 
-				_logger.log(Level.INFO, "Successfully updated display.");
-			} else {
-				String exception = currentResponse.getException().getMessage();
-				_feedbackArea.setText(exception);
-				
-				_logger.log(Level.INFO, "Successfully updated feedback area.");
+				_logger.log(Level.INFO, "Successfully updated display area.");
 			}
 		}
 

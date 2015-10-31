@@ -6,7 +6,7 @@ import java.io.IOException;
 public class UndoCommand extends Command {
 	
 	private static final String MESSAGE_UNDO_SUCCESS = "Succesfully undo last operation.";
-	private static final String MESSAGE_UNDO_FAILED = "Undo failed: no previous checkpoint found.";
+	private static final String MESSAGE_UNDO_FAILURE = "Undo failed: no previous checkpoint found.";
 	
 	public UndoCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
@@ -53,7 +53,7 @@ public class UndoCommand extends Command {
 			}
 		} else {
 			responseForUndo.setIsSuccess(false);
-			responseForUndo.setException(new IllegalThreadStateException(MESSAGE_UNDO_FAILED));
+			responseForUndo.setFeedback(MESSAGE_UNDO_FAILURE);
 		}
 		
 		return responseForUndo;

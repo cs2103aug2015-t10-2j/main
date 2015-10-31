@@ -8,6 +8,8 @@ import java.io.IOException;
 public class BackgroundCommand extends Command {
 
 	private static final String MESSAGE_SET_BACKGROUND_SUCCESS = "Succesfully changed background image.";
+	private static final String MESSAGE_SET_BACKGROUND_FAILURE = "The file format is not supported.";
+	private static final String MESSAGE_FILE_NOT_FOUND = "The specified image file does not exist.";
 	
 	public BackgroundCommand(ArrayList<Parameter> parameters) {
 		_parameters = parameters;
@@ -30,11 +32,11 @@ public class BackgroundCommand extends Command {
 				responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_SUCCESS);
 			} catch (IOException e) {
 				responseForBackground.setIsSuccess(false);
-				responseForBackground.setException(new IllegalArgumentException("The file format is not supported."));
+				responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_FAILURE);
 			}
 		} else {
 			responseForBackground.setIsSuccess(false);
-			responseForBackground.setException(new IllegalArgumentException("The specified image file does not exist."));
+			responseForBackground.setFeedback(MESSAGE_FILE_NOT_FOUND);
 		}
 		
 		return responseForBackground;
