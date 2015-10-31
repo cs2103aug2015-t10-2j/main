@@ -423,11 +423,6 @@ public class UserInterface extends JFrame {
 							constraints.gridwidth = 1;
 						}
 					}
-					
-					_displayArea.revalidate();
-					_displayArea.repaint();
-					_displayScroll.revalidate();
-					_displayScroll.repaint();
 				}
 				
 				_logger.log(Level.INFO, "Successfully updated display area.");
