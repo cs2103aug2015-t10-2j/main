@@ -222,8 +222,9 @@ public class UserInterface extends JFrame {
 			_logger.log(Level.INFO, "System exit.");
 			System.exit(0);
 		} else {
-			Response currentResponse = getLogic().processCommand(userInput);
+			String feedbackFontColor = "";
 			
+			Response currentResponse = getLogic().processCommand(userInput);
 			if (currentResponse.isSuccess()) {
 				ArrayList<Entry> entries = currentResponse.getEntries();
 				
@@ -431,19 +432,19 @@ public class UserInterface extends JFrame {
 				
 				_logger.log(Level.INFO, "Successfully updated display area.");
 				
-				_feedbackArea.setForeground(new Color(50, 205, 50));
+				feedbackFontColor = "#009900";
 			} else {
-				_feedbackArea.setForeground(new Color(178, 34, 34));
+				feedbackFontColor = "#CC0000";
 			}
 			
 			if (currentResponse.getFeedback() != null) {
 				String feedback = currentResponse.getFeedback().trim();
-				_feedbackArea.setText(feedback);
+				_feedbackArea.setText("<font color='" + feedbackFontColor + "'>" + feedback + "</font>");
 				_feedbackArea.setCaretPosition(0);
 				
 				_logger.log(Level.INFO, "Successfully updated feedback area.");
 			} else {
-				_feedbackArea.setText(MESSAGE_NO_FEEDBACK);
+				_feedbackArea.setText("<font color='" + feedbackFontColor + "'>" + MESSAGE_NO_FEEDBACK + "</font>");
 				_feedbackArea.setCaretPosition(0);
 				
 				_logger.log(Level.INFO, "Successfully updated feedback area.");
