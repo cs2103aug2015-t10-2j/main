@@ -70,7 +70,7 @@ public class RestoreCommand extends Command {
 	
 	private void setSuccessResponseForRestore(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_RESTORE.concat("\n").concat("\n").concat(entry.toString());
+		String userFeedback = MESSAGE_AFTER_RESTORE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempArchive());
 	}

@@ -70,7 +70,7 @@ public class CompleteCommand extends Command {
 	
 	private void setSuccessResponseForComplete(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_COMPLETE.concat("\n").concat("\n").concat(entry.toString());
+		String userFeedback = MESSAGE_AFTER_COMPLETE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
