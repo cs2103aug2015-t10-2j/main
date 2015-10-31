@@ -260,6 +260,7 @@ public class UserInterface extends JFrame {
 						if (currentEntry.getIndexParameter() != null) {
 							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
 						}
+						indexLabel.setPreferredSize(new Dimension(30, 30));
 						indexLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 						indexLabel.setOpaque(true);
 						
