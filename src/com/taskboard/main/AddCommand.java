@@ -36,13 +36,13 @@ public class AddCommand extends Command {
 		
 		Response responseForAdd = new Response();
 		if (isAddFloatingTask()) {
-			_logger.log(Level.INFO, "Initiate process of adding floating task");
+			_logger.log(Level.INFO, "Start process of adding floating task");
 			responseForAdd = addFloatingTask();
 		} else if (isAddDeadlineTask()) {
-			_logger.log(Level.INFO, "Initiate process of adding deadline task");
+			_logger.log(Level.INFO, "Start process of adding deadline task");
 			responseForAdd = addDeadlineTask();
 		} else if (isAddEvent()) {
-			_logger.log(Level.INFO, "Initiate process of adding event");
+			_logger.log(Level.INFO, "Start process of adding event");
 			responseForAdd = addEvent();
 		}
 		
@@ -158,11 +158,11 @@ public class AddCommand extends Command {
 		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
 		Response responseForAddDeadline = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
-		if (responseForAddDeadline.isSuccess() == true) {
+		if (responseForAddDeadline.isSuccess()) {
 			_logger.log(Level.INFO, "Start validating date time details for deadline task");
 			responseForAddDeadline = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(date, time);
-			if (responseForAddDeadline.isSuccess() == true) {
-				_logger.log(Level.INFO, "Process deadline task for storage");
+			if (responseForAddDeadline.isSuccess()) {
+				_logger.log(Level.INFO, "Start processing deadline task for storage");
 				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);  	                                               
 			}
 		}
@@ -207,7 +207,7 @@ public class AddCommand extends Command {
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
 		Response responseForAddEvent = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
 				                                                                          endDate, endTime);
-		if (responseForAddEvent.isSuccess() == true) {
+		if (responseForAddEvent.isSuccess()) {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
 		}
@@ -215,8 +215,8 @@ public class AddCommand extends Command {
 			_logger.log(Level.INFO, "Start validating date time details for event");
 			responseForAddEvent = eventDateTimeProcessor.validateEventDateTimeDetails(startDate, startTime, 
 					                                                                  endDate, endTime);	
-			if (responseForAddEvent.isSuccess() == true) {
-				_logger.log(Level.INFO, "Process event for storage");
+			if (responseForAddEvent.isSuccess()) {
+				_logger.log(Level.INFO, "Start processing event for storage");
 				responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, 
 						                                     endTime, priority, category);
 			}

@@ -3,45 +3,43 @@ package com.taskboard.main;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.logging.Level;
 
 public class EditCommand extends Command {
 	
 	private static final String MESSAGE_AFTER_EDIT = "\"%1$s\" updated!";
 	private static final String MESSAGE_ERROR_FOR_EDIT = "The entry could not be edited.";
-	private static final String MESSAGE_ERROR_FOR_NO_INDEX = "No entry index provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_EDIT_DETAILS = "No edit details provided.";
 
 	public EditCommand(ArrayList<Parameter> parameters) {
+		assert parameters != null;
 		_parameters = parameters;
 		
 		if (getTempStorageManipulator() == null) {
 			_tempStorageManipulator = new TempStorageManipulator();
 		}
+		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Response executeCommand() {
+		assert _parameters.size() > 1;
+		_logger.log(Level.INFO, "Commenced execution of EditCommand");
+		
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
-		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
+		
+		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
 		}
 		
 		System.out.println(initialTempStorage.toString());
-		
-		Response responseForEdit = new Response();
-		
-		responseForEdit = processInputIndex();
-		
-		if (responseForEdit.isSuccess() == true) {
-			if (!isEditWithDetails()) {
-				setFailureResponseForNoEditDetails(responseForEdit);
-				return responseForEdit;
-			}
-			
+				
+		Response responseForEdit = processInputIndex();
+		if (responseForEdit.isSuccess()) {
+			_logger.log(Level.INFO, "Start process of editing entry");
 			responseForEdit = processEditedDetailsForStorage();
 		}
 		
@@ -56,66 +54,19 @@ public class EditCommand extends Command {
 	}
 	
 	private Response processInputIndex() {
-		Response responseForInputIndex = new Response();
-		
-		if (!isIndexProvided()) {
-			setFailureResponseForNoIndex(responseForInputIndex);
-			return responseForInputIndex;
-		}
-		
 		String index = getDetailFromParameter(getIndexParameter());
-		responseForInputIndex = validateInputIndex(index);
+		assert !index.isEmpty();
+		_logger.log(Level.INFO, "Successfully retrieved index of entry to be edited: " + index);
 		
-		return responseForInputIndex;
-	}
-	
-	private boolean isIndexProvided() {
-		Parameter indexParameter = getIndexParameter();
-		
-		if (indexParameter != null) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private Response validateInputIndex(String index) {
-		Response responseForInputIndex = new Response();
-		
-		IndexValidator indexValidator = new IndexValidator();
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
+		IndexValidator indexValidator = new IndexValidator();
+		Response responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
 		
 		return responseForInputIndex;
 	}
 	
-	private boolean isEditWithDetails() {
-		if (isIndexProvided() && _parameters.size() > 1) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private void setFailureResponseForNoIndex(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_INDEX);
-		response.setException(exObj);
-	}
-	
-	private void setFailureResponseForNoEditDetails(Response response) {
-		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_EDIT_DETAILS);
-		response.setException(exObj);
-	}
-		
 	private Response processEditedDetailsForStorage() {
 		ArrayList<Parameter> editedParameters = new ArrayList<Parameter>();
-		Response responseForEdit = new Response();
-		
-		String index = getDetailFromParameter(getIndexParameter());
-		int indexValue = Integer.valueOf(index);
-		
 		Parameter newNameParameter = getNewNameParameter();
 		if (newNameParameter != null) {
 			newNameParameter.setParameterType(ParameterType.NAME);
@@ -132,12 +83,18 @@ public class EditCommand extends Command {
 			editedParameters.add(categoryParameter);
 		}
 		
+		Response responseForEdit = new Response();
+		String index = getDetailFromParameter(getIndexParameter());
+		int indexValue = Integer.valueOf(index);
 		if (isEditDateTimeForDeadlineTask()) {
+			_logger.log(Level.INFO, "Start processing edited date time details for deadline task");
 			responseForEdit = processEditedDateTimeDetailsForDeadlineTask(editedParameters, indexValue);
 		} else if (isEditDateTimeForEvent()) {
+			_logger.log(Level.INFO, "Start processing edited date time details for event");
 			responseForEdit = processEditedDateTimeDetailsForEvent(editedParameters, indexValue);
 		} else {
 			boolean isEntryTypeChanged = false;
+			_logger.log(Level.INFO, "Start processing edited details for storage");
 			responseForEdit = updateEditedDetailsToStorage(editedParameters, indexValue, isEntryTypeChanged);
 		}
 		
@@ -147,7 +104,6 @@ public class EditCommand extends Command {
 	private boolean isEditDateTimeForDeadlineTask() {
 		Parameter dateParameter = getDateParameter();
 		Parameter timeParameter = getTimeParameter();
-		
 		if (dateParameter != null || timeParameter != null) {
 			return true;
 		}
@@ -157,14 +113,14 @@ public class EditCommand extends Command {
 	
 	private Response processEditedDateTimeDetailsForDeadlineTask(ArrayList<Parameter> editedParameters, 
 			                                                     int index) {
-		Response responseForDateTime = new Response();
-		
 		String newDate = getDetailFromParameter(getDateParameter());
 		String newTime = getDetailFromParameter(getTimeParameter());
-		
+		Response responseForDateTime = new Response();
 		if (isEditedEntryFloatingTask(index) || isEditedEntryEvent(index)) {
+			_logger.log(Level.INFO, "Start process of converting existing entry to deadline task");
 			responseForDateTime = processConversionToDeadlineTask(editedParameters, index, newDate, newTime);							                                                              
 		} else if (isEditedEntryDeadlineTask(index)) {
+			_logger.log(Level.INFO, "Start process of editing existing deadline task");
 			responseForDateTime = processEditingDeadlineTask(editedParameters, index, newDate, newTime);
 		} 
 				
@@ -183,7 +139,6 @@ public class EditCommand extends Command {
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
 		Entry entry = entries.get(index - 1);
 		Parameter dateParameter = entry.getDateParameter();
-		
 		if (dateParameter != null) {
 			return true;
 		}
@@ -195,7 +150,6 @@ public class EditCommand extends Command {
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
 		Entry entry = entries.get(index - 1);
 		Parameter startDateParameter = entry.getStartDateParameter();
-		
 		if (startDateParameter != null) {
 			return true;
 		}
@@ -205,15 +159,12 @@ public class EditCommand extends Command {
 	
 	private Response processConversionToDeadlineTask(ArrayList<Parameter> editedParameters, int index, 
 			                                         String newDate, String newTime) {
-		Response responseForDateTime = new Response();
-		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
-		responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(newDate, newTime);
-		
-		if (responseForDateTime.isSuccess() == true) {
+		Response responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(newDate, newTime);
+		if (responseForDateTime.isSuccess()) {
+			_logger.log(Level.INFO, "Start validating edited date time details for deadline task");
 			responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, newTime);
-			
-			if (responseForDateTime.isSuccess() == true) {
+			if (responseForDateTime.isSuccess()) {
 				boolean isEntryTypeChanged = true;
 				responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, 
 						                                                               newDate, newTime, 
@@ -227,17 +178,15 @@ public class EditCommand extends Command {
 	private Response constructEditedDateTimeParametersForDeadlineTask(ArrayList<Parameter> editedParameters, 
 			                                                          int index, String newDate, String newTime, 
 			                                                          boolean isEntryTypeChanged) {
-		Response responseForDateTime = new Response();
-		
 		addParameterToEditedParameters(editedParameters, ParameterType.DATE, newDate);
 		addParameterToEditedParameters(editedParameters, ParameterType.TIME, newTime);
-				
-		responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, isEntryTypeChanged);
+		_logger.log(Level.INFO, "Start processing edited details for storage");
+		Response responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, isEntryTypeChanged);
 		
 		return responseForDateTime;
 	}
 	
-	private void addParameterToEditedParameters(ArrayList<Parameter> editedParameters, 
+	private void addParameterToEditedParameters(ArrayList<Parameter> editedParameters,  
 			                                    ParameterType parameterType, String detail) {
 		if (!detail.isEmpty()) {
 			Parameter parameter = new Parameter(parameterType, detail);
@@ -247,20 +196,17 @@ public class EditCommand extends Command {
 	
 	private Response processEditingDeadlineTask(ArrayList<Parameter> editedParameters, int index, 
 			                                    String newDate, String newTime) {
-		Response responseForDateTime = new Response();
-		
 		if (newDate.isEmpty()) {
 			newDate = getDateFromEntry(index);
 		}
-		
 		if (newTime.isEmpty()) {
 			newTime = getTimeFromEntry(index);
 		}
 		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
-		responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, newTime);
-
-		if (responseForDateTime.isSuccess() == true) {
+		_logger.log(Level.INFO, "Start validating edited date time details for deadline task");
+		Response responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, newTime);
+		if (responseForDateTime.isSuccess()) {
 			boolean isEntryTypeChanged = false;
 			responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, 
 					                                                               newDate, newTime, 
@@ -283,9 +229,7 @@ public class EditCommand extends Command {
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
 		Entry entry = entries.get(index - 1);
 		Parameter timeParameter = entry.getTimeParameter();
-		
 		String time = "";
-		
 		if (timeParameter != null) {
 			time = timeParameter.getParameterValue();
 		}
@@ -298,7 +242,6 @@ public class EditCommand extends Command {
 		Parameter startTimeParameter = getStartTimeParameter();
 		Parameter endDateParameter = getEndDateParameter();
 		Parameter endTimeParameter = getEndTimeParameter();
-		
 		if (startDateParameter != null || startTimeParameter != null || 
 		    endDateParameter != null || endTimeParameter != null) {
 			return true;
@@ -308,17 +251,18 @@ public class EditCommand extends Command {
 	}
 	
 	private Response processEditedDateTimeDetailsForEvent(ArrayList<Parameter> editedParameters, int index) {
-		Response responseForDateTime = new Response();
-		
 		String newStartDate = getDetailFromParameter(getStartDateParameter());
 		String newStartTime = getDetailFromParameter(getStartTimeParameter());
 		String newEndDate = getDetailFromParameter(getEndDateParameter());
 		String newEndTime = getDetailFromParameter(getEndTimeParameter());
 		
+		Response responseForDateTime = new Response();
 		if (isEditedEntryFloatingTask(index) || isEditedEntryDeadlineTask(index)) {
+			_logger.log(Level.INFO, "Start process of converting existing entry to event");
 			responseForDateTime = processConversionToEvent(editedParameters, index, newStartDate, newStartTime,
 					                                       newEndDate, newEndTime);							                                                              
 		} else if (isEditedEntryEvent(index)) {
+			_logger.log(Level.INFO, "Start process of editing existing event");
 			responseForDateTime = processEditingEvent(editedParameters, index, newStartDate, newStartTime,
 					                                  newEndDate, newEndTime);		 
 		} 
@@ -329,21 +273,18 @@ public class EditCommand extends Command {
 	private Response processConversionToEvent(ArrayList<Parameter> editedParameters, int index, 
 			                                  String newStartDate, String newStartTime, String newEndDate, 
 			                                  String newEndTime) {
-		Response responseForDateTime = new Response();
-		
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
-		responseForDateTime = eventDateTimeProcessor.processEventDateTimeDetails(newStartDate, newStartTime, 
-				                                                                 newEndDate, newEndTime);
-		
-		if (responseForDateTime.isSuccess() == true) {
+		Response responseForDateTime = eventDateTimeProcessor.processEventDateTimeDetails(newStartDate, newStartTime, 
+				                                                                          newEndDate, newEndTime);
+		if (responseForDateTime.isSuccess()) {
+			_logger.log(Level.INFO, "Assign start date to end date");
 			newEndDate = newStartDate;
 		}
-		
 		if (responseForDateTime.getException() == null) {
+			_logger.log(Level.INFO, "Start validating edited date time details for event");
 			responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
 					                                                                  newEndDate, newEndTime);
-			
-			if (responseForDateTime.isSuccess() == true) {
+			if (responseForDateTime.isSuccess()) {
 				boolean isEntryTypeChanged = true;
 				responseForDateTime = constructEditedDateTimeParametersForEvent(editedParameters, index, 
 						                                                        newStartDate, newStartTime, 
@@ -359,43 +300,36 @@ public class EditCommand extends Command {
 			                                                   String newStartDate, String newStartTime, 
 			                                                   String newEndDate, String newEndTime, 
 			                                                   boolean isEntryTypeChanged) {                      
-		Response responseForDateTime = new Response();
-		
 		addParameterToEditedParameters(editedParameters, ParameterType.START_DATE, newStartDate);
 		addParameterToEditedParameters(editedParameters, ParameterType.START_TIME, newStartTime);
 		addParameterToEditedParameters(editedParameters, ParameterType.END_DATE, newEndDate);
 		addParameterToEditedParameters(editedParameters, ParameterType.END_TIME, newEndTime);
-			
-		responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, isEntryTypeChanged);
+		_logger.log(Level.INFO, "Start processing edited details for storage");
+		Response responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, isEntryTypeChanged);
 		
 		return responseForDateTime;
 	}
 	
 	private Response processEditingEvent(ArrayList<Parameter> editedParameters, int index, String newStartDate,
 			                             String newStartTime, String newEndDate, String newEndTime) {
-		Response responseForDateTime = new Response();
-		
 		if (newStartDate.isEmpty()) {
 			newStartDate = getStartDateFromEntry(index);
 		}
-		
 		if (newStartTime.isEmpty()) {
 			newStartTime = getStartTimeFromEntry(index);
 		}
-		
 		if (newEndDate.isEmpty()) {
 			newEndDate = getEndDateFromEntry(index);
 		}
-		
 		if (newEndTime.isEmpty()) {
 			newEndTime = getEndTimeFromEntry(index);
 		}
 		
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
-		responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
-				                                                                  newEndDate, newEndTime);
-		
-		if (responseForDateTime.isSuccess() == true) {
+		_logger.log(Level.INFO, "Start validating edited date time details for event");
+		Response responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
+				                                                                           newEndDate, newEndTime);
+		if (responseForDateTime.isSuccess()) {
 			boolean isEntryTypeChanged = false;
 			responseForDateTime = constructEditedDateTimeParametersForEvent(editedParameters, index, newStartDate,  
 					                                                        newStartTime, newEndDate, newEndTime,
@@ -418,9 +352,7 @@ public class EditCommand extends Command {
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
 		Entry entry = entries.get(index - 1);
 		Parameter startTimeParameter = entry.getStartTimeParameter();
-		
 		String startTime = "";
-		
 		if (startTimeParameter != null) {
 			startTime = startTimeParameter.getParameterValue();
 		}
@@ -441,9 +373,7 @@ public class EditCommand extends Command {
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
 		Entry entry = entries.get(index - 1);
 		Parameter endTimeParameter = entry.getEndTimeParameter();
-		
 		String endTime = "";
-		
 		if (endTimeParameter != null) {
 			endTime = endTimeParameter.getParameterValue();
 		}
@@ -454,14 +384,15 @@ public class EditCommand extends Command {
 	private Response updateEditedDetailsToStorage(ArrayList<Parameter> editedParameters, int index,
 			                                      boolean isEntryTypeChanged) {
 		Response responseForEdit = new Response();
-		
 		try {
 			int tempStorageIndex = index - 1;
 			String entryName = getEntryName(index);
 			_tempStorageManipulator.editTempStorage(tempStorageIndex, editedParameters, isEntryTypeChanged);
 			setSuccessResponseForEdit(responseForEdit, entryName);
+			_logger.log(Level.INFO, "Generated success response for editing entry");
 		} catch (IOException ex) {
 			setFailureResponseForEdit(responseForEdit);
+			_logger.log(Level.INFO, "Generated failure response for editing entry");
 		}
 		
 		return responseForEdit;
