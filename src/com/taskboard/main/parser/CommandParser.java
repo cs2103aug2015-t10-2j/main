@@ -1,8 +1,26 @@
-package com.taskboard.main;
+package com.taskboard.main.parser;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
+import com.taskboard.main.AddCommand;
+import com.taskboard.main.ArchiveCommand;
+import com.taskboard.main.BackgroundCommand;
+import com.taskboard.main.Command;
+import com.taskboard.main.CommandType;
+import com.taskboard.main.CompleteCommand;
+import com.taskboard.main.DeleteCommand;
+import com.taskboard.main.EditCommand;
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.HelpCommand;
+import com.taskboard.main.InvalidCommand;
+import com.taskboard.main.NewCommand;
+import com.taskboard.main.OpenCommand;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.RestoreCommand;
+import com.taskboard.main.UndoCommand;
+import com.taskboard.main.ViewCommand;
 
 public class CommandParser {
 	

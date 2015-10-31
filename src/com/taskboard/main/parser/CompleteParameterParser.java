@@ -1,19 +1,24 @@
-package com.taskboard.main;
+package com.taskboard.main.parser;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class OpenParameterParser implements ParameterParser {
-	
+import com.taskboard.main.FormatValidator;
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.IndexFormatValidator;
+import com.taskboard.main.Parameter;
+
+public class CompleteParameterParser implements ParameterParser {
+
 	private Logger _logger;
 	
-	public OpenParameterParser() {
+	public CompleteParameterParser() {
 		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
-		_logger.log(Level.INFO, "Started parsing parameters of OPEN command");
+		_logger.log(Level.INFO, "Started parsing parameters of COMPLETE command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
@@ -23,9 +28,11 @@ public class OpenParameterParser implements ParameterParser {
 		} else {
 			throw new IllegalArgumentException("No parameters provided.");
 		}
-		parameters.add(new Parameter(ParameterType.NAME, parameterString));
 		
-		_logger.log(Level.INFO, "Finished parsing parameters of OPEN command");
+		FormatValidator indexFormatValidator =  new IndexFormatValidator();
+		parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
+		
+		_logger.log(Level.INFO, "Finished parsing parameters of COMPLETE command");
 		_logger.log(Level.INFO, "  Recognized parameters:");
 		for (int i = 0; i < parameters.size(); i++) {
 			_logger.log(Level.INFO, "    " + parameters.get(i).getParameterType().name() + ": " + 

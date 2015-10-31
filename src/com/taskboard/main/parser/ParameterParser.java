@@ -1,6 +1,10 @@
-package com.taskboard.main;
+package com.taskboard.main.parser;
 
 import java.util.ArrayList;
+
+import com.taskboard.main.FormatValidator;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.ParameterType;
 
 public interface ParameterParser {
 	

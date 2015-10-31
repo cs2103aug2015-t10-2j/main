@@ -1,19 +1,28 @@
-package com.taskboard.main;
+package com.taskboard.main.parser;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class DeleteParameterParser implements ParameterParser {
+import com.taskboard.main.DateFormatValidator;
+import com.taskboard.main.DelimiterType;
+import com.taskboard.main.FormatValidator;
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.ParameterType;
+import com.taskboard.main.PriorityFormatValidator;
+import com.taskboard.main.TimeFormatValidator;
+
+public class ViewParameterParser implements ParameterParser {
 	
 	private Logger _logger;
 	
-	public DeleteParameterParser() {
+	public ViewParameterParser() {
 		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
-		_logger.log(Level.INFO, "Started parsing parameters of DELETE command");
+		_logger.log(Level.INFO, "Started parsing parameters of VIEW command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
@@ -21,12 +30,13 @@ public class DeleteParameterParser implements ParameterParser {
 		if (commandString.trim().indexOf(" ") != -1) {
 			parameterString = commandString.substring(commandString.indexOf(" ")).trim();
 		} else {
-			throw new IllegalArgumentException("No parameters provided.");
+			// view command allows a command with no trailing parameter (return an empty ArrayList)
+			return parameters;
 		}
 		
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
 		if (delimiterTypes.isEmpty()) {
-			parameters.addAll(convertToParameters(parameterString, DelimiterType.NONE));
+			parameters.add(new Parameter(ParameterType.NAME, parameterString));
 		} else {
 			int expectedDelimiterId = 0;
 			DelimiterType expectedDelimiterType = delimiterTypes.get(expectedDelimiterId);
@@ -63,11 +73,11 @@ public class DeleteParameterParser implements ParameterParser {
 			}
 			if (!temporaryString.isEmpty()) {
 				temporaryString = reverseTokens(temporaryString);
-				parameters.addAll(convertToParameters(temporaryString, DelimiterType.NONE));
+				parameters.add(new Parameter(ParameterType.NAME, temporaryString));
 			}
 		}
 		
-		_logger.log(Level.INFO, "Finished parsing parameters of DELETE command");
+		_logger.log(Level.INFO, "Finished parsing parameters of VIEW command");
 		_logger.log(Level.INFO, "  Recognized parameters:");
 		for (int i = 0; i < parameters.size(); i++) {
 			_logger.log(Level.INFO, "    " + parameters.get(i).getParameterType().name() + ": " + 
@@ -118,15 +128,11 @@ public class DeleteParameterParser implements ParameterParser {
 	
 	private static ArrayList<Parameter> convertToParameters(String parameterString, DelimiterType delimiterType) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		FormatValidator indexFormatValidator = new IndexFormatValidator();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
 		FormatValidator priorityFormatValidator = new PriorityFormatValidator();
 		
 		switch (delimiterType) {
-			case NONE:
-				parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
-				break;
 			case FROM:
 				parameters.addAll(ParameterParser.getStartDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
@@ -153,5 +159,5 @@ public class DeleteParameterParser implements ParameterParser {
 		
 		return parameters;
 	}
-
+	
 }

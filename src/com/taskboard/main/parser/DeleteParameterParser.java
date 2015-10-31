@@ -1,19 +1,28 @@
-package com.taskboard.main;
+package com.taskboard.main.parser;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class AddParameterParser implements ParameterParser {
+import com.taskboard.main.DateFormatValidator;
+import com.taskboard.main.DelimiterType;
+import com.taskboard.main.FormatValidator;
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.IndexFormatValidator;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.PriorityFormatValidator;
+import com.taskboard.main.TimeFormatValidator;
+
+public class DeleteParameterParser implements ParameterParser {
 	
 	private Logger _logger;
 	
-	public AddParameterParser() {
+	public DeleteParameterParser() {
 		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Parameter> parseParameters(String commandString) throws IllegalArgumentException {
-		_logger.log(Level.INFO, "Started parsing parameters of ADD command");
+		_logger.log(Level.INFO, "Started parsing parameters of DELETE command");
 		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		// remove the commandType token (add, edit, delete, etc.) and remove trailing whitespace
@@ -26,7 +35,7 @@ public class AddParameterParser implements ParameterParser {
 		
 		ArrayList<DelimiterType> delimiterTypes = extractDelimiterTypes(parameterString);
 		if (delimiterTypes.isEmpty()) {
-			parameters.add(new Parameter(ParameterType.NAME, parameterString));
+			parameters.addAll(convertToParameters(parameterString, DelimiterType.NONE));
 		} else {
 			int expectedDelimiterId = 0;
 			DelimiterType expectedDelimiterType = delimiterTypes.get(expectedDelimiterId);
@@ -63,19 +72,15 @@ public class AddParameterParser implements ParameterParser {
 			}
 			if (!temporaryString.isEmpty()) {
 				temporaryString = reverseTokens(temporaryString);
-				parameters.add(new Parameter(ParameterType.NAME, temporaryString));
+				parameters.addAll(convertToParameters(temporaryString, DelimiterType.NONE));
 			}
 		}
 		
-		_logger.log(Level.INFO, "Finished parsing parameters of ADD command");
+		_logger.log(Level.INFO, "Finished parsing parameters of DELETE command");
 		_logger.log(Level.INFO, "  Recognized parameters:");
 		for (int i = 0; i < parameters.size(); i++) {
 			_logger.log(Level.INFO, "    " + parameters.get(i).getParameterType().name() + ": " + 
 						parameters.get(i).getParameterValue());
-		}
-		
-		if (!isParameterExists(parameters, ParameterType.NAME)) {
-			throw new IllegalArgumentException("No entry name provided.");
 		}
 		
 		return parameters;
@@ -122,11 +127,15 @@ public class AddParameterParser implements ParameterParser {
 	
 	private static ArrayList<Parameter> convertToParameters(String parameterString, DelimiterType delimiterType) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		FormatValidator indexFormatValidator = new IndexFormatValidator();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
 		FormatValidator priorityFormatValidator = new PriorityFormatValidator();
 		
 		switch (delimiterType) {
+			case NONE:
+				parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
+				break;
 			case FROM:
 				parameters.addAll(ParameterParser.getStartDateTime(parameterString, dateFormatValidator, timeFormatValidator));
 				break;
@@ -153,14 +162,5 @@ public class AddParameterParser implements ParameterParser {
 		
 		return parameters;
 	}
-	
-	private boolean isParameterExists(ArrayList<Parameter> parameters, ParameterType parameterType) {
-		for (int i = 0; i < parameters.size(); i++) {
-			if (parameters.get(i).getParameterType() == parameterType) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 }

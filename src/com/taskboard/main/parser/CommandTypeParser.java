@@ -1,4 +1,6 @@
-package com.taskboard.main;
+package com.taskboard.main.parser;
+
+import com.taskboard.main.CommandType;
 
 public class CommandTypeParser {
 
