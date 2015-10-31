@@ -123,7 +123,7 @@ public class UserInterface extends JFrame {
 		_displayScroll = new TransparentScrollPane(_displayArea, DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 400));
+		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 360));
 		_displayScroll.getVerticalScrollBar().setUnitIncrement(40);
 		_displayScroll.setBackground(Color.WHITE);
 		pane.add(_displayScroll, constraints);
