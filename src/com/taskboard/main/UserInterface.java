@@ -18,9 +18,15 @@ public class UserInterface extends JFrame {
 	private static UserInterface _instance;
 	private static final long serialVersionUID = 1;
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
-	private static final String DEFAULT_BACKGROUND_FILE_STRING = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
+	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
 	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
-
+	private static final float DISPLAY_AREA_RELATIVE_TRANSPARENCY = 0.9f;
+	private static final int LABEL_RELATIVE_TRANSPARENCY = 255;
+	private static final String HIGH_PRIORITY_FILE_PATH = "resources/images/HighPriority.jpg";
+	private static final String MEDIUM_PRIORITY_FILE_PATH = "resources/images/MediumPriority.jpg";
+	private static final String LOW_PRIORITY_FILE_PATH = "resources/images/LowPriority.jpg";
+	private static final String NORMAL_PRIORITY_FILE_PATH = "resources/images/NormalPriority.jpg";
+	
 	private Logic _logic;
 	
 	private JFrame _frame;
@@ -37,7 +43,7 @@ public class UserInterface extends JFrame {
 	private UserInterface() {
 		_frame = new JFrame(TITLE);
 		_backgroundPane = new JLabel();
-		_backgroundFileString = DEFAULT_BACKGROUND_FILE_STRING;
+		_backgroundFileString = DEFAULT_BACKGROUND_FILE_PATH;
 		try {
 			setBackground(_backgroundFileString);
 		} catch (IOException e) {
@@ -91,9 +97,9 @@ public class UserInterface extends JFrame {
 		constraints.gridy = 0;
 		pane.add(_title, constraints);
 		
-		_displayArea = new JPanel();
+		_displayArea = new TransparentPanel(DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayArea.setBackground(Color.WHITE);
-		_displayArea.setOpaque(true);
+		//_displayArea.setOpaque(true);
 		_displayArea.setLayout(new GridBagLayout());
 		_displayArea.setAutoscrolls(true);
 		constraints.weightx = 0.0;
@@ -102,13 +108,14 @@ public class UserInterface extends JFrame {
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		pane.add(_displayArea, constraints);		
+		pane.add(_displayArea, constraints);
 
-		JScrollPane _displayScroll = new JScrollPane(_displayArea);
+		JScrollPane _displayScroll = new TransparentScrollPane(_displayArea, DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 400));
 		_displayScroll.getVerticalScrollBar().setUnitIncrement(40);
+		_displayScroll.setBackground(Color.WHITE);
 		pane.add(_displayScroll, constraints);
 		
 		// Enable up and down buttons for scrolling.
@@ -135,10 +142,10 @@ public class UserInterface extends JFrame {
 		pane.add(_feedbackScroll, constraints);
 		
 		// Enable up and down buttons for scrolling.
-		JScrollBar verticalFeedbackScroll = _displayScroll.getVerticalScrollBar();
+		JScrollBar verticalFeedbackScroll = _feedbackScroll.getVerticalScrollBar();
 		InputMap feedbackScrollIM = verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		feedbackScrollIM.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
-		feedbackScrollIM.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+		feedbackScrollIM.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
+		feedbackScrollIM.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 
 		_commandLabel = new JLabel("Enter command below:");
 		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 14));
@@ -282,49 +289,58 @@ public class UserInterface extends JFrame {
 						indexLabel.setOpaque(true);
 						
 						if (currentEntry.getDateParameter() != null) {
-							indexLabel.setBackground(Color.PINK);
+							indexLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
 							_displayArea.add(indexLabel, constraints);
 							
 							constraints.gridx = 1;
 							constraints.gridy = curGridY++;
 							JLabel deadlineLabel = new JLabel();
 							deadlineLabel.setText(currentEntry.toUIString());
-							deadlineLabel.setBackground(Color.PINK);
+							deadlineLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
 							deadlineLabel.setOpaque(true);
 							deadlineLabel.setPreferredSize(new Dimension(480, 80));
 							//deadlineLabel.setMinimumSize(new Dimension(640, 80));
 							deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							deadlineLabel.setVerticalAlignment(JLabel.TOP);
+							
+							assignPriorityIcon(currentEntry, deadlineLabel);
+							
 							_displayArea.add(deadlineLabel, constraints);
 						} else if (currentEntry.getStartDateParameter() != null) {
-							indexLabel.setBackground(new Color (175, 255, 163));
+							indexLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
 							_displayArea.add(indexLabel, constraints);
 							
 							constraints.gridx = 1;
 							constraints.gridy = curGridY++;
 							JLabel eventLabel = new JLabel();
 							eventLabel.setText(currentEntry.toUIString());
-							eventLabel.setBackground(new Color (175, 255, 163));
+							eventLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
 							eventLabel.setOpaque(true);
 							eventLabel.setPreferredSize(new Dimension(480, 80));
 							//eventLabel.setMinimumSize(new Dimension(640, 80));
 							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							eventLabel.setVerticalAlignment(JLabel.TOP);
+
+							assignPriorityIcon(currentEntry, eventLabel);
+							
 							_displayArea.add(eventLabel, constraints);
 						} else if (currentEntry.getNameParameter() != null) {
-							indexLabel.setBackground(new Color (198, 255, 250));
+							indexLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 							_displayArea.add(indexLabel, constraints);
 							
 							constraints.gridx = 1;
 							constraints.gridy = curGridY++;
 							JLabel floatLabel = new JLabel();
 							floatLabel.setText(currentEntry.toUIString());
-							floatLabel.setBackground(new Color (198, 255, 250));
+							floatLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 							floatLabel.setOpaque(true);
 							floatLabel.setPreferredSize(new Dimension(480, 80));
 							//floatLabel.setMinimumSize(new Dimension(640, 80));
 							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							floatLabel.setVerticalAlignment(JLabel.TOP);
+							
+							assignPriorityIcon(currentEntry, floatLabel);
+							
 							_displayArea.add(floatLabel, constraints);
 						} else {
 							constraints.gridx = 0;
@@ -332,7 +348,7 @@ public class UserInterface extends JFrame {
 							constraints.gridwidth = 2;
 							JLabel helpLabel = new JLabel();
 							helpLabel.setText(currentEntry.toUIString());
-							helpLabel.setBackground(Color.ORANGE);
+							helpLabel.setBackground(new Color(255, 165, 0, LABEL_RELATIVE_TRANSPARENCY));
 							helpLabel.setOpaque(true);
 							helpLabel.setPreferredSize(new Dimension(480, 320));
 							helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -357,6 +373,25 @@ public class UserInterface extends JFrame {
 		}
 
 		_commandField.setText("");
+	}
+	
+	private static void assignPriorityIcon(Entry currentEntry, JLabel currentLabel) {
+		Parameter priority = currentEntry.getPriorityParameter();
+		if (priority != null) {
+			switch (priority.getParameterValue()) {
+				case "high":
+					currentLabel.setIcon(new ImageIcon(HIGH_PRIORITY_FILE_PATH));
+					break;
+				case "medium":
+					currentLabel.setIcon(new ImageIcon(MEDIUM_PRIORITY_FILE_PATH));
+					break;
+				case "low":
+					currentLabel.setIcon(new ImageIcon(LOW_PRIORITY_FILE_PATH));
+					break;
+			}
+		} else {
+			currentLabel.setIcon(new ImageIcon(NORMAL_PRIORITY_FILE_PATH));
+		}
 	}
 	
 }
