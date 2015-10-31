@@ -37,8 +37,6 @@ public class UserInterface extends JFrame {
 	private static final String NEGATIVE_SCROLL_CODE = "negativeUnitIncrement";
 	
 	private static final String EXIT_COMMAND_STRING = "exit";
-	private static final String HELP_COMMAND_STRING = "help";
-	private static final String UNDO_COMMAND_STRING = "undo";
 	
 	private static final long serialVersionUID = 1;
 	
@@ -87,6 +85,10 @@ public class UserInterface extends JFrame {
 	
 	public Logic getLogic() {
 		return _logic;
+	}
+	
+	public JTextField getCommandField() {
+		return _commandField;
 	}
 	
 	public void setBackground(String backgroundFileString) throws IOException {
@@ -168,6 +170,7 @@ public class UserInterface extends JFrame {
 
 		_commandField = new JTextField();
 		_commandField.setEditable(true);
+		_commandField.addKeyListener(new ShortcutListener());
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -175,44 +178,6 @@ public class UserInterface extends JFrame {
 		constraints.gridy = 4;
 		pane.add(_commandField, constraints);
 
-		final ArrayList<Integer> pressed = new ArrayList<Integer>();
-		
-		_commandField.addKeyListener(new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-				// TODO Auto-generated method stub  
-			}
-
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
-					pressed.remove(new Integer(KeyEvent.VK_CONTROL));
-				}
-			}
-
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-					executeInputCommand();
-				} else if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
-					pressed.add(new Integer(KeyEvent.VK_CONTROL));
-				} else if (pressed.contains(new Integer(KeyEvent.VK_CONTROL))) {
-					if (arg0.getKeyCode() == KeyEvent.VK_Z) {
-						_commandField.setText(UNDO_COMMAND_STRING);
-						executeInputCommand();
-					} else if (arg0.getKeyCode() == KeyEvent.VK_Q) {
-						_commandField.setText(EXIT_COMMAND_STRING);
-						executeInputCommand();
-					} else if (arg0.getKeyCode() == KeyEvent.VK_H) {
-						_commandField.setText(HELP_COMMAND_STRING);
-						executeInputCommand();
-					}
-				}
-			}
-		});
-
-		setTitle(TITLE);
-		//setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -308,7 +273,7 @@ public class UserInterface extends JFrame {
 							deadlineLabel.setText(currentEntry.toUIString());
 							deadlineLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
 							deadlineLabel.setOpaque(true);
-							deadlineLabel.setPreferredSize(new Dimension(480, 80));
+							deadlineLabel.setPreferredSize(new Dimension(480, 60));
 							deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							deadlineLabel.setVerticalAlignment(JLabel.TOP);
 							
@@ -325,7 +290,7 @@ public class UserInterface extends JFrame {
 							eventLabel.setText(currentEntry.toUIString());
 							eventLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
 							eventLabel.setOpaque(true);
-							eventLabel.setPreferredSize(new Dimension(480, 80));
+							eventLabel.setPreferredSize(new Dimension(480, 60));
 							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							eventLabel.setVerticalAlignment(JLabel.TOP);
 
@@ -342,7 +307,7 @@ public class UserInterface extends JFrame {
 							floatLabel.setText(currentEntry.toUIString());
 							floatLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 							floatLabel.setOpaque(true);
-							floatLabel.setPreferredSize(new Dimension(480, 80));
+							floatLabel.setPreferredSize(new Dimension(480, 60));
 							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							floatLabel.setVerticalAlignment(JLabel.TOP);
 							
