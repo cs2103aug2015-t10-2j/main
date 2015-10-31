@@ -268,8 +268,8 @@ public class Entry {
 		return entryDetails;
 	}
 	
-	public String toUIString() {
-		String entryDetails = "<html>";
+	public String toHTMLString() {
+		String entryDetails = "";
 		
 		for (int i = 0; i < _parameters.size(); i++) {
 			Parameter detailParameter = _parameters.get(i);
@@ -280,20 +280,38 @@ public class Entry {
 				detailType = "";
 			}
 			String detail = detailParameter.getParameterValue();
-			if (!detailType.equals("INDEX") && !detailType.equals("PRIORITY")) {
+			entryDetails = entryDetails.concat("<b>" + detailType + "</b>").concat(": ").concat(detail).concat("<br>");
+		}
+		
+		return entryDetails;
+	}
+	
+	public String toUIString() {
+		String entryDetails = "";
+		
+		for (int i = 0; i < _parameters.size(); i++) {
+			Parameter detailParameter = _parameters.get(i);
+			String detailType;
+			if (detailParameter.getParameterType() != null) {
+				detailType = detailParameter.getParameterType().name();
+			} else {
+				detailType = "";
+			}
+			String detail = detailParameter.getParameterValue();
+			if (!detailType.equals("INDEX") && !detailType.equals("CATEGORY") && !detailType.equals("PRIORITY")) {
 				switch (detailType) {
 					case "NAME":
-						entryDetails += detail + "<br>";
+						entryDetails += detail + "\n";
 						break;
 					case "DATE":
 						if (getTimeParameter() != null) {
 							entryDetails += "On " + detail + " ";
 						} else {
-							entryDetails += "On " + detail + "<br>";
+							entryDetails += "On " + detail + "\n";
 						}
 						break;
 					case "TIME":
-						entryDetails += detail + "<br>";
+						entryDetails += detail + "\n";
 						break;
 					case "START_DATE":
 						if (getStartTimeParameter() != null) {
@@ -309,23 +327,18 @@ public class Entry {
 						if (getEndTimeParameter() != null) {
 							entryDetails += detail + " ";
 						} else {
-							entryDetails += detail + "<br>";
+							entryDetails += detail + "\n";
 						}
 						break;
 					case "END_TIME":
-						entryDetails += detail + "<br>";
-						break;
-					case "CATEGORY":
-						entryDetails += "Category: " + detail + "<br>";
+						entryDetails += detail + "\n";
 						break;
 					default:
-						entryDetails += detail + "<br>";
+						entryDetails += detail + "\n";
 						break;
 				}
 			}
 		}
-		
-		entryDetails += "</html>";
 		
 		return entryDetails;
 	}

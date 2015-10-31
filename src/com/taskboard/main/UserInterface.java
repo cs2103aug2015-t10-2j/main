@@ -163,7 +163,7 @@ public class UserInterface extends JFrame {
 		_feedbackArea = new JTextPane();
 		_feedbackArea.setEditable(false);
 		_feedbackArea.setAutoscrolls(false);
-		//_feedbackArea.setContentType("text/html");
+		_feedbackArea.setContentType("text/html");
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -276,6 +276,7 @@ public class UserInterface extends JFrame {
 						if (currentEntry.getIndexParameter() != null) {
 							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
 						}
+						indexLabel.setVerticalAlignment(JLabel.TOP);
 						indexLabel.setPreferredSize(new Dimension(30, 30));
 						indexLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 						indexLabel.setOpaque(true);
@@ -286,15 +287,40 @@ public class UserInterface extends JFrame {
 							
 							constraints.gridx = 1;
 							constraints.gridy = curGridY++;
-							JLabel deadlineLabel = new JLabel();
-							deadlineLabel.setText(currentEntry.toUIString());
+							JTextPane deadlineLabel = new JTextPane();
+							deadlineLabel.setEditable(false);
+							
+							JLabel deadlineIcon = new JLabel();
+							deadlineIcon.setBounds(368, 0, 112, 27);
+							assignPriorityIcon(currentEntry, deadlineIcon);
+							deadlineLabel.add(deadlineIcon);
+							
+							JTextArea deadlineText = new TransparentTextArea(1.0f);
+							deadlineText.setText(currentEntry.toUIString());
+							deadlineText.setFont(UIManager.getFont("Label.font"));
+							deadlineText.setLineWrap(true);
+							deadlineText.setBorder(new EmptyBorder(5, 5, 5, 5));
+							deadlineText.setBounds(0, 0, 320, 64);
+							deadlineText.setPreferredSize(new Dimension(320, 64));
+							deadlineLabel.add(deadlineText);
+							
+							if (currentEntry.getCategoryParameter() != null) {
+								JTextArea categoryText = new JTextArea();
+								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
+								categoryText.setFont(UIManager.getFont("Label.font"));
+								categoryText.setLineWrap(true);
+								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
+								categoryText.setBounds(320, 27, 160, 37);
+								categoryText.setPreferredSize(new Dimension(160, 37));
+								categoryText.setBackground(new Color(245, 182, 193, LABEL_RELATIVE_TRANSPARENCY));
+								categoryText.setOpaque(true);
+								deadlineLabel.add(categoryText);
+							}
+							
 							deadlineLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
 							deadlineLabel.setOpaque(true);
-							deadlineLabel.setPreferredSize(new Dimension(480, 60));
+							deadlineLabel.setPreferredSize(new Dimension(480, 64));
 							deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							deadlineLabel.setVerticalAlignment(JLabel.TOP);
-							
-							assignPriorityIcon(currentEntry, deadlineLabel);
 							
 							_displayArea.add(deadlineLabel, constraints);
 						} else if (currentEntry.getStartDateParameter() != null) {
@@ -303,15 +329,40 @@ public class UserInterface extends JFrame {
 							
 							constraints.gridx = 1;
 							constraints.gridy = curGridY++;
-							JLabel eventLabel = new JLabel();
-							eventLabel.setText(currentEntry.toUIString());
+							JTextPane eventLabel = new JTextPane();
+							eventLabel.setEditable(false);
+							
+							JLabel eventIcon = new JLabel();
+							eventIcon.setBounds(368, 0, 112, 27);
+							assignPriorityIcon(currentEntry, eventIcon);
+							eventLabel.add(eventIcon);
+							
+							JTextArea eventText = new TransparentTextArea(1.0f);
+							eventText.setText(currentEntry.toUIString());
+							eventText.setFont(UIManager.getFont("Label.font"));
+							eventText.setLineWrap(true);
+							eventText.setBorder(new EmptyBorder(5, 5, 5, 5));
+							eventText.setBounds(0, 0, 320, 64);
+							eventText.setPreferredSize(new Dimension(320, 64));
+							eventLabel.add(eventText);
+							
+							if (currentEntry.getCategoryParameter() != null) {
+								JTextArea categoryText = new JTextArea();
+								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
+								categoryText.setFont(UIManager.getFont("Label.font"));
+								categoryText.setLineWrap(true);
+								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
+								categoryText.setBounds(320, 27, 160, 37);
+								categoryText.setPreferredSize(new Dimension(160, 37));
+								categoryText.setBackground(new Color(165, 245, 153, LABEL_RELATIVE_TRANSPARENCY));
+								categoryText.setOpaque(true);
+								eventLabel.add(categoryText);
+							}
+							
 							eventLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
 							eventLabel.setOpaque(true);
-							eventLabel.setPreferredSize(new Dimension(480, 60));
+							eventLabel.setPreferredSize(new Dimension(480, 64));
 							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							eventLabel.setVerticalAlignment(JLabel.TOP);
-
-							assignPriorityIcon(currentEntry, eventLabel);
 							
 							_displayArea.add(eventLabel, constraints);
 						} else if (currentEntry.getNameParameter() != null) {
@@ -320,28 +371,53 @@ public class UserInterface extends JFrame {
 							
 							constraints.gridx = 1;
 							constraints.gridy = curGridY++;
-							JLabel floatLabel = new JLabel();
-							floatLabel.setText(currentEntry.toUIString());
+							JTextPane floatLabel = new JTextPane();
+							floatLabel.setEditable(false);
+							
+							JLabel floatIcon = new JLabel();
+							floatIcon.setBounds(368, 0, 112, 27);
+							assignPriorityIcon(currentEntry, floatIcon);
+							floatLabel.add(floatIcon);
+							
+							JTextArea floatText = new TransparentTextArea(1.0f);
+							floatText.setText(currentEntry.toUIString());
+							floatText.setFont(UIManager.getFont("Label.font"));
+							floatText.setLineWrap(true);
+							floatText.setBorder(new EmptyBorder(5, 5, 5, 5));
+							floatText.setBounds(0, 0, 320, 64);
+							floatText.setPreferredSize(new Dimension(320, 64));
+							floatLabel.add(floatText);
+							
+							if (currentEntry.getCategoryParameter() != null) {
+								JTextArea categoryText = new JTextArea();
+								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
+								categoryText.setFont(UIManager.getFont("Label.font"));
+								categoryText.setLineWrap(true);
+								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
+								categoryText.setBounds(320, 27, 160, 37);
+								categoryText.setPreferredSize(new Dimension(160, 37));
+								categoryText.setBackground(new Color(188, 245, 240, LABEL_RELATIVE_TRANSPARENCY));
+								categoryText.setOpaque(true);
+								floatLabel.add(categoryText);
+							}
+							
 							floatLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 							floatLabel.setOpaque(true);
-							floatLabel.setPreferredSize(new Dimension(480, 60));
+							floatLabel.setPreferredSize(new Dimension(480, 64));
 							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							floatLabel.setVerticalAlignment(JLabel.TOP);
-							
-							assignPriorityIcon(currentEntry, floatLabel);
 							
 							_displayArea.add(floatLabel, constraints);
 						} else {
 							constraints.gridx = 0;
 							constraints.gridy = curGridY++;
 							constraints.gridwidth = 2;
-							JLabel helpLabel = new JLabel();
+							JTextPane helpLabel = new JTextPane();
+							helpLabel.setEditable(false);
 							helpLabel.setText(currentEntry.toUIString());
 							helpLabel.setBackground(new Color(255, 165, 0, LABEL_RELATIVE_TRANSPARENCY));
 							helpLabel.setOpaque(true);
 							helpLabel.setPreferredSize(new Dimension(480, 320));
 							helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							helpLabel.setVerticalAlignment(JLabel.TOP);
 							_displayArea.add(helpLabel, constraints);
 							constraints.gridwidth = 1;
 						}
