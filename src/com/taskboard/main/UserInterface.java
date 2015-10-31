@@ -14,21 +14,36 @@ import java.io.File;
 import java.io.IOException;
 
 public class UserInterface extends JFrame {
-
-	private static UserInterface _instance;
-	private static final long serialVersionUID = 1;
+	
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
+	private static final String TITLE_IMAGE_FILE_PATH = "resources/images/TaskBoard-title2-v03.png";
 	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
-	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
-	private static final float DISPLAY_AREA_RELATIVE_TRANSPARENCY = 0.9f;
-	private static final int LABEL_RELATIVE_TRANSPARENCY = 255;
 	private static final String HIGH_PRIORITY_FILE_PATH = "resources/images/HighPriority.jpg";
 	private static final String MEDIUM_PRIORITY_FILE_PATH = "resources/images/MediumPriority.jpg";
 	private static final String LOW_PRIORITY_FILE_PATH = "resources/images/LowPriority.jpg";
 	private static final String NORMAL_PRIORITY_FILE_PATH = "resources/images/NormalPriority.jpg";
 	
-	private Logic _logic;
+	private static final String MESSAGE_PROMPT_COMMAND = "Enter command below:";
+	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
 	
+	private static final float DISPLAY_AREA_RELATIVE_TRANSPARENCY = 0.9f;
+	private static final int LABEL_RELATIVE_TRANSPARENCY = 255;
+	
+	private static final String UP_BUTTON_CODE = "UP";
+	private static final String DOWN_BUTTON_CODE = "DOWN";
+	private static final String LEFT_BUTTON_CODE = "LEFT";
+	private static final String RIGHT_BUTTON_CODE = "RIGHT";
+	private static final String POSITIVE_SCROLL_CODE = "positiveUnitIncrement";
+	private static final String NEGATIVE_SCROLL_CODE = "negativeUnitIncrement";
+	
+	private static final String EXIT_COMMAND_STRING = "exit";
+	private static final String HELP_COMMAND_STRING = "help";
+	private static final String UNDO_COMMAND_STRING = "undo";
+	
+	private static final long serialVersionUID = 1;
+	
+	private static UserInterface _instance;
+	private Logic _logic;
 	private JFrame _frame;
 	private JLabel _backgroundPane;
 	private JTextArea _feedbackArea;
@@ -83,13 +98,8 @@ public class UserInterface extends JFrame {
 
 		_logic = new Logic();
 		
-		ImageIcon titleImage = new ImageIcon("resources/images/TaskBoard-title2-v03.png");
-		// another alternative for title's image:
-		// ImageIcon titleImage = new ImageIcon("resources/images/TaskBoard-title1-v03.png");
+		ImageIcon titleImage = new ImageIcon(TITLE_IMAGE_FILE_PATH);
 		_title = new JLabel(titleImage);
-		//_title.setText("TaskBoard V0.3");
-		//_title.setFont(new Font("Sans-Serif", Font.BOLD, 25));
-		//_title.setForeground(Color.WHITE);
 		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
@@ -121,8 +131,8 @@ public class UserInterface extends JFrame {
 		// Enable up and down buttons for scrolling.
 		JScrollBar verticalDisplayScroll = _displayScroll.getVerticalScrollBar();
 		InputMap displayScrollIM = verticalDisplayScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		displayScrollIM.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
-		displayScrollIM.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+		displayScrollIM.put(KeyStroke.getKeyStroke(DOWN_BUTTON_CODE), POSITIVE_SCROLL_CODE);
+		displayScrollIM.put(KeyStroke.getKeyStroke(UP_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
 		
 		_feedbackArea = new JTextArea(6, 50);
 		_feedbackArea.setEditable(false);
@@ -144,10 +154,10 @@ public class UserInterface extends JFrame {
 		// Enable up and down buttons for scrolling.
 		JScrollBar verticalFeedbackScroll = _feedbackScroll.getVerticalScrollBar();
 		InputMap feedbackScrollIM = verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		feedbackScrollIM.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
-		feedbackScrollIM.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
+		feedbackScrollIM.put(KeyStroke.getKeyStroke(RIGHT_BUTTON_CODE), POSITIVE_SCROLL_CODE);
+		feedbackScrollIM.put(KeyStroke.getKeyStroke(LEFT_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
 
-		_commandLabel = new JLabel("Enter command below:");
+		_commandLabel = new JLabel(MESSAGE_PROMPT_COMMAND);
 		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 14));
 		_commandLabel.setForeground(Color.WHITE);
 		constraints.weightx = 0.0;
@@ -188,13 +198,13 @@ public class UserInterface extends JFrame {
 					pressed.add(new Integer(KeyEvent.VK_CONTROL));
 				} else if (pressed.contains(new Integer(KeyEvent.VK_CONTROL))) {
 					if (arg0.getKeyCode() == KeyEvent.VK_Z) {
-						_commandField.setText("undo");
+						_commandField.setText(UNDO_COMMAND_STRING);
 						executeInputCommand();
 					} else if (arg0.getKeyCode() == KeyEvent.VK_Q) {
-						_commandField.setText("exit");
+						_commandField.setText(EXIT_COMMAND_STRING);
 						executeInputCommand();
 					} else if (arg0.getKeyCode() == KeyEvent.VK_H) {
-						_commandField.setText("help");
+						_commandField.setText(HELP_COMMAND_STRING);
 						executeInputCommand();
 					}
 				}
@@ -218,7 +228,7 @@ public class UserInterface extends JFrame {
 	public void executeInputCommand() {
 		String userInput = _commandField.getText();
 
-		if (userInput.toLowerCase().equals("exit")) {
+		if (userInput.toLowerCase().equals(EXIT_COMMAND_STRING)) {
 			_logger.log(Level.INFO, "System exit.");
 			System.exit(0);
 		} else {
