@@ -5,7 +5,6 @@ import javax.swing.border.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.logging.*;
 import java.util.ArrayList;
 
@@ -16,40 +15,53 @@ import java.io.IOException;
 
 public class UserInterface extends JFrame {
 
+	private static UserInterface _instance;
 	private static final long serialVersionUID = 1;
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
+	private static final String DEFAULT_BACKGROUND_FILE = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
 
 	private Logic _logic;
 	
+	private JFrame _frame;
+	private JLabel _backgroundPane;
 	private JTextArea _feedbackArea;
 	private JPanel _displayArea;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
 	private JLabel _title;
+	private String _backgroundImage;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
-
-	public UserInterface() {
-		JFrame frame = new JFrame(TITLE);
-		JLabel backgroundPane = new JLabel();
+	
+	private UserInterface() {
+		_frame = new JFrame(TITLE);
+		_backgroundPane = new JLabel();
+		_backgroundImage = DEFAULT_BACKGROUND_FILE;
 		try {
-			backgroundPane.setIcon(new ImageIcon(ImageIO.read(new File("resources/images/space-wallpaper-download-800x640.jpg"))));
+			_backgroundPane.setIcon(new ImageIcon(ImageIO.read(new File(_backgroundImage))));
 		} catch (IOException e) {
 			// Handle IOException
 		}
-		backgroundPane.setLayout(new BorderLayout());
-		frame.setContentPane(backgroundPane);
-		frame.getContentPane().setBackground(Color.BLACK);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(800, 650));
+		_backgroundPane.setLayout(new BorderLayout());
+		_frame.setContentPane(_backgroundPane);
+		_frame.getContentPane().setBackground(Color.BLACK);
+		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.setPreferredSize(new Dimension(800, 720));
 
-		initComponents(frame.getContentPane());
+		initComponents(_frame.getContentPane());
 		
-		frame.pack();
-		frame.setVisible(true);
+		_frame.pack();
+		_frame.setVisible(true);
 		_commandField.requestFocus();
 	}
 
+	public static UserInterface getInstance() {
+		if (_instance == null) {
+			_instance = new UserInterface();
+		}
+		return _instance;
+	}
+	
 	public Logic getLogic() {
 		return _logic;
 	}
@@ -90,22 +102,41 @@ public class UserInterface extends JFrame {
 		JScrollPane _displayScroll = new JScrollPane(_displayArea);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 420));
-		_displayScroll.getVerticalScrollBar().setUnitIncrement(16);
+		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 400));
+		_displayScroll.getVerticalScrollBar().setUnitIncrement(40);
 		pane.add(_displayScroll, constraints);
 		
-		_feedbackArea = new JTextArea(2, 50);
+		// Enable up and down buttons for scrolling.
+		JScrollBar verticalDisplayScroll = _displayScroll.getVerticalScrollBar();
+		InputMap displayScrollIM = verticalDisplayScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		displayScrollIM.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
+		displayScrollIM.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+		
+		_feedbackArea = new JTextArea(6, 50);
 		_feedbackArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
-		constraints.insets = new Insets(2, 5, 2, 5);
+		constraints.insets = new Insets(7, 7, 7, 7);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		pane.add(_feedbackArea, constraints);
+		
+		JScrollPane _feedbackScroll = new JScrollPane(_feedbackArea);
+		_feedbackScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		_feedbackScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		_feedbackScroll.getViewport().setPreferredSize(new Dimension(640, 100));
+		_feedbackScroll.getVerticalScrollBar().setUnitIncrement(40);
+		pane.add(_feedbackScroll, constraints);
+		
+		// Enable up and down buttons for scrolling.
+		JScrollBar verticalFeedbackScroll = _displayScroll.getVerticalScrollBar();
+		InputMap feedbackScrollIM = verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		feedbackScrollIM.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
+		feedbackScrollIM.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
 
 		_commandLabel = new JLabel("Enter command below:");
-		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
+		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 14));
 		_commandLabel.setForeground(Color.WHITE);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
@@ -167,7 +198,7 @@ public class UserInterface extends JFrame {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new UserInterface();
+				UserInterface.getInstance();
 			}
 		});
 	}
@@ -210,8 +241,10 @@ public class UserInterface extends JFrame {
 							pivotDate = currentEntry.getDateParameter().getParameterValue();
 						} else if (currentEntry.getStartDateParameter() != null) {
 							pivotDate = currentEntry.getStartDateParameter().getParameterValue();
-						} else {
+						} else if (currentEntry.getNameParameter() != null) {
 							pivotDate = "Side Tasks";
+						} else {
+							pivotDate = "";
 						}
 						
 						if (!lastDate.equals(pivotDate)) {
@@ -269,7 +302,7 @@ public class UserInterface extends JFrame {
 							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							eventLabel.setVerticalAlignment(JLabel.TOP);
 							_displayArea.add(eventLabel, constraints);
-						} else {
+						} else if (currentEntry.getNameParameter() != null) {
 							indexLabel.setBackground(new Color (198, 255, 250));
 							_displayArea.add(indexLabel, constraints);
 							
@@ -284,6 +317,19 @@ public class UserInterface extends JFrame {
 							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							floatLabel.setVerticalAlignment(JLabel.TOP);
 							_displayArea.add(floatLabel, constraints);
+						} else {
+							constraints.gridx = 0;
+							constraints.gridy = curGridY++;
+							constraints.gridwidth = 2;
+							JLabel helpLabel = new JLabel();
+							helpLabel.setText(currentEntry.toUIString());
+							helpLabel.setBackground(Color.ORANGE);
+							helpLabel.setOpaque(true);
+							helpLabel.setPreferredSize(new Dimension(480, 320));
+							helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+							helpLabel.setVerticalAlignment(JLabel.TOP);
+							_displayArea.add(helpLabel, constraints);
+							constraints.gridwidth = 1;
 						}
 					}
 					
