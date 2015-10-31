@@ -285,7 +285,7 @@ public class Entry {
 				} else if (detailType.equals("END_TIME")) {
 					entryDetails += detail + "<br>";
 				} else {
-					entryDetails += detailType + ": " + detail + "<br>";
+					entryDetails += detailType + (detailType.equals("") ? "" : ": ") + detail + "<br>";
 				}
 			}
 		}

@@ -17,27 +17,17 @@ public class HelpCommand extends Command {
 		ArrayList<Entry> helpList = new ArrayList<Entry>();
 		
 		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
-		helpList.add(new Entry());
 		helpList.get(0).addToParameters(new Parameter(null, "TaskBoard Command List:"));
-		helpList.get(1).addToParameters(new Parameter(null, ""));
-		helpList.get(2).addToParameters(new Parameter(null, "add .... : Add a new entry"));
-		helpList.get(3).addToParameters(new Parameter(null, "edit .... : Edit an entry"));
-		helpList.get(4).addToParameters(new Parameter(null, "delete .... : Delete entries"));
-		helpList.get(5).addToParameters(new Parameter(null, "view .... : Selectively view entries"));
-		helpList.get(6).addToParameters(new Parameter(null, "complete .... : Indicate entry as completed"));
-		helpList.get(7).addToParameters(new Parameter(null, "restore .... : Restore entry from archive"));
-		helpList.get(8).addToParameters(new Parameter(null, "archive .... : Display archived entries"));
-		helpList.get(9).addToParameters(new Parameter(null, "command : View command list"));
-		helpList.get(10).addToParameters(new Parameter(null, "exit : Terminates program"));
+		helpList.get(0).addToParameters(new Parameter(null, ""));
+		helpList.get(0).addToParameters(new Parameter(null, "- add .... : Add a new entry"));
+		helpList.get(0).addToParameters(new Parameter(null, "- edit .... : Edit an entry"));
+		helpList.get(0).addToParameters(new Parameter(null, "- delete .... : Delete entries"));
+		helpList.get(0).addToParameters(new Parameter(null, "- view .... : Selectively view entries"));
+		helpList.get(0).addToParameters(new Parameter(null, "- complete .... : Indicate entry as completed"));
+		helpList.get(0).addToParameters(new Parameter(null, "- restore .... : Restore entry from archive"));
+		helpList.get(0).addToParameters(new Parameter(null, "- archive .... : Display archived entries"));
+		helpList.get(0).addToParameters(new Parameter(null, "- command : View command list"));
+		helpList.get(0).addToParameters(new Parameter(null, "- exit : Terminates program"));
 		
 		responseForHelp.setIsSuccess(true);
 		responseForHelp.setFeedback("Successfully displayed all entries in command list.");
