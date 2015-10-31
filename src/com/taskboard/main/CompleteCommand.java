@@ -34,7 +34,9 @@ public class CompleteCommand extends Command {
 			initialTempArchive.add(new Entry(entry));
 		}
 		
-		Response responseForComplete = processInputIndex();
+		IndexProcessor indexProcessorForComplete = new IndexProcessor();
+		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
+		Response responseForComplete = indexProcessorForComplete.processInputIndex(_parameters, entries);
 		if (responseForComplete.isSuccess()) {
 			_logger.log(Level.INFO, "Start process of indicating entry completion");
 			responseForComplete = processEntryCompletion();
@@ -47,19 +49,7 @@ public class CompleteCommand extends Command {
 		
 		return responseForComplete;
 	}
-	
-	private Response processInputIndex() {
-		String index = getDetailFromParameter(getIndexParameter());
-		assert !index.isEmpty();
-		_logger.log(Level.INFO, "Successfully retrieved index of entry to be completed: " + index);
 		
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		IndexValidator indexValidator = new IndexValidator();
-		Response responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
-		
-		return responseForInputIndex;
-	}
-	
 	private Response processEntryCompletion() {
 		String index = getDetailFromParameter(getIndexParameter());
 		int indexValue = Integer.parseInt(index);

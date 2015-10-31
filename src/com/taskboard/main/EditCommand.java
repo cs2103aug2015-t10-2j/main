@@ -35,7 +35,9 @@ public class EditCommand extends Command {
 			initialTempArchive.add(new Entry(entry));
 		}
 				
-		Response responseForEdit = processInputIndex();
+		IndexProcessor indexProcessorForEdit = new IndexProcessor();
+		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
+		Response responseForEdit = indexProcessorForEdit.processInputIndex(_parameters, entries);
 		if (responseForEdit.isSuccess()) {
 			_logger.log(Level.INFO, "Start process of editing entry");
 			responseForEdit = processEditedDetailsForStorage();
@@ -47,18 +49,6 @@ public class EditCommand extends Command {
 		}
 		 
 		return responseForEdit;
-	}
-	
-	private Response processInputIndex() {
-		String index = getDetailFromParameter(getIndexParameter());
-		assert !index.isEmpty();
-		_logger.log(Level.INFO, "Successfully retrieved index of entry to be edited: " + index);
-		
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		IndexValidator indexValidator = new IndexValidator();
-		Response responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
-		
-		return responseForInputIndex;
 	}
 	
 	private Response processEditedDetailsForStorage() {

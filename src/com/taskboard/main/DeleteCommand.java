@@ -36,7 +36,9 @@ public class DeleteCommand extends Command {
 		
 		Response responseForDelete = new Response();
 		if (isDeleteByIndex()) {
-			responseForDelete = processInputIndex();
+			IndexProcessor indexProcessorForDelete = new IndexProcessor();
+			ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
+			responseForDelete = indexProcessorForDelete.processInputIndex(_parameters, entries);
 			if (!responseForDelete.isSuccess()) {
 				return responseForDelete;
 			}
@@ -64,19 +66,7 @@ public class DeleteCommand extends Command {
 		
 		return false; 
 	}
-	
-	private Response processInputIndex() {
-		String index = getDetailFromParameter(getIndexParameter());
-		assert !index.isEmpty();
-		_logger.log(Level.INFO, "Successfully retrieved index of entry to be deleted: " + index);
 		
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
-		IndexValidator indexValidator = new IndexValidator();
-		Response responseForInputIndex = indexValidator.checkValidityOfInputIndex(index, entries);
-		
-		return responseForInputIndex;
-	}
-	
 	private Response processDeleteByIndex() {
 		String index = getDetailFromParameter(getIndexParameter());
 		int indexValue = Integer.parseInt(index);
