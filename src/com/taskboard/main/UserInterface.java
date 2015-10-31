@@ -30,8 +30,8 @@ public class UserInterface extends JFrame {
 	
 	private static final String UP_BUTTON_CODE = "UP";
 	private static final String DOWN_BUTTON_CODE = "DOWN";
-	private static final String LEFT_BUTTON_CODE = "LEFT";
-	private static final String RIGHT_BUTTON_CODE = "RIGHT";
+	private static final String PAGE_UP_BUTTON_CODE = "PAGE_UP";
+	private static final String PAGE_DOWN_BUTTON_CODE = "PAGE_DOWN";
 	private static final String POSITIVE_SCROLL_CODE = "positiveUnitIncrement";
 	private static final String NEGATIVE_SCROLL_CODE = "negativeUnitIncrement";
 	
@@ -59,7 +59,7 @@ public class UserInterface extends JFrame {
 	private UserInterface() {
 		_frame = new JFrame(TITLE);
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_frame.setMinimumSize(new Dimension(800, 720));
+		_frame.setPreferredSize(new Dimension(800, 720));
 		_frame.setVisible(true);
 		_frame.addComponentListener(new WindowResizeListener());
 		
@@ -140,7 +140,7 @@ public class UserInterface extends JFrame {
 		_displayArea.setAutoscrolls(true);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.5;
-		constraints.insets = new Insets(7, 7, 7, 7);
+		constraints.insets = new Insets(2, 2, 2, 2);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 1;
@@ -164,7 +164,6 @@ public class UserInterface extends JFrame {
 		_feedbackArea.setEditable(false);
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
-		constraints.insets = new Insets(7, 7, 7, 7);
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -180,8 +179,8 @@ public class UserInterface extends JFrame {
 		// Enable up and down buttons for scrolling.
 		_verticalFeedbackScroll = _feedbackScroll.getVerticalScrollBar();
 		InputMap feedbackScrollIM = _verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		feedbackScrollIM.put(KeyStroke.getKeyStroke(RIGHT_BUTTON_CODE), POSITIVE_SCROLL_CODE);
-		feedbackScrollIM.put(KeyStroke.getKeyStroke(LEFT_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
+		feedbackScrollIM.put(KeyStroke.getKeyStroke(PAGE_DOWN_BUTTON_CODE), POSITIVE_SCROLL_CODE);
+		feedbackScrollIM.put(KeyStroke.getKeyStroke(PAGE_UP_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
 
 		_commandLabel = new JLabel(MESSAGE_PROMPT_COMMAND);
 		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 14));
