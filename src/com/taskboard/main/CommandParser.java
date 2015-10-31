@@ -65,6 +65,11 @@ public class CommandParser {
 			case UNDO:
 				_logger.log(Level.INFO, "Finished parsing UNDO command string");
 				return new UndoCommand(null);
+			case BACKGROUND:
+				_logger.log(Level.INFO, "Finished parsing BACKGROUND command string");
+				_parameterParser = new BackgroundParameterParser();
+				newCommandParameters = _parameterParser.parseParameters(commandString);
+				return new BackgroundCommand(newCommandParameters);
 			case HELP:
 				_logger.log(Level.INFO, "Finished parsing HELP command string");
 				return new HelpCommand(null);

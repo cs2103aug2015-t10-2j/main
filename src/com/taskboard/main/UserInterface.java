@@ -18,7 +18,8 @@ public class UserInterface extends JFrame {
 	private static UserInterface _instance;
 	private static final long serialVersionUID = 1;
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
-	private static final String DEFAULT_BACKGROUND_FILE = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
+	private static final String DEFAULT_BACKGROUND_FILE_STRING = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
+	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
 
 	private Logic _logic;
 	
@@ -29,16 +30,16 @@ public class UserInterface extends JFrame {
 	private JLabel _commandLabel;
 	private JTextField _commandField;
 	private JLabel _title;
-	private String _backgroundImage;
+	private String _backgroundFileString;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
 	private UserInterface() {
 		_frame = new JFrame(TITLE);
 		_backgroundPane = new JLabel();
-		_backgroundImage = DEFAULT_BACKGROUND_FILE;
+		_backgroundFileString = DEFAULT_BACKGROUND_FILE_STRING;
 		try {
-			_backgroundPane.setIcon(new ImageIcon(ImageIO.read(new File(_backgroundImage))));
+			setBackground(_backgroundFileString);
 		} catch (IOException e) {
 			// Handle IOException
 		}
@@ -64,6 +65,10 @@ public class UserInterface extends JFrame {
 	
 	public Logic getLogic() {
 		return _logic;
+	}
+	
+	public void setBackground(String backgroundFileString) throws IOException {
+		_backgroundPane.setIcon(new ImageIcon(ImageIO.read(new File(backgroundFileString))));
 	}
 
 	private void initComponents(Container pane) {
@@ -218,6 +223,10 @@ public class UserInterface extends JFrame {
 				if (currentResponse.getFeedback() != null) {
 					String feedback = currentResponse.getFeedback().trim();
 					_feedbackArea.setText(feedback);
+					
+					_logger.log(Level.INFO, "Successfully updated feedback area.");
+				} else {
+					_feedbackArea.setText(MESSAGE_NO_FEEDBACK);
 					
 					_logger.log(Level.INFO, "Successfully updated feedback area.");
 				}

@@ -45,6 +45,9 @@ public class CommandTypeParser {
 			case "un":
 			case "u":
 				return CommandType.UNDO;
+			case "background":
+			case "bg":
+				return CommandType.BACKGROUND;
 			case "h":
 			case "help":
 			case "cmd":
