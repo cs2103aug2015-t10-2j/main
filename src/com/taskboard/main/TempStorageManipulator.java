@@ -95,11 +95,12 @@ public class TempStorageManipulator {
 		_logger.log(Level.INFO, "Replace old entries with new ones.");
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
+		Entry renewedEntry = new Entry(editedEntry);
 		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		
-		return editedEntry;
+		return renewedEntry;
 	}
 
 	private void replaceParameters(ArrayList<Parameter> oldParameters, ArrayList<Parameter> newParameters) {
