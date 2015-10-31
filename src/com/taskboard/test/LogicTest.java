@@ -94,10 +94,10 @@ public class LogicTest {
 		return response;
 	}
 	
-	private Response createFailureResponse(boolean isSuccess, Exception exObj) {
+	private Response createFailureResponse(boolean isSuccess, String exMsg) {
 		Response response = new Response();
 		response.setIsSuccess(isSuccess);
-		response.setException(exObj);
+		response.setFeedback(exMsg);
 		
 		return response;
 	}
