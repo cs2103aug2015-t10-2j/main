@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.logging.*;
 import java.util.ArrayList;
 
@@ -46,33 +45,42 @@ public class UserInterface extends JFrame {
 	private JLabel _backgroundPane;
 	private JPanel _displayArea;
 	private JScrollPane _displayScroll;
+	private JScrollBar _verticalDisplayScroll;
 	private JTextArea _feedbackArea;
 	private JScrollPane _feedbackScroll;
+	private JScrollBar _verticalFeedbackScroll;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
 	private JLabel _title;
-	private String _backgroundFileString;
+	private String _backgroundFilePath;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
 	private UserInterface() {
 		_frame = new JFrame(TITLE);
+		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.setMinimumSize(new Dimension(800, 720));
+		_frame.setVisible(true);
+		_frame.addComponentListener(new WindowResizeListener());
+		
 		_backgroundPane = new JLabel();
-		_backgroundFileString = DEFAULT_BACKGROUND_FILE_PATH;
+		_backgroundFilePath = DEFAULT_BACKGROUND_FILE_PATH;
+		
 		try {
-			setBackground(_backgroundFileString);
+			setBackground(_backgroundFilePath);
 		} catch (IOException e) {
-			// Handle IOException
+			if (_feedbackArea == null) {
+				_feedbackArea = new JTextArea();
+			}
+			_feedbackArea.setText("Unexpected error during background resize.");
 		}
+		
 		_backgroundPane.setLayout(new BorderLayout());
 		_frame.setContentPane(_backgroundPane);
-		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_frame.setPreferredSize(new Dimension(800, 720));
-
-		initComponents(_frame.getContentPane());
 		
+		initComponents(_frame.getContentPane());
 		_frame.pack();
-		_frame.setVisible(true);
+		
 		_commandField.requestFocus();
 	}
 
@@ -91,10 +99,26 @@ public class UserInterface extends JFrame {
 		return _commandField;
 	}
 	
-	public void setBackground(String backgroundFileString) throws IOException {
-		_backgroundPane.setIcon(new ImageIcon(ImageIO.read(new File(backgroundFileString))));
+	public String getBackgroundFilePath() {
+		return _backgroundFilePath;
 	}
-
+	
+	public JTextArea getFeedbackArea() {
+		return _feedbackArea;
+	}
+	
+	public void setBackground(String backgroundFileString) throws IOException {
+		ImageIcon sourceIcon = new ImageIcon(ImageIO.read(new File(backgroundFileString)));
+		Rectangle frameRect = _frame.getBounds();
+		Image resizedImage = sourceIcon.getImage().getScaledInstance(frameRect.width, frameRect.height,  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon = new ImageIcon(resizedImage);
+		_backgroundPane.setIcon(resizedIcon);
+	}
+	
+	public void setFeedbackArea(JTextArea newFeedbackArea) {
+		_feedbackArea = newFeedbackArea;
+	}
+	
 	private void initComponents(Container pane) {
 		pane.setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -125,14 +149,14 @@ public class UserInterface extends JFrame {
 		_displayScroll = new TransparentScrollPane(_displayArea, DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_displayScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 360));
+		_displayScroll.getViewport().setPreferredSize(new Dimension(640, 400));
 		_displayScroll.getVerticalScrollBar().setUnitIncrement(40);
 		_displayScroll.setBackground(Color.WHITE);
 		pane.add(_displayScroll, constraints);
 		
 		// Enable up and down buttons for scrolling.
-		JScrollBar verticalDisplayScroll = _displayScroll.getVerticalScrollBar();
-		InputMap displayScrollIM = verticalDisplayScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		_verticalDisplayScroll = _displayScroll.getVerticalScrollBar();
+		InputMap displayScrollIM = _verticalDisplayScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		displayScrollIM.put(KeyStroke.getKeyStroke(DOWN_BUTTON_CODE), POSITIVE_SCROLL_CODE);
 		displayScrollIM.put(KeyStroke.getKeyStroke(UP_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
 		
@@ -154,8 +178,8 @@ public class UserInterface extends JFrame {
 		pane.add(_feedbackScroll, constraints);
 		
 		// Enable up and down buttons for scrolling.
-		JScrollBar verticalFeedbackScroll = _feedbackScroll.getVerticalScrollBar();
-		InputMap feedbackScrollIM = verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		_verticalFeedbackScroll = _feedbackScroll.getVerticalScrollBar();
+		InputMap feedbackScrollIM = _verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		feedbackScrollIM.put(KeyStroke.getKeyStroke(RIGHT_BUTTON_CODE), POSITIVE_SCROLL_CODE);
 		feedbackScrollIM.put(KeyStroke.getKeyStroke(LEFT_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
 
