@@ -21,6 +21,10 @@ public class Entry {
 		}
 	}
 	
+	public Entry(ArrayList<Parameter> parameters) {
+		_parameters = parameters;
+	}
+	
 	// accessors
 	
 	public ArrayList<Parameter> getParameters() {

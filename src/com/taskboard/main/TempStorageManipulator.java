@@ -88,16 +88,18 @@ public class TempStorageManipulator {
 		_logger.log(Level.INFO, "Add entry into temp storage.");
 	}
 
-	public void editTempStorage(int i, ArrayList<Parameter> newContent, boolean isEntryTypeChanged) throws IOException {
+	public Entry editTempStorage(int i, ArrayList<Parameter> newContent, boolean isEntryTypeChanged) throws IOException {
 		Entry editedEntry = _tempStorage.get(i);
 		ArrayList<Parameter> entryDetails = editedEntry.getParameters();
-		replaceWithNewContent(entryDetails, newContent, isEntryTypeChanged);
+		Entry renewedEntry = replaceWithNewContent(entryDetails, newContent, isEntryTypeChanged);
 		_logger.log(Level.INFO, "Replace old entries with new ones.");
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
 		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
+		
+		return renewedEntry;
 	}
 
 	private void replaceParameters(ArrayList<Parameter> oldParameters, ArrayList<Parameter> newParameters) {
@@ -123,7 +125,7 @@ public class TempStorageManipulator {
 		}
 	}
 
-	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent,
+	private Entry replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent,
 			boolean isEntryTypeChanged) {
 		if (!isEntryTypeChanged) {
 			replaceParameters(entryDetails, newContent);
@@ -137,6 +139,8 @@ public class TempStorageManipulator {
 			addParameters(entryDetails, newContent);
 			Collections.sort(entryDetails, new ParameterComparator());
 		}
+		
+		return new Entry(entryDetails);
 	}
 
 	// Removing non Name/Index/Category/Priorty
