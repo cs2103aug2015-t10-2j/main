@@ -34,8 +34,6 @@ public class EditCommand extends Command {
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
 		}
-		
-		System.out.println(initialTempStorage.toString());
 				
 		Response responseForEdit = processInputIndex();
 		if (responseForEdit.isSuccess()) {
@@ -47,9 +45,7 @@ public class EditCommand extends Command {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
 		}
-		
-		System.out.println(_tempStorageManipulator.getLastTempStorage().toString());
-		
+		 
 		return responseForEdit;
 	}
 	

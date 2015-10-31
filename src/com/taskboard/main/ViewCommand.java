@@ -26,6 +26,7 @@ public class ViewCommand extends Command {
 			setSuccessResponseForViewWithoutFilter(responseForView);
 			_logger.log(Level.INFO, "Generated success response for view without filter");
 		} else {
+			_logger.log(Level.INFO, "Start processing view with filter");
 			SelectiveFilterProcessor selectiveFilterProcessor = new SelectiveFilterProcessor();
 			ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
 			responseForView = selectiveFilterProcessor.processFiltering(entries, _parameters);
