@@ -173,7 +173,7 @@ public class UserInterface extends JFrame {
 		_feedbackScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		_feedbackScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_feedbackScroll.getViewport().setPreferredSize(new Dimension(640, 100));
-		_feedbackScroll.getVerticalScrollBar().setUnitIncrement(40);
+		_feedbackScroll.getVerticalScrollBar().setUnitIncrement(20);
 		pane.add(_feedbackScroll, constraints);
 		
 		// Enable up and down buttons for scrolling.
