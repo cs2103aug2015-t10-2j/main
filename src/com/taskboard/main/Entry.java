@@ -7,13 +7,11 @@ public class Entry {
 	// attribute
 	
 	private ArrayList<Parameter> _parameters;
-	private boolean _isCompleted;
 	
 	// constructor
 	
 	public Entry() {
 		_parameters = new ArrayList<Parameter>();
-		_isCompleted = false;
 	}
 	
 	public Entry(Entry oldEntry) {
@@ -21,7 +19,6 @@ public class Entry {
 		for (Parameter currentParameter: oldEntry.getParameters()) {
 			_parameters.add(new Parameter(currentParameter));
 		}
-		_isCompleted = oldEntry.isCompleted();
 	}
 	
 	// accessors
@@ -130,10 +127,6 @@ public class Entry {
 		return null;
 	}
 	
-	public boolean isCompleted() {
-		return _isCompleted;
-	}
-	
 	// mutators
 	
 	public void setParameters(ArrayList<Parameter> newParameters) {
@@ -222,10 +215,6 @@ public class Entry {
 				_parameters.set(i, newPriorityParameter);
 			}
 		}
-	}
-	
-	public void setCompleted(boolean newIsCompleted) {
-		_isCompleted = newIsCompleted;
 	}
 	
 	@Override

@@ -200,7 +200,6 @@ public class TempStorageManipulator {
 
 	public void setCompletedInTempStorage(int i) throws IOException {
 		Entry entry = _tempStorage.get(i);
-		entry.setCompleted(true);
 		_tempStorage.remove(i);
 		_tempArchive.add(entry);
 		_logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
@@ -212,7 +211,6 @@ public class TempStorageManipulator {
 
 	public void restoreToTempStorage(int i) throws IOException {
 		Entry entry = _tempArchive.get(i);
-		entry.setCompleted(false);
 		_tempArchive.remove(i);
 		_tempStorage.add(entry);
 		_logger.log(Level.INFO, "Restored entry to storage.");
