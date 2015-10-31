@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 public class RestoreCommand extends Command {
 	
-	private static final String MESSAGE_AFTER_RESTORE = "\"%1$s\" restored to entry list!";
+	private static final String MESSAGE_AFTER_RESTORE = "Entry successfully restored:";
 	private static final String MESSAGE_ERROR_FOR_RESTORE = "The entry could not be restored.";
 	
 	public RestoreCommand(ArrayList<Parameter> parameters) {
@@ -56,9 +56,9 @@ public class RestoreCommand extends Command {
 		int tempArchiveIndex = indexValue - 1;
 		Response responseForRestore = new Response();
 		try {
-			String entryName = getEntryName(indexValue);
+			Entry entryToRestore = _tempStorageManipulator.getTempArchive().get(tempArchiveIndex);
 			_tempStorageManipulator.restoreToTempStorage(tempArchiveIndex);
-			setSuccessResponseForRestore(responseForRestore, entryName);
+			setSuccessResponseForRestore(responseForRestore, entryToRestore);
 			_logger.log(Level.INFO, "Generated success response for restoring entry");
 		} catch (IOException ex) {
 			setFailureResponseForRestore(responseForRestore);
@@ -68,18 +68,9 @@ public class RestoreCommand extends Command {
 		return responseForRestore;
 	}
 	
-	private String getEntryName(int index) {
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempArchive(); 
-		Entry entry = entries.get(index - 1);
-		Parameter entryNameParameter = entry.getNameParameter();
-		String entryName = entryNameParameter.getParameterValue();
-		
-		return entryName;
-	}
-	
-	private void setSuccessResponseForRestore(Response response, String entryName) {
+	private void setSuccessResponseForRestore(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_RESTORE, entryName);
+		String userFeedback = MESSAGE_AFTER_RESTORE.concat("\n").concat("\n").concat(entry.toString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempArchive());
 	}

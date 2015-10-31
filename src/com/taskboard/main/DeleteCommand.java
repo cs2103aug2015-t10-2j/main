@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 public class DeleteCommand extends Command {
 	
-	private static final String MESSAGE_AFTER_DELETE = "\"%1$s\" deleted!";
+	private static final String MESSAGE_AFTER_DELETE = "Entry successfully deleted:";
 	private static final String MESSAGE_ERROR_FOR_DELETE = "The deletion was unsuccessful.";
 	
 	public DeleteCommand(ArrayList<Parameter> parameters) {
@@ -73,9 +73,9 @@ public class DeleteCommand extends Command {
 		int tempStorageIndex = indexValue - 1;
 		Response responseForDeleteByIndex = new Response();
 		try {
-			String entryName = getEntryName(indexValue);
+			Entry entryToDelete = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
 			_tempStorageManipulator.deleteFromTempStorage(tempStorageIndex);
-			setSuccessResponseForDeleteByIndex(responseForDeleteByIndex, entryName);
+			setSuccessResponseForDeleteByIndex(responseForDeleteByIndex, entryToDelete);
 			_logger.log(Level.INFO, "Generated success response for delete by index");
 		} catch (IOException ex) {
 			setFailureResponseForDelete(responseForDeleteByIndex);
@@ -85,18 +85,9 @@ public class DeleteCommand extends Command {
 		return responseForDeleteByIndex;
 	}
 	
-	private String getEntryName(int index) {
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
-		Entry entry = entries.get(index - 1);
-		Parameter entryNameParameter = entry.getNameParameter();
-		String entryName = entryNameParameter.getParameterValue();
-		
-		return entryName;
-	}
-	
-	private void setSuccessResponseForDeleteByIndex(Response response, String entryName) {
+	private void setSuccessResponseForDeleteByIndex(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_DELETE, entryName);
+		String userFeedback = MESSAGE_AFTER_DELETE.concat("\n").concat("\n").concat(entry.toString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}

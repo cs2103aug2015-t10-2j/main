@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 public class CompleteCommand extends Command {
 	
-	private static final String MESSAGE_AFTER_COMPLETE = "\"%1$s\" completed!";
+	private static final String MESSAGE_AFTER_COMPLETE = "Entry successfully indicated as completed:";
 	private static final String MESSAGE_ERROR_FOR_COMPLETE = "The entry could not be indicated as completed.";
 	
 	public CompleteCommand(ArrayList<Parameter> parameters) {
@@ -56,9 +56,9 @@ public class CompleteCommand extends Command {
 		int tempStorageIndex = indexValue - 1;
 		Response responseForComplete = new Response();
 		try {
-			String entryName = getEntryName(indexValue);
+			Entry entryToComplete = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
 			_tempStorageManipulator.setCompletedInTempStorage(tempStorageIndex);
-			setSuccessResponseForComplete(responseForComplete, entryName);
+			setSuccessResponseForComplete(responseForComplete, entryToComplete);
 			_logger.log(Level.INFO, "Generated success response for indicating entry completion");
 		} catch (IOException ex) {
 			setFailureResponseForComplete(responseForComplete);
@@ -68,18 +68,9 @@ public class CompleteCommand extends Command {
 		return responseForComplete;
 	}
 	
-	private String getEntryName(int index) {
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
-		Entry entry = entries.get(index - 1);
-		Parameter entryNameParameter = entry.getNameParameter();
-		String entryName = entryNameParameter.getParameterValue();
-		
-		return entryName;
-	}
-	
-	private void setSuccessResponseForComplete(Response response, String entryName) {
+	private void setSuccessResponseForComplete(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_COMPLETE, entryName);
+		String userFeedback = MESSAGE_AFTER_COMPLETE.concat("\n").concat("\n").concat(entry.toString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}

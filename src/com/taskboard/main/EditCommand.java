@@ -7,7 +7,9 @@ import java.util.logging.Level;
 
 public class EditCommand extends Command {
 	
-	private static final String MESSAGE_AFTER_EDIT = "\"%1$s\" updated!";
+	private static final String MESSAGE_AFTER_EDIT = "Entry successfully updated:";
+	private static final String MESSAGE_FOR_UPDATED_ENTRY = "Entry after update =>";
+	private static final String MESSAGE_FOR_OLD_ENTRY = "Entry before update =>";
 	private static final String MESSAGE_ERROR_FOR_EDIT = "The entry could not be edited.";
 
 	public EditCommand(ArrayList<Parameter> parameters) {
@@ -371,9 +373,10 @@ public class EditCommand extends Command {
 		Response responseForEdit = new Response();
 		try {
 			int tempStorageIndex = index - 1;
-			String entryName = getEntryName(index);
+			Entry entryBeforeUpdate = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
 			_tempStorageManipulator.editTempStorage(tempStorageIndex, editedParameters, isEntryTypeChanged);
-			setSuccessResponseForEdit(responseForEdit, entryName);
+			Entry entryAfterUpdate = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
+			setSuccessResponseForEdit(responseForEdit, entryBeforeUpdate, entryAfterUpdate);
 			_logger.log(Level.INFO, "Generated success response for editing entry");
 		} catch (IOException ex) {
 			setFailureResponseForEdit(responseForEdit);
@@ -382,19 +385,13 @@ public class EditCommand extends Command {
 		
 		return responseForEdit;
 	}
-	
-	private String getEntryName(int index) {
-		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage(); 
-		Entry entry = entries.get(index - 1);
-		Parameter entryNameParameter = entry.getNameParameter();
-		String entryName = entryNameParameter.getParameterValue();
-		
-		return entryName;
-	}
-	
-	private void setSuccessResponseForEdit(Response response, String entryName) {
+
+	private void setSuccessResponseForEdit(Response response, Entry entryBeforeUpdate, Entry entryAfterUpdate) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_EDIT, entryName);
+		String userFeedback = MESSAGE_AFTER_EDIT.concat("\n").concat("\n").concat(MESSAGE_FOR_UPDATED_ENTRY);
+		userFeedback = userFeedback.concat("\n").concat(entryAfterUpdate.toString());
+		userFeedback = userFeedback.concat("\n").concat(MESSAGE_FOR_OLD_ENTRY);
+		userFeedback = userFeedback.concat("\n").concat(entryBeforeUpdate.toString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}

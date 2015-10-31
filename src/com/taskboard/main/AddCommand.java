@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 public class AddCommand extends Command {
 	
-	private static final String MESSAGE_AFTER_ADD = "\"%1$s\" added!";
+	private static final String MESSAGE_AFTER_ADD = "Entry successfully added:";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
 
 	public AddCommand(ArrayList<Parameter> parameters) {
@@ -97,7 +97,7 @@ public class AddCommand extends Command {
 	private Response processFloatingTaskForStorage(String taskName, String priority, String category) {
 		Entry floatingTask = constructFloatingTaskParameters(taskName, priority, category);
 		_logger.log(Level.INFO, "Successfully created floating task");
-		Response responseForAddFloating = updateNewEntryToStorage(floatingTask, taskName);
+		Response responseForAddFloating = updateNewEntryToStorage(floatingTask);
 			
 		return responseForAddFloating;
 	}
@@ -119,11 +119,11 @@ public class AddCommand extends Command {
 		}
 	}
 	
-	private Response updateNewEntryToStorage(Entry entry, String entryName) {
+	private Response updateNewEntryToStorage(Entry entry) {
 		Response responseForAdd = new Response();
 		try {
 			_tempStorageManipulator.addToTempStorage(entry);
-			setSuccessResponseForAdd(responseForAdd, entryName);
+			setSuccessResponseForAdd(responseForAdd, entry);
 			_logger.log(Level.INFO, "Generated success response for adding entry");
 		} catch (IOException ex) {
 			setFailureResponseForAdd(responseForAdd);
@@ -133,9 +133,9 @@ public class AddCommand extends Command {
 		return responseForAdd;
 	}
 	
-	private void setSuccessResponseForAdd(Response response, String entryName) {
+	private void setSuccessResponseForAdd(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = getFeedbackForUser(MESSAGE_AFTER_ADD, entryName);
+		String userFeedback = MESSAGE_AFTER_ADD.concat("\n").concat("\n").concat(entry.toString());
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
@@ -174,7 +174,7 @@ public class AddCommand extends Command {
 			                                       String priority, String category) {
 		Entry deadlineTask = constructDeadlineTaskParameters(taskName, date, time, priority, category);
 		_logger.log(Level.INFO, "Successfully created deadline task");
-		Response responseForAddDeadline = updateNewEntryToStorage(deadlineTask, taskName);
+		Response responseForAddDeadline = updateNewEntryToStorage(deadlineTask);
 		
 		return responseForAddDeadline;
 	}
@@ -231,7 +231,7 @@ public class AddCommand extends Command {
 		Entry event = constructEventParameters(eventName, startDate, startTime, endDate, endTime,  
 				                               priority, category);
 		_logger.log(Level.INFO, "Successfully created event");
-		Response responseForEvent = updateNewEntryToStorage(event, eventName);
+		Response responseForEvent = updateNewEntryToStorage(event);
 		
 		return responseForEvent;
 	}
