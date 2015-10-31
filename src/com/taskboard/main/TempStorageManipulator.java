@@ -95,12 +95,17 @@ public class TempStorageManipulator {
 		_logger.log(Level.INFO, "Replace old entries with new ones.");
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
-		Entry renewedEntry = new Entry(editedEntry);
 		Collections.sort(_tempStorage, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		
-		return renewedEntry;
+		for (Entry currentEntry: _tempStorage) {
+			if (currentEntry.equals(editedEntry)) {
+				return currentEntry;
+			}
+		}
+		assert false: "Critical error: Edited entry not found.";
+		return null;
 	}
 
 	private void replaceParameters(ArrayList<Parameter> oldParameters, ArrayList<Parameter> newParameters) {

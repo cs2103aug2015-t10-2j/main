@@ -222,6 +222,45 @@ public class Entry {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Entry) {
+			Entry entry = (Entry) obj;
+			
+			boolean isEqual = true;
+			
+			for (Parameter comparedParameter: entry.getParameters()) {
+				ParameterType comparedParameterType = comparedParameter.getParameterType();
+				if (comparedParameterType != ParameterType.INDEX) {
+					String comparedParameterValue = comparedParameter.getParameterValue();
+					boolean parameterFound = false;
+					for (Parameter currentParameter: _parameters) {
+						ParameterType currentParameterType = currentParameter.getParameterType();
+						String currentParameterValue = currentParameter.getParameterValue();
+						if (currentParameterType == comparedParameterType) {
+							parameterFound = true;
+							if (!currentParameterValue.equals(comparedParameterValue)) {
+								isEqual = false;
+							}
+							break;
+						}
+					}
+					if (!parameterFound) {
+						isEqual = false;
+						break;
+					}
+				}
+				if (!isEqual) {
+					break;
+				}
+			}
+			
+			return isEqual;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
 	public String toString() {
 		String entryDetails = "";
 		
