@@ -259,33 +259,47 @@ public class Entry {
 				detailType = "";
 			}
 			String detail = detailParameter.getParameterValue();
-			if (!detailType.equals("INDEX")) {
-				if (detailType.equals("DATE")) {
-					if (getTimeParameter() != null) {
-						entryDetails += "by " + detail + " ";
-					} else {
-						entryDetails += "by " + detail + "<br>";
-					}
-				} else if (detailType.equals("TIME")) {
-					entryDetails += detail + "<br>";
-				} else if (detailType.equals("START_DATE")) {
-					if (getStartTimeParameter() != null) {
-						entryDetails += "from " + detail + " ";
-					} else {
-						entryDetails += "from " + detail + " to ";
-					}
-				} else if (detailType.equals("START_TIME")) {
-					entryDetails += detail + " to ";
-				} else if (detailType.equals("END_DATE")) {
-					if (getEndTimeParameter() != null) {
-						entryDetails += detail + " ";
-					} else {
+			if (!detailType.equals("INDEX") && !detailType.equals("PRIORITY")) {
+				switch (detailType) {
+					case "NAME":
 						entryDetails += detail + "<br>";
-					}
-				} else if (detailType.equals("END_TIME")) {
-					entryDetails += detail + "<br>";
-				} else {
-					entryDetails += detailType + (detailType.equals("") ? "" : ": ") + detail + "<br>";
+						break;
+					case "DATE":
+						if (getTimeParameter() != null) {
+							entryDetails += "On " + detail + " ";
+						} else {
+							entryDetails += "On " + detail + "<br>";
+						}
+						break;
+					case "TIME":
+						entryDetails += detail + "<br>";
+						break;
+					case "START_DATE":
+						if (getStartTimeParameter() != null) {
+							entryDetails += "From " + detail + " ";
+						} else {
+							entryDetails += "From " + detail + " To ";
+						}
+						break;
+					case "START_TIME":
+						entryDetails += detail + " To ";
+						break;
+					case "END_DATE":
+						if (getEndTimeParameter() != null) {
+							entryDetails += detail + " ";
+						} else {
+							entryDetails += detail + "<br>";
+						}
+						break;
+					case "END_TIME":
+						entryDetails += detail + "<br>";
+						break;
+					case "CATEGORY":
+						entryDetails += "Category: " + detail + "<br>";
+						break;
+					default:
+						entryDetails += detail + "<br>";
+						break;
 				}
 			}
 		}
