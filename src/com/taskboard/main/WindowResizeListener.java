@@ -4,7 +4,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
 
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 public class WindowResizeListener extends ComponentAdapter {
 	// whenever the window is resized
@@ -13,9 +13,9 @@ public class WindowResizeListener extends ComponentAdapter {
 		try {
 			UserInterface.getInstance().setBackground(UserInterface.getInstance().getBackgroundFilePath());
 		} catch (IOException e) {
-			JTextArea feedbackArea = UserInterface.getInstance().getFeedbackArea();
+			JTextPane feedbackArea = UserInterface.getInstance().getFeedbackArea();
 			if (feedbackArea == null) {
-				UserInterface.getInstance().setFeedbackArea(new JTextArea());
+				UserInterface.getInstance().setFeedbackArea(new JTextPane());
 			}
 			feedbackArea.setText("Unexpected error during background resize.");
 		}

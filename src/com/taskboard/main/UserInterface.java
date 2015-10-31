@@ -46,7 +46,7 @@ public class UserInterface extends JFrame {
 	private JPanel _displayArea;
 	private JScrollPane _displayScroll;
 	private JScrollBar _verticalDisplayScroll;
-	private JTextArea _feedbackArea;
+	private JTextPane _feedbackArea;
 	private JScrollPane _feedbackScroll;
 	private JScrollBar _verticalFeedbackScroll;
 	private JLabel _commandLabel;
@@ -60,8 +60,8 @@ public class UserInterface extends JFrame {
 		_frame = new JFrame(TITLE);
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		_frame.setPreferredSize(new Dimension(800, 720));
-		_frame.setVisible(true);
 		_frame.addComponentListener(new WindowResizeListener());
+		_frame.setVisible(true);
 		
 		_backgroundPane = new JLabel();
 		_backgroundFilePath = DEFAULT_BACKGROUND_FILE_PATH;
@@ -70,7 +70,7 @@ public class UserInterface extends JFrame {
 			setBackground(_backgroundFilePath);
 		} catch (IOException e) {
 			if (_feedbackArea == null) {
-				_feedbackArea = new JTextArea();
+				_feedbackArea = new JTextPane();
 			}
 			_feedbackArea.setText("Unexpected error during background resize.");
 		}
@@ -103,7 +103,7 @@ public class UserInterface extends JFrame {
 		return _backgroundFilePath;
 	}
 	
-	public JTextArea getFeedbackArea() {
+	public JTextPane getFeedbackArea() {
 		return _feedbackArea;
 	}
 	
@@ -115,7 +115,7 @@ public class UserInterface extends JFrame {
 		_backgroundPane.setIcon(resizedIcon);
 	}
 	
-	public void setFeedbackArea(JTextArea newFeedbackArea) {
+	public void setFeedbackArea(JTextPane newFeedbackArea) {
 		_feedbackArea = newFeedbackArea;
 	}
 	
@@ -160,8 +160,10 @@ public class UserInterface extends JFrame {
 		displayScrollIM.put(KeyStroke.getKeyStroke(DOWN_BUTTON_CODE), POSITIVE_SCROLL_CODE);
 		displayScrollIM.put(KeyStroke.getKeyStroke(UP_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
 		
-		_feedbackArea = new JTextArea(6, 50);
+		_feedbackArea = new JTextPane();
 		_feedbackArea.setEditable(false);
+		_feedbackArea.setAutoscrolls(false);
+		//_feedbackArea.setContentType("text/html");
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -222,17 +224,6 @@ public class UserInterface extends JFrame {
 		} else {
 			Response currentResponse = getLogic().processCommand(userInput);
 			
-			if (currentResponse.getFeedback() != null) {
-				String feedback = currentResponse.getFeedback().trim();
-				_feedbackArea.setText(feedback);
-				
-				_logger.log(Level.INFO, "Successfully updated feedback area.");
-			} else {
-				_feedbackArea.setText(MESSAGE_NO_FEEDBACK);
-				
-				_logger.log(Level.INFO, "Successfully updated feedback area.");
-			}
-
 			if (currentResponse.isSuccess()) {
 				ArrayList<Entry> entries = currentResponse.getEntries();
 				
@@ -361,8 +352,25 @@ public class UserInterface extends JFrame {
 					_displayScroll.revalidate();
 					_displayScroll.repaint();
 				}
-
+				
 				_logger.log(Level.INFO, "Successfully updated display area.");
+				
+				_feedbackArea.setForeground(new Color(50, 205, 50));
+			} else {
+				_feedbackArea.setForeground(new Color(178, 34, 34));
+			}
+			
+			if (currentResponse.getFeedback() != null) {
+				String feedback = currentResponse.getFeedback().trim();
+				_feedbackArea.setText(feedback);
+				_feedbackArea.setCaretPosition(0);
+				
+				_logger.log(Level.INFO, "Successfully updated feedback area.");
+			} else {
+				_feedbackArea.setText(MESSAGE_NO_FEEDBACK);
+				_feedbackArea.setCaretPosition(0);
+				
+				_logger.log(Level.INFO, "Successfully updated feedback area.");
 			}
 		}
 
