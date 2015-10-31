@@ -221,40 +221,29 @@ public class Entry {
 		}
 	}
 	
+	public void removeIndexParameter() {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.INDEX) {
+				_parameters.remove(i);
+				break;
+			}
+		}
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Entry) {
 			Entry entry = (Entry) obj;
+			Entry currentEntry = new Entry(this);
+			Entry comparedEntry = new Entry(entry);
 			
-			boolean isEqual = true;
-			
-			for (Parameter comparedParameter: entry.getParameters()) {
-				ParameterType comparedParameterType = comparedParameter.getParameterType();
-				if (comparedParameterType != ParameterType.INDEX) {
-					String comparedParameterValue = comparedParameter.getParameterValue();
-					boolean parameterFound = false;
-					for (Parameter currentParameter: _parameters) {
-						ParameterType currentParameterType = currentParameter.getParameterType();
-						String currentParameterValue = currentParameter.getParameterValue();
-						if (currentParameterType == comparedParameterType) {
-							parameterFound = true;
-							if (!currentParameterValue.equals(comparedParameterValue)) {
-								isEqual = false;
-							}
-							break;
-						}
-					}
-					if (!parameterFound) {
-						isEqual = false;
-						break;
-					}
-				}
-				if (!isEqual) {
-					break;
-				}
+			currentEntry.removeIndexParameter();
+			comparedEntry.removeIndexParameter();
+			if (currentEntry.toString().equals(comparedEntry.toString())) {
+				return true;
+			} else {
+				return false;
 			}
-			
-			return isEqual;
 		} else {
 			return false;
 		}
