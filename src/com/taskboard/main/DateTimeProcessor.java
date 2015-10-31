@@ -17,7 +17,7 @@ public class DateTimeProcessor {
 	// constructor
 	
 	public DateTimeProcessor() {
-		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Response processDeadlineDateTimeDetails(String date, String time) {

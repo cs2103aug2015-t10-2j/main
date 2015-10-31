@@ -228,7 +228,6 @@ public abstract class Command {
 
 	protected String getDetailFromParameter(Parameter parameter) {
 		String detail = "";
-		
 		if (parameter != null) {
 			detail = parameter.getParameterValue();
 		}

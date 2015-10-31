@@ -2,22 +2,29 @@ package com.taskboard.main;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SelectiveFilter {
+	
+	// attribute
+	
+	private Logger _logger;
 
+	// constructor
+	
 	public SelectiveFilter() {
-		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public ArrayList<Entry> filterByName(ArrayList<Entry> entries, String searchKey) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-		
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			String entryName = entry.getNameParameter().getParameterValue();
-			
 			if (entryName.contains(searchKey)) {
 				filteredEntries.add(entry);
+				_logger.log(Level.INFO, "Successfully filtered entry by name: " + entryName);
 			}
 		}
 		
@@ -26,16 +33,15 @@ public class SelectiveFilter {
 	
 	public ArrayList<Entry> filterByPriority(ArrayList<Entry> entries, String searchPriority) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-		
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			Parameter priorityParameter = entry.getPriorityParameter();
-			
 			if (priorityParameter != null) {
 				String priority = priorityParameter.getParameterValue();
-				
 				if (priority.equals(searchPriority)) {
 					filteredEntries.add(entry);
+					_logger.log(Level.INFO, "Successfully filtered entry by priority: " 
+					            + entry.getNameParameter().getParameterValue());
 				}
 			}
 		} 
@@ -45,16 +51,15 @@ public class SelectiveFilter {
 	
 	public ArrayList<Entry> filterByCategory(ArrayList<Entry> entries, String searchCategory) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-		
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			Parameter categoryParameter = entry.getCategoryParameter();
-			
 			if (categoryParameter != null) {
 				String category = categoryParameter.getParameterValue();
-				
 				if (category.equals(searchCategory)) {
 					filteredEntries.add(entry);
+					_logger.log(Level.INFO, "Successfully filtered entry by category: " 
+				                + entry.getNameParameter().getParameterValue());
 				}
 			}
 		} 
@@ -62,40 +67,8 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
-//	public ArrayList<Entry> filterByDate(ArrayList<Entry> entries, String searchDate) {
-//		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-//		
-//		for (int i = 0; i < entries.size(); i++) {
-//			Entry entry = entries.get(i);
-//			Parameter dateParameter = entry.getDateParameter();
-//			Parameter startDateParameter = entry.getStartDateParameter();
-//			
-//			boolean hasDeadlineDateMatched = hasEntryDateMatched(dateParameter, searchDate); 
-//		    boolean hasEventDateMatched = hasEntryDateMatched(startDateParameter, searchDate); 
-//		    
-//		    if (hasDeadlineDateMatched || hasEventDateMatched) {
-//		    	filteredEntries.add(entry);
-//		    }
-//		} 
-//		
-//		return filteredEntries;
-//	}
-//	
-//	private boolean hasEntryDateMatched(Parameter dateParameter, String referenceDate) {
-//		if (dateParameter != null) {
-//			String date = dateParameter.getParameterValue();
-//			
-//			if (date.equals(referenceDate)) {
-//				return true;
-//			}
-//		}
-//		
-//		return false;
-//	}
-	
 	public ArrayList<Entry> filterByDateTime(ArrayList<Entry> entries, Date inputDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-		
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			Parameter dateParameter = entry.getDateParameter();
@@ -107,20 +80,23 @@ public class SelectiveFilter {
 			
 			boolean hasDeadlineDateTimeMatched = false;
 			boolean hasEventDateTimeMatched = false;
-			
 			if (dateParameter != null) {
+				_logger.log(Level.INFO, "Start checking whether to filter deadline task: "
+						    + entry.getNameParameter().getParameterValue());
 				hasDeadlineDateTimeMatched = hasDeadlineDateTimeMatched(dateParameter, timeParameter, 
 						                                                inputDate); 
-						
 			} else if (startDateParameter != null) {
+				_logger.log(Level.INFO, "Start checking whether to filter event: "
+						    + entry.getNameParameter().getParameterValue());
 				hasEventDateTimeMatched = hasEventDateTimeMatched(startDateParameter, startTimeParameter, 
 						                                          endDateParameter, endTimeParameter, 
-						                                          inputDate); 
-						                                         
+						                                          inputDate); 				                                         
 			}
 			
 			if (hasDeadlineDateTimeMatched || hasEventDateTimeMatched) {
 				filteredEntries.add(entry);
+				_logger.log(Level.INFO, "Successfully filtered entry by date time: " 
+		                    + entry.getNameParameter().getParameterValue());
 			}
 		}
 		
@@ -130,15 +106,14 @@ public class SelectiveFilter {
 	private boolean hasDeadlineDateTimeMatched(Parameter dateParameter, Parameter timeParameter, 
 			                                   Date referenceDate) {
 		String date = dateParameter.getParameterValue();
-		String time = "";
-			
+		String time = "";	
 		if (timeParameter != null) {
 			time = timeParameter.getParameterValue();
 		}
 		
 		Date deadlineDate = retrieveDateFromDateTimeDetails(date, time);
-		
 		if (deadlineDate.equals(referenceDate)) {
+			_logger.log(Level.INFO, "Deadline task successfully satisfied filter by date time");
 			return true;
 		}
 	
@@ -158,24 +133,21 @@ public class SelectiveFilter {
 			                                Date referenceDate) {
 		String startDate = startDateParameter.getParameterValue();
 		String startTime = "";
-		
 		if (startTimeParameter != null) {
 			startTime = startTimeParameter.getParameterValue();
 		}
-		
 		String endDate = endDateParameter.getParameterValue();
 		String endTime = "";
-		
 		if (endTimeParameter != null) {
 			endTime = endTimeParameter.getParameterValue();
 		}
 		
 		Date eventStartDate = retrieveDateFromDateTimeDetails(startDate, startTime);
-		Date eventEndDate = retrieveDateFromDateTimeDetails(endDate, endTime);
 		int referenceDateIndicatorForEventStartDate = eventStartDate.compareTo(referenceDate);
+		Date eventEndDate = retrieveDateFromDateTimeDetails(endDate, endTime);
 		int referenceDateIndicatorForEventEndDate = eventEndDate.compareTo(referenceDate);
-		
 		if (referenceDateIndicatorForEventStartDate <= 0 && referenceDateIndicatorForEventEndDate >= 0) {
+			_logger.log(Level.INFO, "Event successfully satisfied filter by date time");
 			return true;
 		}
 		
@@ -185,7 +157,6 @@ public class SelectiveFilter {
 	public ArrayList<Entry> filterByDateTimeRange(ArrayList<Entry> entries, Date inputStartDate, 
 			                                      Date inputEndDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
-		
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			Parameter dateParameter = entry.getDateParameter();
@@ -197,11 +168,14 @@ public class SelectiveFilter {
 			
 			boolean isDeadlineDateTimeInRange = false;
 			boolean isEventDateTimeInRange = false;
-			
 			if (dateParameter != null) {
+				_logger.log(Level.INFO, "Start checking whether to filter deadline task: "
+					        + entry.getNameParameter().getParameterValue());
 				isDeadlineDateTimeInRange = isDeadlineDateTimeInRange(dateParameter, timeParameter,  
 						                                              inputStartDate, inputEndDate);
 			} else if (startDateParameter != null) {
+				_logger.log(Level.INFO, "Start checking whether to filter event: "
+					        + entry.getNameParameter().getParameterValue());
 				isEventDateTimeInRange = isEventDateTimeInRange(startDateParameter, startTimeParameter,  
 				                                                endDateParameter, endTimeParameter,
 				                                                inputStartDate,  inputEndDate);
@@ -209,6 +183,8 @@ public class SelectiveFilter {
 			
 			if (isDeadlineDateTimeInRange || isEventDateTimeInRange) {
 				filteredEntries.add(entry);
+				_logger.log(Level.INFO, "Successfully filtered entry by date time range: " 
+	                        + entry.getNameParameter().getParameterValue());
 			}
 		}
 		
@@ -219,7 +195,6 @@ public class SelectiveFilter {
 			                                  Date referenceStartDate, Date referenceEndDate) {
 		String date = dateParameter.getParameterValue();
 		String time = "";
-			
 		if (timeParameter != null) {
 			time = timeParameter.getParameterValue();
 		}
@@ -227,8 +202,8 @@ public class SelectiveFilter {
 		Date deadlineDate = retrieveDateFromDateTimeDetails(date, time);
 		int referenceStartDateIndicator = deadlineDate.compareTo(referenceStartDate);
 		int referenceEndDateIndicator = deadlineDate.compareTo(referenceEndDate);
-			
 		if (referenceStartDateIndicator >= 0 && referenceEndDateIndicator <= 0) {
+			_logger.log(Level.INFO, "Deadline task successfully satisfied filter by date time range");
 			return true;
 		}
 	
@@ -240,14 +215,11 @@ public class SelectiveFilter {
 			                               Date referenceStartDate, Date referenceEndDate) {
 		String startDate = startDateParameter.getParameterValue();
 		String startTime = "";
-		
 		if (startTimeParameter != null) {
 			startTime = startTimeParameter.getParameterValue();
 		}
-		
 		String endDate = endDateParameter.getParameterValue();
 		String endTime = "";
-		
 		if (endTimeParameter != null) {
 			endTime = endTimeParameter.getParameterValue();
 		}
@@ -268,9 +240,9 @@ public class SelectiveFilter {
 			                            	referenceEndDateIndicatorForEventEndDate > 0;
 		
 		if (isEventStartDateInSearchRange || isEventEndDateInSearchRange || isSearchRangeInEventRange) {
+			_logger.log(Level.INFO, "Event successfully satisfied filter by date time range");
 			return true;
 		}
-		
 		
 		return false;
 	}

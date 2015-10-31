@@ -255,7 +255,6 @@ public class EditCommand extends Command {
 		String newStartTime = getDetailFromParameter(getStartTimeParameter());
 		String newEndDate = getDetailFromParameter(getEndDateParameter());
 		String newEndTime = getDetailFromParameter(getEndTimeParameter());
-		
 		Response responseForDateTime = new Response();
 		if (isEditedEntryFloatingTask(index) || isEditedEntryDeadlineTask(index)) {
 			_logger.log(Level.INFO, "Start process of converting existing entry to event");

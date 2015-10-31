@@ -157,6 +157,7 @@ public class AddCommand extends Command {
 		String category = getDetailFromParameter(getCategoryParameter());
 		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
+		_logger.log(Level.INFO, "Start processing date time details for deadline task");
 		Response responseForAddDeadline = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
 		if (responseForAddDeadline.isSuccess()) {
 			_logger.log(Level.INFO, "Start validating date time details for deadline task");
@@ -205,6 +206,7 @@ public class AddCommand extends Command {
 		String category = getDetailFromParameter(getCategoryParameter());
 		
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
+		_logger.log(Level.INFO, "Start processing date time details for event");
 		Response responseForAddEvent = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
 				                                                                          endDate, endTime);
 		if (responseForAddEvent.isSuccess()) {

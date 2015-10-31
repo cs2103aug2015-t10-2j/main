@@ -16,7 +16,7 @@ public class IndexValidator {
 	// constructor
 	
 	public IndexValidator() {
-		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	public Response checkValidityOfInputIndex(String index, ArrayList<Entry> entries) {

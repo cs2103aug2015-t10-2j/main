@@ -24,7 +24,7 @@ public class DateTimeValidator {
 	// constructor
 	
 	public DateTimeValidator() {
-		
+		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
 	// accessor
