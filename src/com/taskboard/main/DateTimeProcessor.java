@@ -34,8 +34,7 @@ public class DateTimeProcessor {
 	
 	private void setFailureResponseForNoDate(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_DATE);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_NO_DATE);
 	}
 	
 	public Response validateDeadlineDateTimeDetails(String date, String time) {
@@ -64,14 +63,12 @@ public class DateTimeProcessor {
 	
 	private void setFailureResponseForNoStartDate(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_START_DATE);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_NO_START_DATE);
 	}
 	
 	private void setFailureResponseForNoEndDateTime(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
 	}
 	
 	public Response validateEventDateTimeDetails(String startDate, String startTime, String endDate, 

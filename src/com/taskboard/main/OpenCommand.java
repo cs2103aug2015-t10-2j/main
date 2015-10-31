@@ -58,12 +58,11 @@ public class OpenCommand extends Command{
 	
 	private void setFailureResponseForInvalidOpen(Response response, IllegalArgumentException ex) {
 		response.setIsSuccess(false);
-		response.setException(ex);
+		response.setFeedback(ex.getMessage());
 	}
 	
 	private void setFailureResponseForLaunchOpen(Response response) {
 		response.setIsSuccess(false);
-		IOException exObj = new IOException(MESSAGE_ERROR_FOR_LAUNCH_OPEN);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_LAUNCH_OPEN);
 	}
 }

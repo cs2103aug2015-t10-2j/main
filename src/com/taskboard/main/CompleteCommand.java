@@ -86,7 +86,6 @@ public class CompleteCommand extends Command {
 	
 	private void setFailureResponseForComplete(Response response) {
 		response.setIsSuccess(false);
-		IOException exobj = new IOException(MESSAGE_ERROR_FOR_COMPLETE);
-		response.setException(exobj);
+		response.setFeedback(MESSAGE_ERROR_FOR_COMPLETE);
 	}
 }

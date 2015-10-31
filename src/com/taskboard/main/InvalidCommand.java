@@ -20,8 +20,7 @@ public class InvalidCommand extends Command {
 	public Response executeCommand() {
 		Response responseForInvalidCommand = new Response();
 		responseForInvalidCommand.setIsSuccess(false);
-		IllegalArgumentException exobj = new IllegalArgumentException(MESSAGE_ERROR_INVALID_COMMAND);
-		responseForInvalidCommand.setException(exobj);
+		responseForInvalidCommand.setFeedback(MESSAGE_ERROR_INVALID_COMMAND);
 		_logger.log(Level.INFO, "Generated failure response for invalid command");
 		
 		return responseForInvalidCommand;

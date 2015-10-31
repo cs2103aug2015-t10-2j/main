@@ -42,7 +42,7 @@ public class NewCommand extends Command {
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidNew(responseForNew, ex);
 			_logger.log(Level.INFO, "Generated failure response for creating new file with "
-					                 + "existing filename");
+					    + "existing filename");
 		} catch (IOException ex) {
 			setFailureResponseForLaunchNew(responseForNew);
 			_logger.log(Level.INFO, "Generated failure response for creating new file");
@@ -59,12 +59,11 @@ public class NewCommand extends Command {
 	
 	private void setFailureResponseForInvalidNew(Response response, IllegalArgumentException ex) {
 		response.setIsSuccess(false);
-		response.setException(ex);
+		response.setFeedback(ex.getMessage());
 	}
 	
 	private void setFailureResponseForLaunchNew(Response response) {
 		response.setIsSuccess(false);
-		IOException exObj = new IOException(MESSAGE_ERROR_FOR_LAUNCH_NEW);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_LAUNCH_NEW);
 	}
 }

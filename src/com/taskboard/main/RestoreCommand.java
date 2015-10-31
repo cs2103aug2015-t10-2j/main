@@ -86,7 +86,6 @@ public class RestoreCommand extends Command {
 	
 	private void setFailureResponseForRestore(Response response) {
 		response.setIsSuccess(false);
-		IOException exobj = new IOException(MESSAGE_ERROR_FOR_RESTORE);
-		response.setException(exobj);
+		response.setFeedback(MESSAGE_ERROR_FOR_RESTORE);
 	}
 }

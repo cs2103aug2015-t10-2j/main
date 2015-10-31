@@ -142,8 +142,7 @@ public class AddCommand extends Command {
 	
 	private void setFailureResponseForAdd(Response response) {
 		response.setIsSuccess(false);
-		IOException exObj = new IOException(MESSAGE_ERROR_FOR_ADD);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_ADD);
 	}
 			
 	private Response addDeadlineTask() {
@@ -213,7 +212,7 @@ public class AddCommand extends Command {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
 		}
-		if (responseForAddEvent.getException() == null) {
+		if (responseForAddEvent.getFeedback() == null) {
 			_logger.log(Level.INFO, "Start validating date time details for event");
 			responseForAddEvent = eventDateTimeProcessor.validateEventDateTimeDetails(startDate, startTime, 
 					                                                                  endDate, endTime);	

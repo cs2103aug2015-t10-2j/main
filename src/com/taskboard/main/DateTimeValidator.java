@@ -71,8 +71,7 @@ public class DateTimeValidator {
 	
 	private void setFailureResponseForInvalidDateTime(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
 	}
 	
 	private Response checkValidityOfInputDate(Date referenceDate) {
@@ -89,7 +88,6 @@ public class DateTimeValidator {
 	
 	private void setFailureResponseForPastDateTime(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
 	}
 }

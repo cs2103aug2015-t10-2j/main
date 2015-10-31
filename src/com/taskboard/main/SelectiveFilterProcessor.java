@@ -48,7 +48,7 @@ public class SelectiveFilterProcessor {
 			_logger.log(Level.INFO, "Start processing filter by date");
 			DateTimeValidator dateValidator = new DateTimeValidator();
 			responseForFiltering = checkForDateValidity(dateValidator, parameters);
-			if (responseForFiltering.getException() != null) {
+			if (responseForFiltering.getFeedback() != null) {
 				return responseForFiltering;
 			}
 			
@@ -59,7 +59,7 @@ public class SelectiveFilterProcessor {
 			_logger.log(Level.INFO, "Start processing filter by date time");
 			DateTimeValidator dateTimeValidator = new DateTimeValidator();
 			responseForFiltering = checkForDateTimeValidity(dateTimeValidator, parameters);
-			if (responseForFiltering.getException() != null) {
+			if (responseForFiltering.getFeedback() != null) {
 				return responseForFiltering;
 			}
 			
@@ -72,7 +72,7 @@ public class SelectiveFilterProcessor {
 			DateTimeValidator endDateTimeValidator = new DateTimeValidator();
 			responseForFiltering = checkForDateTimeValidity(startDateTimeValidator, endDateTimeValidator,
 					                                        parameters);
-			if (responseForFiltering.getException() != null) {
+			if (responseForFiltering.getFeedback() != null) {
 				return responseForFiltering;
 			}
 			
@@ -324,10 +324,10 @@ public class SelectiveFilterProcessor {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
 		}
-		if (responseForDateTime.getException() == null) {
+		if (responseForDateTime.getFeedback() == null) {
 			_logger.log(Level.INFO, "Start validating start date time details");
 			responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, null);	
-			if (responseForDateTime.getException() == null) {
+			if (responseForDateTime.getFeedback() == null) {
 				Date inputStartDate = startDateTimeValidator.getDate();
 				_logger.log(Level.INFO, "Start validating end date time details");
 				responseForDateTime = endDateTimeValidator.validateDateTimeDetails(endDate, endTime, 

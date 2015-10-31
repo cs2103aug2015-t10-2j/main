@@ -37,20 +37,19 @@ public class IndexProcessor {
 	private Response checkValidityOfInputIndex(String index, ArrayList<Entry> entries) {
 		int indexValue = Integer.valueOf(index);
 		int maxEntryIndex = entries.size();
-		Response responseForIndex = new Response();
+		Response responseForInputIndex = new Response();
 		if (indexValue > maxEntryIndex || indexValue < MIN_ENTRY_INDEX) {
-			setFailureResponseForInvalidIndex(responseForIndex);
+			setFailureResponseForInvalidIndex(responseForInputIndex);
 			_logger.log(Level.INFO, "Generated failure response for invalid index");
 		} else {
-			responseForIndex.setIsSuccess(true);
+			responseForInputIndex.setIsSuccess(true);
 		}
 		
-		return responseForIndex;
+		return responseForInputIndex;
 	}
 	
 	private void setFailureResponseForInvalidIndex(Response response) {
 		response.setIsSuccess(false);
-		IllegalArgumentException exObj = new IllegalArgumentException(MESSAGE_ERROR_FOR_INVALID_INDEX);
-		response.setException(exObj);
+		response.setFeedback(MESSAGE_ERROR_FOR_INVALID_INDEX);
 	}
 }

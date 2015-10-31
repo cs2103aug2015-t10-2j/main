@@ -265,7 +265,7 @@ public class EditCommand extends Command {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			newEndDate = newStartDate;
 		}
-		if (responseForDateTime.getException() == null) {
+		if (responseForDateTime.getFeedback() == null) {
 			_logger.log(Level.INFO, "Start validating edited date time details for event");
 			responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
 					                                                                  newEndDate, newEndTime);
@@ -401,7 +401,6 @@ public class EditCommand extends Command {
 	
 	private void setFailureResponseForEdit(Response response) {
 		response.setIsSuccess(false);
-		IOException exobj = new IOException(MESSAGE_ERROR_FOR_EDIT);
-		response.setException(exobj);
+		response.setFeedback(MESSAGE_ERROR_FOR_EDIT);
 	}
 }

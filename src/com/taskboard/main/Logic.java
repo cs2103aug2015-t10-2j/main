@@ -1,4 +1,4 @@
-package com.taskboard.main;
+ package com.taskboard.main;
 
 import com.taskboard.main.parser.CommandParser;
 
@@ -22,7 +22,7 @@ public class Logic {
 			responseForOperations = commandInput.executeCommand();
 		} catch (IllegalArgumentException ex) {
 			responseForOperations.setIsSuccess(false);
-			responseForOperations.setException(ex);
+			responseForOperations.setFeedback(ex.getMessage());
 		}
 		
 		return responseForOperations; 

@@ -8,7 +8,6 @@ public class Response {
 	
 	private boolean _isSuccess;
 	private String _feedback;
-	private Exception _exObj;
 	private ArrayList<Entry> _entries;
 	
 	// constructor
@@ -27,10 +26,6 @@ public class Response {
 		return _feedback;
 	}
 	
-	public Exception getException() {
-		return _exObj;
-	}
-	
 	public ArrayList<Entry> getEntries() {
 		return _entries;
 	}
@@ -45,10 +40,6 @@ public class Response {
 		_feedback = feedback;
 	}
 	
-	public void setException(Exception exObj) {
-		_exObj = exObj;
-	}
-	
 	public void setEntries(ArrayList<Entry> entries) {
 		_entries = entries;
 	}
@@ -59,14 +50,13 @@ public class Response {
 			Response response = (Response) obj;
 			
 			boolean isEqual;
-			
 			if (this.isSuccess() == true) {
 				isEqual = this._isSuccess == response._isSuccess && 
 						  this._feedback.equals(response._feedback) &&
 						  this.retrieveEntryDetails(this._entries).equals(response.retrieveEntryDetails(response._entries));
 			} else {
 				isEqual = this._isSuccess == response._isSuccess &&
-				          this._exObj.getMessage().equals(response._exObj.getMessage());
+						  this._feedback.equals(response._feedback);
 			}
 			
 			return isEqual;

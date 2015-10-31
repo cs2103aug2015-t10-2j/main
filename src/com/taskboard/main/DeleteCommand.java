@@ -103,8 +103,7 @@ public class DeleteCommand extends Command {
 	
 	private void setFailureResponseForDelete(Response response) {
 		response.setIsSuccess(false);
-		IOException exobj = new IOException(MESSAGE_ERROR_FOR_DELETE);
-		response.setException(exobj);
+		response.setFeedback(MESSAGE_ERROR_FOR_DELETE);
 	}
 	
 	private Response processDeleteByFiltering() {
