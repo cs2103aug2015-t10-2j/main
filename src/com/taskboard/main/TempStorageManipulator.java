@@ -91,7 +91,7 @@ public class TempStorageManipulator {
 	public Entry editTempStorage(int i, ArrayList<Parameter> newContent, boolean isEntryTypeChanged) throws IOException {
 		Entry editedEntry = _tempStorage.get(i);
 		ArrayList<Parameter> entryDetails = editedEntry.getParameters();
-		Entry renewedEntry = replaceWithNewContent(entryDetails, newContent, isEntryTypeChanged);
+		replaceWithNewContent(entryDetails, newContent, isEntryTypeChanged);
 		_logger.log(Level.INFO, "Replace old entries with new ones.");
 		editedEntry.setParameters(entryDetails);
 		_tempStorage.set(i, editedEntry);
@@ -99,7 +99,7 @@ public class TempStorageManipulator {
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		
-		return renewedEntry;
+		return editedEntry;
 	}
 
 	private void replaceParameters(ArrayList<Parameter> oldParameters, ArrayList<Parameter> newParameters) {
@@ -125,7 +125,7 @@ public class TempStorageManipulator {
 		}
 	}
 
-	private Entry replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent,
+	private void replaceWithNewContent(ArrayList<Parameter> entryDetails, ArrayList<Parameter> newContent,
 			boolean isEntryTypeChanged) {
 		if (!isEntryTypeChanged) {
 			replaceParameters(entryDetails, newContent);
@@ -139,8 +139,6 @@ public class TempStorageManipulator {
 			addParameters(entryDetails, newContent);
 			Collections.sort(entryDetails, new ParameterComparator());
 		}
-		
-		return new Entry(entryDetails);
 	}
 
 	// Removing non Name/Index/Category/Priorty
