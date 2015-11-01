@@ -78,23 +78,27 @@ public class TempStorageManipulator {
 		_lastTempArchive = newLastTempArchive;
 	}
 	
-	public void setBackgroundPath(String bgPath) {
+	public void setBackgroundPath(String bgPath) throws IOException {
 		_tempPreference.set(0, bgPath);
+		setTempPreferenceToFile(_tempPreference);
 	}
 	
-	public void setReminderHour(int numOfHours) {
+	public void setReminderHour(int numOfHours) throws IOException {
 		_tempPreference.set(1, String.valueOf(numOfHours));
+		setTempPreferenceToFile(_tempPreference);
 	}
 	
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
 		_tempStorage = _storageHandler.createNewFile(fileName);
 		_tempArchive = _archiveHandler.createNewFile(fileName);
+		_tempPreference = _preferenceHandler.createNewFile(fileName);
 		_logger.log(Level.INFO, "Initialise a new temporary storage.");
 	}
 
 	public void repopulate(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		_tempStorage = _storageHandler.openExistingFile(fileName);
 		_tempArchive = _archiveHandler.openExistingFile(fileName);
+		_tempPreference = _preferenceHandler.openExistingFile(fileName);
 		_logger.log(Level.INFO, "Repopulate a temporary storage.");
 	}
 
