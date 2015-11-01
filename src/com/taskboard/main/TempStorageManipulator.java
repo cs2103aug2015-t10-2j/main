@@ -15,8 +15,10 @@ public class TempStorageManipulator {
 	private ArrayList<Entry> _tempArchive;
 	private ArrayList<Entry> _lastTempStorage;
 	private ArrayList<Entry> _lastTempArchive;
+	private ArrayList<String> _tempPreference;
 	StorageHandler _storageHandler;
 	ArchiveHandler _archiveHandler;
+	PreferenceHandler _preferenceHandler;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	// constructor
@@ -24,6 +26,7 @@ public class TempStorageManipulator {
 	public TempStorageManipulator() {
 		_storageHandler = new StorageHandler();
 		_archiveHandler = new ArchiveHandler();
+		_preferenceHandler = new PreferenceHandler();
 	}
 
 	// accessors
@@ -43,7 +46,14 @@ public class TempStorageManipulator {
 	public ArrayList<Entry> getLastTempArchive() {
 		return _lastTempArchive;
 	}
-
+	
+	public String getBackgroundPath() {
+		return _tempPreference.get(0);
+	}
+	
+	public int getReminderHour() {
+		return Integer.valueOf(_tempPreference.get(1));
+	}
 	// mutators
 	
 	public void setTempStorage(ArrayList<Entry> newTempStorage) throws IOException {
@@ -66,6 +76,14 @@ public class TempStorageManipulator {
 	
 	public void setLastTempArchive(ArrayList<Entry> newLastTempArchive) {
 		_lastTempArchive = newLastTempArchive;
+	}
+	
+	public void setBackgroundPath(String bgPath) {
+		_tempPreference.set(0, bgPath);
+	}
+	
+	public void setReminderHour(int numOfHours) {
+		_tempPreference.set(1, String.valueOf(numOfHours));
 	}
 	
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
@@ -147,7 +165,7 @@ public class TempStorageManipulator {
 		}
 	}
 
-	// Removing non Name/Index/Category/Priorty
+	// Removing non Name/Index/Category/Priority
 	private void removingSomeContent(ArrayList<Parameter> entryDetails) {
 		for (int i = 0; i < entryDetails.size(); i++) {
 			if ((entryDetails.get(i).getParameterType() != ParameterType.NAME)
@@ -236,6 +254,11 @@ public class TempStorageManipulator {
 	public void setTempArchiveToFile(ArrayList<Entry> entries) throws IOException {
 		_archiveHandler.updateTempStorageToFile(entries);
 		_logger.log(Level.INFO, "Transfer the temp storage into archive.");
+	}
+	
+	public void setTempPreferenceToFile(ArrayList<String> contents) throws IOException {
+		_preferenceHandler.updateTempStorageToFile(contents);
+		_logger.log(Level.INFO, "Transfer the temp storage into preference.");
 	}
 
 	private void setIndexForAllEntries() {
