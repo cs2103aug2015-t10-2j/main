@@ -22,7 +22,7 @@ public class PreferenceHandler {
 	}
 	
 	public ArrayList<String> createNewFile(String fileName) throws IllegalArgumentException, IOException {
-		String newFileName = fileName + ".prf";
+		String newFileName = "resources/storages/" + fileName + ".pref";
 		_original = new File(newFileName);
 		boolean doesFileExist = doesFileExist(_original);
 
@@ -40,7 +40,7 @@ public class PreferenceHandler {
 	}
 
 	public ArrayList<String> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
-		String newFileName = fileName + ".prf";
+		String newFileName = "resources/storages/" + fileName + ".pref";
 		_original = new File(newFileName);
 		boolean doesFileExist = doesFileExist(_original);
 

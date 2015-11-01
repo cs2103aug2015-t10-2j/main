@@ -34,7 +34,7 @@ public class ArchiveHandler {
 	}
 	
 	public ArrayList<Entry> createNewFile(String fileName) throws IllegalArgumentException,IOException {
-		String archiveFileName = fileName + ".arc";
+		String archiveFileName = "resources/storages/" + fileName + ".arc";
 		_archive = new File(archiveFileName);
 		
 		boolean doesFileExist = doesFileExist(_archive);
@@ -51,7 +51,7 @@ public class ArchiveHandler {
 	}
 	
 	public ArrayList<Entry> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
-		String archiveFileName = fileName + ".arc";
+		String archiveFileName = "resources/storages/" + fileName + ".arc";
 		_archive = new File(archiveFileName);
 		boolean doesFileExist = doesFileExist(_archive);
 		
