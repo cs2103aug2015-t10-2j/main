@@ -37,7 +37,7 @@ public class OpenCommand extends Command{
 			
 		try {
 			_tempStorageManipulator.repopulate(fileName);
-			setSuccessResponseForOpen(responseForOpen, fileName);
+			setSuccessResponseForLaunchOpen(responseForOpen);
 			_logger.log(Level.INFO, "Generated success response for opening existing file");
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidOpen(responseForOpen, ex);
@@ -50,7 +50,7 @@ public class OpenCommand extends Command{
 		return responseForOpen;
 	}
 	
-	private void setSuccessResponseForOpen(Response response, String fileName) {
+	private void setSuccessResponseForLaunchOpen(Response response) {
 		response.setIsSuccess(true);
 		response.setFeedback(MESSAGE_WELCOME);
 		response.setEntries(_tempStorageManipulator.getTempStorage());

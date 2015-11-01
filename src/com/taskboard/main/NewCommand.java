@@ -37,7 +37,7 @@ public class NewCommand extends Command {
 		
 		try {
 			_tempStorageManipulator.initialise(fileName);
-			setSuccessResponseForNew(responseForNew, fileName);
+			setSuccessResponseForLaunchNew(responseForNew);
 			_logger.log(Level.INFO, "Generated success response for creating new file");
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidNew(responseForNew, ex);
@@ -51,7 +51,7 @@ public class NewCommand extends Command {
 		return responseForNew;
 	}
 	
-	private void setSuccessResponseForNew(Response response, String fileName) {
+	private void setSuccessResponseForLaunchNew(Response response) {
 		response.setIsSuccess(true);
 		response.setFeedback(MESSAGE_WELCOME);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
