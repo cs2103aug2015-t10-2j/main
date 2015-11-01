@@ -23,8 +23,13 @@ import com.taskboard.main.Response;
 public class LogicTest {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
+	private static final String MESSAGE_AFTER_ADD = "Entry successfully added:";
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
+	private static final String MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND = "No parameters provided.";
+	private static final String MESSAGE_ERROR_FOR_EMPTY_PRI_PARAMETER = "Empty pri parameter provided.";
+	private static final String MESSAGE_ERROR_FOR_EMPTY_BY_PARAMETER = "Empty by parameter provided.";
+	private static final String MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER = "Empty cat parameter provided.";
 	
 	private File testStorageFileForNew;
 	private File testArchiveFileForNew;
@@ -101,6 +106,47 @@ public class LogicTest {
 		actualResponse = logic.processCommand("open testOpen");
 		expectedResponse = createSuccessResponse(MESSAGE_WELCOME, expectedEntries);
 		testResponseEquality("test success response for opening existing file", expectedResponse, actualResponse);
+	}
+	
+	@Test
+	public void testResponsesForAdd() {
+		Response actualResponse = logic.processCommand("add ");
+		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
+		testResponseEquality("test failure response for no parameters after add command", expectedResponse,
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("a Prepare for EE2020 Final Quiz pri ");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_PRI_PARAMETER);
+		testResponseEquality("test failure response for empty pri parameter", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("a Prepare for EE2020 Final Quiz pri H");
+		Entry floatingTask = new Entry();
+		floatingTask.addToParameters(new Parameter(ParameterType.INDEX, ""));
+		floatingTask.addToParameters(new Parameter(ParameterType.NAME, "Prepare for EE2020 Final Quiz"));
+		floatingTask.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
+		expectedEntries.add(floatingTask);
+		updateSortingOfEntries(expectedEntries);
+		String feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(floatingTask.toHTMLString());
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for adding floating task with priority", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("add Submit MA3264 by ");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_BY_PARAMETER);
+		testResponseEquality("test failure response for empty by parameter", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat ");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER);
+		testResponseEquality("test failure response for empty cat parameter", expectedResponse, actualResponse);
+	}
+	
+	private void updateSortingOfEntries(ArrayList<Entry> entries) {
+		Collections.sort(entries, new DateComparator());
+		for (int i = 0; i < entries.size(); i++) {
+			Entry entry = entries.get(i);
+			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i+1));
+			entry.setIndexParameter(indexParameter);
+		}
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
