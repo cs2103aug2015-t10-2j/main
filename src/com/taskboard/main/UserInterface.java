@@ -6,6 +6,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.util.logging.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -24,6 +25,7 @@ public class UserInterface extends JFrame {
 	private static final String MEDIUM_PRIORITY_FILE_PATH = "resources/images/MediumPriority.jpg";
 	private static final String LOW_PRIORITY_FILE_PATH = "resources/images/LowPriority.jpg";
 	private static final String NORMAL_PRIORITY_FILE_PATH = "resources/images/NormalPriority.jpg";
+	private static final String PAST_ENTRY_FILE_PATH = "resources/images/Past.png";
 	
 	private static final String MESSAGE_PROMPT_COMMAND = "Enter command below:";
 	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
@@ -301,7 +303,22 @@ public class UserInterface extends JFrame {
 							assignPriorityIcon(currentEntry, deadlineIcon);
 							deadlineLabel.add(deadlineIcon);
 							
-							JTextArea deadlineText = new TransparentTextArea(1.0f);
+							TransparentTextArea deadlineText = new TransparentTextArea(1.0f);
+							String dateString = currentEntry.getDateParameter().getParameterValue();
+							Parameter timeParameter = currentEntry.getTimeParameter();
+							String timeString;
+							if (timeParameter != null) {
+								timeString = timeParameter.getParameterValue();
+							} else {
+								timeString = "23:59";
+							}
+							if (isPastDateTime(dateString, timeString)) {
+								JLabel pastIcon = new JLabel();
+								pastIcon.setBounds(320, 0, 48, 27);
+								pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
+								deadlineLabel.add(pastIcon);
+							}
+							
 							deadlineText.setText(getDeadlineTaskDisplayString(currentEntry));
 							deadlineText.setFont(UIManager.getFont("Label.font"));
 							deadlineText.setLineWrap(true);
@@ -343,7 +360,22 @@ public class UserInterface extends JFrame {
 							assignPriorityIcon(currentEntry, eventIcon);
 							eventLabel.add(eventIcon);
 							
-							JTextArea eventText = new TransparentTextArea(1.0f);
+							TransparentTextArea eventText = new TransparentTextArea(1.0f);
+							String endDateString = currentEntry.getEndDateParameter().getParameterValue();
+							Parameter endTimeParameter = currentEntry.getEndTimeParameter();
+							String endTimeString;
+							if (endTimeParameter != null) {
+								endTimeString = endTimeParameter.getParameterValue();
+							} else {
+								endTimeString = "23:59";
+							}
+							if (isPastDateTime(endDateString, endTimeString)) {
+								JLabel pastIcon = new JLabel();
+								pastIcon.setBounds(320, 0, 48, 27);
+								pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
+								eventLabel.add(pastIcon);
+							}
+							
 							eventText.setText(getEventDisplayString(currentEntry));
 							eventText.setFont(UIManager.getFont("Label.font"));
 							eventText.setLineWrap(true);
@@ -385,7 +417,7 @@ public class UserInterface extends JFrame {
 							assignPriorityIcon(currentEntry, floatIcon);
 							floatLabel.add(floatIcon);
 							
-							JTextArea floatText = new TransparentTextArea(1.0f);
+							TransparentTextArea floatText = new TransparentTextArea(1.0f);
 							floatText.setText(getFloatingTaskDisplayString(currentEntry));
 							floatText.setFont(UIManager.getFont("Label.font"));
 							floatText.setLineWrap(true);
@@ -428,6 +460,11 @@ public class UserInterface extends JFrame {
 							constraints.gridwidth = 1;
 						}
 					}
+					
+					_displayArea.revalidate();
+					_displayArea.repaint();
+					_displayScroll.revalidate();
+					_displayScroll.repaint();
 				}
 				
 				_logger.log(Level.INFO, "Successfully updated display area.");
@@ -546,6 +583,23 @@ public class UserInterface extends JFrame {
 			_logger.log(Level.SEVERE, "Fatal error: failed formatting date string from storage");
 			assert false: "Fatal error: failed formatting date string from storage.";
 			return null;
+		}
+	}
+	
+	private static boolean isPastDateTime(String dateString, String timeString) {
+		String dateTimeString = dateString + " " + timeString;
+		SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		try {
+			Date dateTime = dateTimeFormat.parse(dateTimeString);
+			if (dateTime.compareTo(new Date()) < 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (ParseException e) {
+			_logger.log(Level.SEVERE, "Fatal error: failed formatting date string from storage");
+			assert false: "Fatal error: failed formatting date string from storage.";
+			return false;
 		}
 	}
 	
