@@ -13,11 +13,15 @@ public class WindowResizeListener extends ComponentAdapter {
 		try {
 			UserInterface.getInstance().setBackground(UserInterface.getInstance().getBackgroundFilePath());
 		} catch (IOException e) {
-			JTextPane feedbackArea = UserInterface.getInstance().getFeedbackArea();
-			if (feedbackArea == null) {
-				UserInterface.getInstance().setFeedbackArea(new JTextPane());
+			try {
+				UserInterface.getInstance().setBackgroundURL(UserInterface.getInstance().getBackgroundFilePath());
+			} catch (IOException eURL) {
+				JTextPane feedbackArea = UserInterface.getInstance().getFeedbackArea();
+				if (feedbackArea == null) {
+					UserInterface.getInstance().setFeedbackArea(new JTextPane());
+				}
+				feedbackArea.setText("Unexpected error during background resize.");
 			}
-			feedbackArea.setText("Unexpected error during background resize.");
 		}
 	}
 }

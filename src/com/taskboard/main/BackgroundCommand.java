@@ -5,6 +5,14 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+
+import java.awt.Image;
+
+import javax.imageio.ImageIO;
+
 public class BackgroundCommand extends Command {
 
 	private static final String MESSAGE_SET_BACKGROUND_SUCCESS = "Succesfully changed background image.";
@@ -35,8 +43,28 @@ public class BackgroundCommand extends Command {
 				responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_FAILURE);
 			}
 		} else {
-			responseForBackground.setIsSuccess(false);
-			responseForBackground.setFeedback(MESSAGE_FILE_NOT_FOUND);
+			try {
+				URL imageURLPathString = new URL(imageFilePathString);
+				try {
+					final HttpURLConnection connection = (HttpURLConnection) imageURLPathString.openConnection();
+					connection.setRequestProperty(
+					    "User-Agent",
+					    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
+					Image imageFileURL = ImageIO.read(connection.getInputStream());
+					if (imageFileURL != null) {
+						UserInterface.getInstance().setBackgroundURL(imageFilePathString);
+					} else {
+						responseForBackground.setIsSuccess(false);
+						responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_FAILURE);
+					}
+				} catch (IOException e) {
+					responseForBackground.setIsSuccess(false);
+					responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_FAILURE);
+				}
+			} catch (MalformedURLException e) {
+				responseForBackground.setIsSuccess(false);
+				responseForBackground.setFeedback(MESSAGE_FILE_NOT_FOUND);
+			}
 		}
 		
 		return responseForBackground;

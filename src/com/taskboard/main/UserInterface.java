@@ -7,7 +7,6 @@ import java.awt.*;
 import java.util.logging.*;
 import java.util.ArrayList;
 import java.util.Date;
-
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -15,6 +14,9 @@ import javax.imageio.ImageIO;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 public class UserInterface extends JFrame {
 	
@@ -74,10 +76,14 @@ public class UserInterface extends JFrame {
 		try {
 			setBackground(_backgroundFilePath);
 		} catch (IOException e) {
-			if (_feedbackArea == null) {
-				_feedbackArea = new JTextPane();
+			try {
+				setBackgroundURL(_backgroundFilePath);
+			} catch (IOException eURL) {
+				if (_feedbackArea == null) {
+					_feedbackArea = new JTextPane();
+				}
+				_feedbackArea.setText("Unexpected error during background initialization.");
 			}
-			_feedbackArea.setText("Unexpected error during background resize.");
 		}
 		
 		_backgroundPane.setLayout(new BorderLayout());
@@ -112,12 +118,35 @@ public class UserInterface extends JFrame {
 		return _feedbackArea;
 	}
 	
+	public void setBackgroundFilePath(String newBackgroundFilePath) {
+		_backgroundFilePath = newBackgroundFilePath;
+	}
+	
 	public void setBackground(String backgroundFileString) throws IOException {
 		ImageIcon sourceIcon = new ImageIcon(ImageIO.read(new File(backgroundFileString)));
 		Rectangle frameRect = _frame.getBounds();
 		Image resizedImage = sourceIcon.getImage().getScaledInstance(frameRect.width, frameRect.height,  java.awt.Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon = new ImageIcon(resizedImage);
 		_backgroundPane.setIcon(resizedIcon);
+		setBackgroundFilePath(backgroundFileString);
+	}
+	
+	public void setBackgroundURL(String backgroundURLString) throws IOException {
+		try {
+			URL sourceIconURL = new URL(backgroundURLString);
+			final HttpURLConnection connection = (HttpURLConnection) sourceIconURL.openConnection();
+			connection.setRequestProperty(
+			    "User-Agent",
+			    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
+			ImageIcon sourceIcon = new ImageIcon(ImageIO.read(connection.getInputStream()));
+			Rectangle frameRect = _frame.getBounds();
+			Image resizedImage = sourceIcon.getImage().getScaledInstance(frameRect.width, frameRect.height,  java.awt.Image.SCALE_SMOOTH);
+			ImageIcon resizedIcon = new ImageIcon(resizedImage);
+			_backgroundPane.setIcon(resizedIcon);
+			setBackgroundFilePath(backgroundURLString);
+		} catch (MalformedURLException e) {
+			assert false: "Code should not be reached as checking has been done.";
+		}
 	}
 	
 	public void setFeedbackArea(JTextPane newFeedbackArea) {
