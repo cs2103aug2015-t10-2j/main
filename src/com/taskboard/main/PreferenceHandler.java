@@ -32,6 +32,9 @@ public class PreferenceHandler {
 		if (!doesFileExist) {
 			_original.createNewFile();
 			contents = new ArrayList<String>();
+			contents.add("resources/images/Black-Rose-Cool-Desktop-Background.jpg");
+			contents.add("1");
+			updateTempStorageToFile(contents);
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
@@ -49,6 +52,16 @@ public class PreferenceHandler {
 		if (doesFileExist) {
 			Scanner scanFileToCopy = new Scanner(_original);
 			contents = copyExistingContentsFromFile(scanFileToCopy);
+			if (contents.isEmpty()) {
+				contents.add("resources/images/Black-Rose-Cool-Desktop-Background.jpg");
+				contents.add("1");
+				try {
+					updateTempStorageToFile(contents);
+				} catch (IOException e) {
+					_logger.log(Level.SEVERE, "Reopening existing file, exception should not occur");
+					assert false: "Reopening existing file, exception should not occur.";
+				}
+			}
 			scanFileToCopy.close();
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);

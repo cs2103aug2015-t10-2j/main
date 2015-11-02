@@ -126,6 +126,7 @@ public class UserInterface extends JFrame {
 			_backgroundImageIcon = sourceIcon;
 			updateBackground();
 		} catch (IOException e) {
+			e.printStackTrace();
 			try {
 				URL sourceIconURL = new URL(_backgroundPath);
 				final HttpURLConnection connection = (HttpURLConnection) sourceIconURL.openConnection();
@@ -136,7 +137,11 @@ public class UserInterface extends JFrame {
 				_backgroundImageIcon = sourceIcon;
 				updateBackground();
 			} catch (MalformedURLException eMal) {
-				assert false: "Code should not be reached as checking has been done.";
+				JTextPane feedbackArea = UserInterface.getInstance().getFeedbackArea();
+				if (feedbackArea == null) {
+					UserInterface.getInstance().setFeedbackArea(new JTextPane());
+				}
+				feedbackArea.setText("Unexpected error during background initialization.");
 			} catch (IOException eURL) {
 				throw eURL;
 			}

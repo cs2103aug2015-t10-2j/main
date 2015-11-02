@@ -37,6 +37,7 @@ public class OpenCommand extends Command{
 			
 		try {
 			_tempStorageManipulator.repopulate(fileName);
+			updateUIPreferences();
 			setSuccessResponseForLaunchOpen(responseForOpen);
 			_logger.log(Level.INFO, "Generated success response for opening existing file");
 		} catch (IllegalArgumentException ex) {
@@ -64,5 +65,12 @@ public class OpenCommand extends Command{
 	private void setFailureResponseForLaunchOpen(Response response) {
 		response.setIsSuccess(false);
 		response.setFeedback(MESSAGE_ERROR_FOR_LAUNCH_OPEN);
+	}
+	
+	private void updateUIPreferences() throws IOException {
+		String backgroundPath = _tempStorageManipulator.getBackgroundPath();
+		// int reminderHour = _tempStorageManipulator.getReminderHour();
+		UserInterface.getInstance().setBackgroundPath(backgroundPath);
+		// UserInterface.getInstance().setReminderHour(reminderHour);
 	}
 }

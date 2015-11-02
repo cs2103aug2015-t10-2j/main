@@ -36,6 +36,7 @@ public class BackgroundCommand extends Command {
 		if (imageFilePath.exists() && !imageFilePath.isDirectory()) {
 			try {
 				UserInterface.getInstance().setBackgroundPath(imageFilePathString);
+				_tempStorageManipulator.setBackgroundPath(imageFilePathString);
 				responseForBackground.setIsSuccess(true);
 				responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_SUCCESS);
 			} catch (IOException e) {
@@ -52,6 +53,9 @@ public class BackgroundCommand extends Command {
 				Image imageFileURL = ImageIO.read(connection.getInputStream());
 				if (imageFileURL != null) {
 					UserInterface.getInstance().setBackgroundPath(imageFilePathString);
+					_tempStorageManipulator.setBackgroundPath(imageFilePathString);
+					responseForBackground.setIsSuccess(true);
+					responseForBackground.setFeedback(MESSAGE_SET_BACKGROUND_SUCCESS);
 				} else {
 					responseForBackground.setIsSuccess(false);
 					responseForBackground.setFeedback(MESSAGE_FILE_NOT_FOUND);

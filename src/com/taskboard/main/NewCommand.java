@@ -1,7 +1,6 @@
 package com.taskboard.main;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -37,6 +36,7 @@ public class NewCommand extends Command {
 		
 		try {
 			_tempStorageManipulator.initialise(fileName);
+			updateUIPreferences();
 			setSuccessResponseForLaunchNew(responseForNew);
 			_logger.log(Level.INFO, "Generated success response for creating new file");
 		} catch (IllegalArgumentException ex) {
@@ -65,5 +65,12 @@ public class NewCommand extends Command {
 	private void setFailureResponseForLaunchNew(Response response) {
 		response.setIsSuccess(false);
 		response.setFeedback(MESSAGE_ERROR_FOR_LAUNCH_NEW);
+	}
+	
+	private void updateUIPreferences() throws IOException {
+		String backgroundPath = _tempStorageManipulator.getBackgroundPath();
+		// int reminderHour = _tempStorageManipulator.getReminderHour();
+		UserInterface.getInstance().setBackgroundPath(backgroundPath);
+		// UserInterface.getInstance().setReminderHour(reminderHour);
 	}
 }
