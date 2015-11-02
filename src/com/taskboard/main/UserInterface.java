@@ -7,6 +7,9 @@ import java.awt.*;
 import java.util.logging.*;
 import java.util.ArrayList;
 
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 import javax.imageio.ImageIO;
 
 import java.io.File;
@@ -247,8 +250,10 @@ public class UserInterface extends JFrame {
 						String pivotDate = "";
 						if (currentEntry.getDateParameter() != null) {
 							pivotDate = currentEntry.getDateParameter().getParameterValue();
+							pivotDate = toDisplayDateFormat(pivotDate);
 						} else if (currentEntry.getStartDateParameter() != null) {
 							pivotDate = currentEntry.getStartDateParameter().getParameterValue();
+							pivotDate = toDisplayDateFormat(pivotDate);
 						} else if (currentEntry.getNameParameter() != null) {
 							pivotDate = "Side Tasks";
 						} else {
@@ -297,7 +302,7 @@ public class UserInterface extends JFrame {
 							deadlineLabel.add(deadlineIcon);
 							
 							JTextArea deadlineText = new TransparentTextArea(1.0f);
-							deadlineText.setText(currentEntry.toUIString());
+							deadlineText.setText(getDeadlineTaskDisplayString(currentEntry));
 							deadlineText.setFont(UIManager.getFont("Label.font"));
 							deadlineText.setLineWrap(true);
 							deadlineText.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -339,7 +344,7 @@ public class UserInterface extends JFrame {
 							eventLabel.add(eventIcon);
 							
 							JTextArea eventText = new TransparentTextArea(1.0f);
-							eventText.setText(currentEntry.toUIString());
+							eventText.setText(getEventDisplayString(currentEntry));
 							eventText.setFont(UIManager.getFont("Label.font"));
 							eventText.setLineWrap(true);
 							eventText.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -381,7 +386,7 @@ public class UserInterface extends JFrame {
 							floatLabel.add(floatIcon);
 							
 							JTextArea floatText = new TransparentTextArea(1.0f);
-							floatText.setText(currentEntry.toUIString());
+							floatText.setText(getFloatingTaskDisplayString(currentEntry));
 							floatText.setFont(UIManager.getFont("Label.font"));
 							floatText.setLineWrap(true);
 							floatText.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -465,6 +470,82 @@ public class UserInterface extends JFrame {
 			}
 		} else {
 			currentLabel.setIcon(new ImageIcon(NORMAL_PRIORITY_FILE_PATH));
+		}
+	}
+	
+	private static String getDeadlineTaskDisplayString(Entry currentEntry) {
+		String displayString = "";
+		
+		String entryName = currentEntry.getNameParameter().getParameterValue();
+		displayString += entryName + "\n";
+		
+		Parameter dateParameter = currentEntry.getDateParameter();
+		String dateString = dateParameter.getParameterValue();
+		dateString = toDisplayDateFormat(dateString);
+		
+		Parameter timeParameter = currentEntry.getTimeParameter();
+		if (timeParameter != null) {
+			String timeString = timeParameter.getParameterValue();
+			displayString += "On " + dateString + " " + timeString;
+		} else {
+			displayString += "On " + dateString;
+		}
+		
+		return displayString;
+	}
+	
+	public static String getEventDisplayString(Entry currentEntry) {
+		String displayString = "";
+		
+		String entryName = currentEntry.getNameParameter().getParameterValue();
+		displayString += entryName + "\n";
+		
+		Parameter startDateParameter = currentEntry.getStartDateParameter();
+		String startDateString = startDateParameter.getParameterValue();
+		startDateString = toDisplayDateFormat(startDateString);
+			
+		Parameter startTimeParameter = currentEntry.getStartTimeParameter();
+		if (startTimeParameter != null) {
+			String startTimeString = startTimeParameter.getParameterValue();
+			displayString += "From " + startDateString + " " + startTimeString + "\n";
+		} else {
+			displayString += "From " + startDateString + "\n";
+		}
+		
+		Parameter endDateParameter = currentEntry.getEndDateParameter();
+		String endDateString = endDateParameter.getParameterValue();
+		endDateString = toDisplayDateFormat(endDateString);
+			
+		Parameter endTimeParameter = currentEntry.getEndTimeParameter();
+		if (endTimeParameter != null) {
+			String endTimeString = endTimeParameter.getParameterValue();
+			displayString += "To " + endDateString + " " + endTimeString;
+		} else {
+			displayString += "To " + endDateString;
+		}
+		
+		return displayString;
+	}
+	
+	private static String getFloatingTaskDisplayString(Entry currentEntry) {
+		String displayString = "";
+		
+		String entryName = currentEntry.getNameParameter().getParameterValue();
+		displayString += entryName;
+		
+		return displayString;
+	}
+	
+	private static String toDisplayDateFormat(String dateString) {
+		SimpleDateFormat displayDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy");
+		SimpleDateFormat storageDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		try {
+			return displayDateFormat.format(storageDateFormat.parse(dateString));
+		} catch (ParseException e) {
+			_logger.log(Level.SEVERE, "Fatal error: failed formatting date string from storage");
+			assert false: "Fatal error: failed formatting date string from storage.";
+			return null;
 		}
 	}
 	
