@@ -5,9 +5,3 @@
 *.str
 *.arc
 *.pref
-/resources/storages/*.str
-/resources/storages/*.arc
-/resources/storages/*.pref
-!/resources/storages/default.str
-!/resources/storages/default.arc
-!/resources/storages/default.pref
