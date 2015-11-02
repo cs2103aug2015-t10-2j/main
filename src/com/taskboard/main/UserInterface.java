@@ -59,7 +59,8 @@ public class UserInterface extends JFrame {
 	private JLabel _commandLabel;
 	private JTextField _commandField;
 	private JLabel _title;
-	private String _backgroundFilePath;
+	private String _backgroundPath;
+	private ImageIcon _backgroundImageIcon;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
@@ -71,19 +72,15 @@ public class UserInterface extends JFrame {
 		_frame.setVisible(true);
 		
 		_backgroundPane = new JLabel();
-		_backgroundFilePath = DEFAULT_BACKGROUND_FILE_PATH;
 		
 		try {
-			setBackground(_backgroundFilePath);
+			setBackgroundPath(DEFAULT_BACKGROUND_FILE_PATH);
 		} catch (IOException e) {
-			try {
-				setBackgroundURL(_backgroundFilePath);
-			} catch (IOException eURL) {
-				if (_feedbackArea == null) {
-					_feedbackArea = new JTextPane();
-				}
-				_feedbackArea.setText("Unexpected error during background initialization.");
+			JTextPane feedbackArea = UserInterface.getInstance().getFeedbackArea();
+			if (feedbackArea == null) {
+				UserInterface.getInstance().setFeedbackArea(new JTextPane());
 			}
+			feedbackArea.setText("Unexpected error during background initialization.");
 		}
 		
 		_backgroundPane.setLayout(new BorderLayout());
@@ -111,42 +108,46 @@ public class UserInterface extends JFrame {
 	}
 	
 	public String getBackgroundFilePath() {
-		return _backgroundFilePath;
+		return _backgroundPath;
 	}
 	
 	public JTextPane getFeedbackArea() {
 		return _feedbackArea;
 	}
 	
-	public void setBackgroundFilePath(String newBackgroundFilePath) {
-		_backgroundFilePath = newBackgroundFilePath;
+	public void setBackgroundPath(String newBackgroundFilePath) throws IOException {
+		_backgroundPath = newBackgroundFilePath;
+		updateBackgroundImageIcon();
 	}
 	
-	public void setBackground(String backgroundFileString) throws IOException {
-		ImageIcon sourceIcon = new ImageIcon(ImageIO.read(new File(backgroundFileString)));
+	public void updateBackgroundImageIcon() throws IOException {
+		try {
+			ImageIcon sourceIcon = new ImageIcon(ImageIO.read(new File(_backgroundPath)));
+			_backgroundImageIcon = sourceIcon;
+			updateBackground();
+		} catch (IOException e) {
+			try {
+				URL sourceIconURL = new URL(_backgroundPath);
+				final HttpURLConnection connection = (HttpURLConnection) sourceIconURL.openConnection();
+				connection.setRequestProperty(
+				    "User-Agent",
+				    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
+				ImageIcon sourceIcon = new ImageIcon(ImageIO.read(connection.getInputStream()));
+				_backgroundImageIcon = sourceIcon;
+				updateBackground();
+			} catch (MalformedURLException eMal) {
+				assert false: "Code should not be reached as checking has been done.";
+			} catch (IOException eURL) {
+				throw eURL;
+			}
+		}
+	}
+	
+	public void updateBackground() throws IOException {
 		Rectangle frameRect = _frame.getBounds();
-		Image resizedImage = sourceIcon.getImage().getScaledInstance(frameRect.width, frameRect.height,  java.awt.Image.SCALE_SMOOTH);
+		Image resizedImage = _backgroundImageIcon.getImage().getScaledInstance(frameRect.width, frameRect.height,  java.awt.Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon = new ImageIcon(resizedImage);
 		_backgroundPane.setIcon(resizedIcon);
-		setBackgroundFilePath(backgroundFileString);
-	}
-	
-	public void setBackgroundURL(String backgroundURLString) throws IOException {
-		try {
-			URL sourceIconURL = new URL(backgroundURLString);
-			final HttpURLConnection connection = (HttpURLConnection) sourceIconURL.openConnection();
-			connection.setRequestProperty(
-			    "User-Agent",
-			    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
-			ImageIcon sourceIcon = new ImageIcon(ImageIO.read(connection.getInputStream()));
-			Rectangle frameRect = _frame.getBounds();
-			Image resizedImage = sourceIcon.getImage().getScaledInstance(frameRect.width, frameRect.height,  java.awt.Image.SCALE_SMOOTH);
-			ImageIcon resizedIcon = new ImageIcon(resizedImage);
-			_backgroundPane.setIcon(resizedIcon);
-			setBackgroundFilePath(backgroundURLString);
-		} catch (MalformedURLException e) {
-			assert false: "Code should not be reached as checking has been done.";
-		}
 	}
 	
 	public void setFeedbackArea(JTextPane newFeedbackArea) {
