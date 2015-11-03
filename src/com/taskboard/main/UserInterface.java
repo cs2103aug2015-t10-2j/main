@@ -4,9 +4,12 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import java.awt.*;
+
 import java.util.logging.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -14,6 +17,7 @@ import javax.imageio.ImageIO;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -22,12 +26,14 @@ public class UserInterface extends JFrame {
 	
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
 	private static final String TITLE_IMAGE_FILE_PATH = "resources/images/TaskBoard-title2-v03.png";
-	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
 	private static final String HIGH_PRIORITY_FILE_PATH = "resources/images/HighPriority.jpg";
 	private static final String MEDIUM_PRIORITY_FILE_PATH = "resources/images/MediumPriority.jpg";
 	private static final String LOW_PRIORITY_FILE_PATH = "resources/images/LowPriority.jpg";
 	private static final String NORMAL_PRIORITY_FILE_PATH = "resources/images/NormalPriority.jpg";
 	private static final String PAST_ENTRY_FILE_PATH = "resources/images/Past.png";
+	private static final String REMINDER_FILE_PATH = "resources/images/Soon.png";
+	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
+	private static final int DEFAULT_REMINDER_HOUR = 1;
 	
 	private static final String MESSAGE_PROMPT_COMMAND = "Enter command below:";
 	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
@@ -43,6 +49,10 @@ public class UserInterface extends JFrame {
 	private static final String NEGATIVE_SCROLL_CODE = "negativeUnitIncrement";
 	
 	private static final String EXIT_COMMAND_STRING = "exit";
+	
+	private static final String START_OF_DAY_TIME = "00:00";
+	private static final String END_OF_DAY_TIME = "23:59";
+	private static final String STRING_NONE = "N/A";
 	
 	private static final long serialVersionUID = 1;
 	
@@ -61,6 +71,7 @@ public class UserInterface extends JFrame {
 	private JLabel _title;
 	private String _backgroundPath;
 	private ImageIcon _backgroundImageIcon;
+	private int _reminderHour;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
@@ -75,6 +86,7 @@ public class UserInterface extends JFrame {
 		
 		try {
 			setBackgroundPath(DEFAULT_BACKGROUND_FILE_PATH);
+			setReminderHour(DEFAULT_REMINDER_HOUR);
 		} catch (IOException e) {
 			JTextPane feedbackArea = UserInterface.getInstance().getFeedbackArea();
 			if (feedbackArea == null) {
@@ -111,6 +123,10 @@ public class UserInterface extends JFrame {
 		return _backgroundPath;
 	}
 	
+	public int getReminderHour() {
+		return _reminderHour;
+	}
+	
 	public JTextPane getFeedbackArea() {
 		return _feedbackArea;
 	}
@@ -120,13 +136,16 @@ public class UserInterface extends JFrame {
 		updateBackgroundImageIcon();
 	}
 	
+	public void setReminderHour(int newReminderHour) {
+		_reminderHour = newReminderHour;
+	}
+	
 	public void updateBackgroundImageIcon() throws IOException {
 		try {
 			ImageIcon sourceIcon = new ImageIcon(ImageIO.read(new File(_backgroundPath)));
 			_backgroundImageIcon = sourceIcon;
 			updateBackground();
 		} catch (IOException e) {
-			e.printStackTrace();
 			try {
 				URL sourceIconURL = new URL(_backgroundPath);
 				final HttpURLConnection connection = (HttpURLConnection) sourceIconURL.openConnection();
@@ -248,7 +267,7 @@ public class UserInterface extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				UserInterface.getInstance();
 			}
@@ -345,13 +364,18 @@ public class UserInterface extends JFrame {
 							if (timeParameter != null) {
 								timeString = timeParameter.getParameterValue();
 							} else {
-								timeString = "23:59";
+								timeString = STRING_NONE;
 							}
 							if (isPastDateTime(dateString, timeString)) {
 								JLabel pastIcon = new JLabel();
 								pastIcon.setBounds(320, 0, 48, 27);
 								pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
 								deadlineLabel.add(pastIcon);
+							} else if (isInReminderPeriod(dateString, timeString)) {
+								BlinkingLabel reminderIcon = new BlinkingLabel();
+								reminderIcon.setBounds(320, 0, 48, 27);
+								reminderIcon.setIcon(new ImageIcon(REMINDER_FILE_PATH));
+								deadlineLabel.add(reminderIcon);
 							}
 							
 							deadlineText.setText(getDeadlineTaskDisplayString(currentEntry));
@@ -396,19 +420,32 @@ public class UserInterface extends JFrame {
 							eventLabel.add(eventIcon);
 							
 							TransparentTextArea eventText = new TransparentTextArea(1.0f);
+							String startDateString = currentEntry.getStartDateParameter().getParameterValue();
 							String endDateString = currentEntry.getEndDateParameter().getParameterValue();
+							Parameter startTimeParameter = currentEntry.getStartTimeParameter();
 							Parameter endTimeParameter = currentEntry.getEndTimeParameter();
+							String startTimeString;
 							String endTimeString;
+							if (startTimeParameter != null) {
+								startTimeString = startTimeParameter.getParameterValue();
+							} else {
+								startTimeString = STRING_NONE;
+							}
 							if (endTimeParameter != null) {
 								endTimeString = endTimeParameter.getParameterValue();
 							} else {
-								endTimeString = "23:59";
+								endTimeString = END_OF_DAY_TIME;
 							}
 							if (isPastDateTime(endDateString, endTimeString)) {
 								JLabel pastIcon = new JLabel();
 								pastIcon.setBounds(320, 0, 48, 27);
 								pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
 								eventLabel.add(pastIcon);
+							} else if (isInReminderPeriod(startDateString, startTimeString)) {
+								BlinkingLabel reminderIcon = new BlinkingLabel();
+								reminderIcon.setBounds(320, 0, 48, 27);
+								reminderIcon.setIcon(new ImageIcon(REMINDER_FILE_PATH));
+								eventLabel.add(reminderIcon);
 							}
 							
 							eventText.setText(getEventDisplayString(currentEntry));
@@ -622,6 +659,9 @@ public class UserInterface extends JFrame {
 	}
 	
 	private static boolean isPastDateTime(String dateString, String timeString) {
+		if (timeString.equals(STRING_NONE)) {
+			timeString = END_OF_DAY_TIME;
+		}
 		String dateTimeString = dateString + " " + timeString;
 		SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
@@ -634,6 +674,49 @@ public class UserInterface extends JFrame {
 		} catch (ParseException e) {
 			_logger.log(Level.SEVERE, "Fatal error: failed formatting date string from storage");
 			assert false: "Fatal error: failed formatting date string from storage.";
+			return false;
+		}
+	}
+	
+	private boolean isInReminderPeriod(String dateString, String timeString) {
+		SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Date currentDateTime = new Date();
+		Date startReminderDateTime = new Date();
+		Date endReminderDateTime = new Date();
+		if (timeString.equals(STRING_NONE)) {
+			String startDateTimeString = dateString + " " + START_OF_DAY_TIME;
+			String endDateTimeString = dateString + " " + END_OF_DAY_TIME;
+			try {
+				endReminderDateTime = dateTimeFormat.parse(endDateTimeString);
+				startReminderDateTime = dateTimeFormat.parse(startDateTimeString);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(startReminderDateTime);
+				cal.add(Calendar.HOUR_OF_DAY, -_reminderHour);
+				startReminderDateTime = cal.getTime();
+			} catch (ParseException e) {
+				_logger.log(Level.SEVERE, "Fatal error: failed formatting date string from storage");
+				assert false: "Fatal error: failed formatting date string from storage.";
+				return false;
+			}
+		} else {
+			String endDateTimeString = dateString + " " + timeString;
+			try {
+				endReminderDateTime = dateTimeFormat.parse(endDateTimeString);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(endReminderDateTime);
+				cal.add(Calendar.HOUR_OF_DAY, -_reminderHour);
+				startReminderDateTime = cal.getTime();
+			} catch (ParseException e) {
+				_logger.log(Level.SEVERE, "Fatal error: failed formatting date string from storage");
+				assert false: "Fatal error: failed formatting date string from storage.";
+				return false;
+			}
+		}
+		boolean isAfterStartReminder = (startReminderDateTime.compareTo(currentDateTime) <= 0);
+		boolean isBeforeEndReminder = (currentDateTime.compareTo(endReminderDateTime) <= 0);
+		if (isAfterStartReminder && isBeforeEndReminder) {
+			return true;
+		} else {
 			return false;
 		}
 	}
