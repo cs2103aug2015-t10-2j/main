@@ -33,8 +33,10 @@ public class LogicTest {
 	
 	private File testStorageFileForNew;
 	private File testArchiveFileForNew;
+	private File testPreferenceFileForNew;
 	private File testStorageFileForOpen;
 	private File testArchiveFileForOpen;
+	private File testPreferenceFileForOpen;
 	private ArrayList<Entry> expectedEntries; 
 	private Logic logic;
 	
@@ -46,11 +48,15 @@ public class LogicTest {
 		testStorageFileForNew.createNewFile();
 		testArchiveFileForNew = new File("testNew" + ".arc");
 		testArchiveFileForNew.createNewFile();
+		testPreferenceFileForNew = new File("testNew" + ".pref");
+		testPreferenceFileForNew.createNewFile();
 		
 		testStorageFileForOpen = new File("testOpen" + ".str");
 		testStorageFileForOpen.createNewFile();
 		testArchiveFileForOpen = new File("testOpen" + ".arc");
 		testArchiveFileForOpen.createNewFile();
+		testPreferenceFileForOpen = new File("testOpen" + ".pref");
+		testPreferenceFileForOpen.createNewFile();
 		
 		Entry event = new Entry();
 		event.addToParameters(new Parameter(ParameterType.INDEX, "1"));
@@ -94,6 +100,8 @@ public class LogicTest {
 		storageFile.delete();
 		File archiveFile = new File("AcademicManager" + ".arc");
 		archiveFile.delete();
+		File preferenceFile = new File("AcademicManager" + ".pref");
+		preferenceFile.delete();
 	}
 	
 	@Test
@@ -174,8 +182,10 @@ public class LogicTest {
 	public void terminate() {
 		testStorageFileForNew.delete();
 		testArchiveFileForNew.delete();
+		testPreferenceFileForNew.delete();
 		testStorageFileForOpen.delete();
 		testArchiveFileForOpen.delete();
+		testPreferenceFileForOpen.delete();
 	}
 	
 //	@Test

@@ -9,6 +9,8 @@ public class SelectiveFilterProcessor {
 	
 	private static final String MESSAGE_FILTER_RESULTS = "entries found based on search results!";
 	
+	private static final String FORMAT_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";
+	
 	// attribute
 	
 	private ArrayList<Entry> _filteredEntries;
@@ -52,7 +54,7 @@ public class SelectiveFilterProcessor {
 				return responseForFiltering;
 			}
 			
-			_filteredEntries = processFilterByDateTime(dateValidator);
+			_filteredEntries = processFilterByDate(dateValidator);
 		}
 		
 		if (isFilterByDateTime(parameters)) {
@@ -215,23 +217,24 @@ public class SelectiveFilterProcessor {
 	
 	private Response checkForDateValidity(DateTimeValidator dateValidator, ArrayList<Parameter> parameters) {
 		String date = getDetailFromParameter(getDateParameter(parameters));
+		String time = FORMAT_DEFAULT_TIME_FOR_FILTER_BY_DATE; 
 		_logger.log(Level.INFO, "Start validating date");
-		Response responseForDate = dateValidator.validateDateTimeDetails(date, "", null);
+		Response responseForDate = dateValidator.validateDateTimeDetails(date, time, null);
 		
 		return responseForDate;
 	}
 	
-	private ArrayList<Entry> processFilterByDateTime(DateTimeValidator dateTimeValidator) {
-		Date inputDate = dateTimeValidator.getDate();
-		SelectiveFilter selectiveFilterByDateTime = new SelectiveFilter();
-		ArrayList<Entry> filteredEntries = selectiveFilterByDateTime.filterByDateTime(_filteredEntries, 
-				                                                                      inputDate);
+	private ArrayList<Entry> processFilterByDate(DateTimeValidator dateValidator) {
+		Date inputDate = dateValidator.getDate();
+		SelectiveFilter selectiveFilterByDate = new SelectiveFilter();
+		ArrayList<Entry> filteredEntries = selectiveFilterByDate.filterByDate(_filteredEntries, 
+				                                                              inputDate);
 		_logger.log(Level.INFO, "Successfully filtered " + String.valueOf(filteredEntries.size())
-                    + " entries by date time");
-		
+                    + " entries by date");
+
 		return filteredEntries;
 	}
-	
+		
 	private boolean isFilterByDateTime(ArrayList<Parameter> parameters) {
 		Parameter timeParameter = getTimeParameter(parameters);
 		if (timeParameter != null) {
@@ -254,6 +257,17 @@ public class SelectiveFilterProcessor {
 		}
 		
 		return responseForDateTime;
+	}
+	
+	private ArrayList<Entry> processFilterByDateTime(DateTimeValidator dateTimeValidator) {
+		Date inputDate = dateTimeValidator.getDate();
+		SelectiveFilter selectiveFilterByDateTime = new SelectiveFilter();
+		ArrayList<Entry> filteredEntries = selectiveFilterByDateTime.filterByDateTime(_filteredEntries, 
+				                                                                      inputDate);
+		_logger.log(Level.INFO, "Successfully filtered " + String.valueOf(filteredEntries.size())
+                    + " entries by date time");
+		
+		return filteredEntries;
 	}
 		
 	private boolean isFilterByDateTimeRange(ArrayList<Parameter> parameters) {
@@ -356,6 +370,9 @@ public class SelectiveFilterProcessor {
 		response.setIsSuccess(true);
 		int numOfFilteredEntries = _filteredEntries.size();
 		String userFeedback = String.valueOf(numOfFilteredEntries).concat(" ").concat(MESSAGE_FILTER_RESULTS);
+		if (numOfFilteredEntries == 1) {
+			userFeedback = userFeedback.replace("entries", "entry");
+		}
 		response.setFeedback(userFeedback);
 		response.setEntries(_filteredEntries);
 	}
