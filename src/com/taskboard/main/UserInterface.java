@@ -272,7 +272,7 @@ public class UserInterface extends JFrame {
 		_commandLabel.setFont(new Font("Sans-Serif", Font.BOLD, 16));
 		_commandLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
 		_commandLabel.setForeground(Color.WHITE);
-		_commandLabel.setBackground(new Color(0, 0, 0, 128));
+		_commandLabel.setBackground(new Color(0, 0, 0, 216));
 		_commandLabel.setOpaque(true);
 		constraints.weightx = 0.1;
 		constraints.weighty = 0.1;
