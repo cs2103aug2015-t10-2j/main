@@ -14,6 +14,7 @@ public class TransparentTextArea extends JTextArea {
 		super();
 		_transparency = transparency;
 		setOpaque(false);
+		setEditable(false);
 	}
 
 	public void setTransparency(float newTransparency) {
