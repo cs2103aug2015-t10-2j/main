@@ -33,7 +33,7 @@ public class UserInterface extends JFrame {
 	private static final String NORMAL_PRIORITY_FILE_PATH = "resources/images/NormalPriority.jpg";
 	private static final String PAST_ENTRY_FILE_PATH = "resources/images/Past.png";
 	private static final String REMINDER_FILE_PATH = "resources/images/Soon.png";
-	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Black-Rose-Cool-Desktop-Background.jpg";
+	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Nice-Island-background.jpg";
 	private static final int DEFAULT_REMINDER_HOUR = 1;
 	
 	private static final String MESSAGE_PROMPT_COMMAND = "Enter command below:";
