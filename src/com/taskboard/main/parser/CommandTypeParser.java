@@ -50,6 +50,9 @@ public class CommandTypeParser {
 			case "background":
 			case "bg":
 				return CommandType.BACKGROUND;
+			case "reminder":
+			case "remind":
+				return CommandType.REMINDER;
 			case "h":
 			case "help":
 			case "cmd":

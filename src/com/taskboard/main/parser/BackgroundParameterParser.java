@@ -10,7 +10,7 @@ import com.taskboard.main.ParameterType;
 
 public class BackgroundParameterParser implements ParameterParser {
 
-private Logger _logger;
+	private Logger _logger;
 	
 	public BackgroundParameterParser() {
 		_logger = GlobalLogger.getInstance().getLogger();

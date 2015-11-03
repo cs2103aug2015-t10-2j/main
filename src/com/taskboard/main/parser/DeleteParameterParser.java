@@ -9,7 +9,7 @@ import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.formatvalidator.DateFormatValidator;
 import com.taskboard.main.formatvalidator.FormatValidator;
-import com.taskboard.main.formatvalidator.IndexFormatValidator;
+import com.taskboard.main.formatvalidator.NumberFormatValidator;
 import com.taskboard.main.formatvalidator.PriorityFormatValidator;
 import com.taskboard.main.formatvalidator.TimeFormatValidator;
 
@@ -127,7 +127,7 @@ public class DeleteParameterParser implements ParameterParser {
 	
 	private static ArrayList<Parameter> convertToParameters(String parameterString, DelimiterType delimiterType) {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		FormatValidator indexFormatValidator = new IndexFormatValidator();
+		FormatValidator indexFormatValidator = new NumberFormatValidator();
 		FormatValidator dateFormatValidator = new DateFormatValidator();
 		FormatValidator timeFormatValidator = new TimeFormatValidator();
 		FormatValidator priorityFormatValidator = new PriorityFormatValidator();

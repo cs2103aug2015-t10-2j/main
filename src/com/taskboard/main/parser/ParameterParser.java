@@ -17,10 +17,10 @@ public interface ParameterParser {
 				String index = indexFormatValidator.toDefaultFormat(parameterString);
 				return new Parameter(ParameterType.INDEX, index);
 			} else {
-				throw new IllegalArgumentException("Invalid index format provided.");
+				throw new IllegalArgumentException("Invalid numeric format provided.");
 			}
 		} else {
-			throw new IllegalArgumentException("Invalid index format provided.");
+			throw new IllegalArgumentException("Invalid numeric format provided.");
 		}
 	}
 	

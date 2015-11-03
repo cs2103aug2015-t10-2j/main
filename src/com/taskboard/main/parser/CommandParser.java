@@ -18,6 +18,7 @@ import com.taskboard.main.InvalidCommand;
 import com.taskboard.main.NewCommand;
 import com.taskboard.main.OpenCommand;
 import com.taskboard.main.Parameter;
+import com.taskboard.main.ReminderCommand;
 import com.taskboard.main.RestoreCommand;
 import com.taskboard.main.UndoCommand;
 import com.taskboard.main.ViewCommand;
@@ -84,10 +85,15 @@ public class CommandParser {
 				_logger.log(Level.INFO, "Finished parsing UNDO command string");
 				return new UndoCommand(null);
 			case BACKGROUND:
-				_logger.log(Level.INFO, "Finished parsing BACKGROUND command string");
 				_parameterParser = new BackgroundParameterParser();
 				newCommandParameters = _parameterParser.parseParameters(commandString);
+				_logger.log(Level.INFO, "Finished parsing BACKGROUND command string");
 				return new BackgroundCommand(newCommandParameters);
+			case REMINDER:
+				_parameterParser = new ReminderParameterParser();
+				newCommandParameters = _parameterParser.parseParameters(commandString);
+				_logger.log(Level.INFO, "Finished parsing REMINDER command string");
+				return new ReminderCommand(newCommandParameters);
 			case HELP:
 				_logger.log(Level.INFO, "Finished parsing HELP command string");
 				return new HelpCommand(null);

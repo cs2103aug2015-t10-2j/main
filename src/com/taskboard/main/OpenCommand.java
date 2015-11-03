@@ -69,8 +69,8 @@ public class OpenCommand extends Command{
 	
 	private void updateUIPreferences() throws IOException {
 		String backgroundPath = _tempStorageManipulator.getBackgroundPath();
-		// int reminderHour = _tempStorageManipulator.getReminderHour();
+		int reminderHour = _tempStorageManipulator.getReminderHour();
 		UserInterface.getInstance().setBackgroundPath(backgroundPath);
-		// UserInterface.getInstance().setReminderHour(reminderHour);
+		UserInterface.getInstance().setReminderHour(reminderHour);
 	}
 }

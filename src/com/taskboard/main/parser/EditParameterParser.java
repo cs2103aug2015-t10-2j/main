@@ -10,7 +10,7 @@ import com.taskboard.main.Parameter;
 import com.taskboard.main.ParameterType;
 import com.taskboard.main.formatvalidator.DateFormatValidator;
 import com.taskboard.main.formatvalidator.FormatValidator;
-import com.taskboard.main.formatvalidator.IndexFormatValidator;
+import com.taskboard.main.formatvalidator.NumberFormatValidator;
 import com.taskboard.main.formatvalidator.PriorityFormatValidator;
 import com.taskboard.main.formatvalidator.TimeFormatValidator;
 
@@ -35,7 +35,7 @@ public class EditParameterParser implements ParameterParser {
 		}
 		
 		if (parameterString.trim().indexOf(" ") != -1) {
-			FormatValidator indexFormatValidator =  new IndexFormatValidator();
+			FormatValidator indexFormatValidator =  new NumberFormatValidator();
 			
 			String indexString = parameterString.substring(0, parameterString.indexOf(" ")).trim();
 			if (indexFormatValidator.isValidFormat(indexString)) {

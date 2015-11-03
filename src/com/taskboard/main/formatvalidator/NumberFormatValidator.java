@@ -1,8 +1,8 @@
 package com.taskboard.main.formatvalidator;
 
-public class IndexFormatValidator implements FormatValidator {
+public class NumberFormatValidator implements FormatValidator {
 	
-	public IndexFormatValidator() {
+	public NumberFormatValidator() {
 		
 	}
 	

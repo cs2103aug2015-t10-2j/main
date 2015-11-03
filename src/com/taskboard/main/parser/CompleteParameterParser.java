@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.formatvalidator.FormatValidator;
-import com.taskboard.main.formatvalidator.IndexFormatValidator;
+import com.taskboard.main.formatvalidator.NumberFormatValidator;
 
 public class CompleteParameterParser implements ParameterParser {
 
@@ -29,7 +29,7 @@ public class CompleteParameterParser implements ParameterParser {
 			throw new IllegalArgumentException("No parameters provided.");
 		}
 		
-		FormatValidator indexFormatValidator =  new IndexFormatValidator();
+		FormatValidator indexFormatValidator =  new NumberFormatValidator();
 		parameters.add(ParameterParser.getIndex(parameterString, indexFormatValidator));
 		
 		_logger.log(Level.INFO, "Finished parsing parameters of COMPLETE command");
