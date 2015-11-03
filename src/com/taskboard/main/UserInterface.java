@@ -121,12 +121,20 @@ public class UserInterface extends JFrame {
 		return _commandField;
 	}
 	
-	public String getBackgroundFilePath() {
+	public String getBackgroundPath() {
 		return _backgroundPath;
+	}
+	
+	public String getDefaultBackgroundFilePath() {
+		return DEFAULT_BACKGROUND_FILE_PATH;
 	}
 	
 	public int getReminderHour() {
 		return _reminderHour;
+	}
+	
+	public int getDefaultReminderHour() {
+		return DEFAULT_REMINDER_HOUR;
 	}
 	
 	public JTextPane getFeedbackArea() {
