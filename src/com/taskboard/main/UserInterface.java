@@ -2,6 +2,7 @@ package com.taskboard.main;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.text.DefaultCaret;
 
 import java.awt.*;
 
@@ -378,6 +379,8 @@ public class UserInterface extends JFrame {
 								deadlineLabel.add(reminderIcon);
 							}
 							
+							DefaultCaret deadlineCaret = (DefaultCaret) deadlineText.getCaret();
+							deadlineCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							deadlineText.setText(getDeadlineTaskDisplayString(currentEntry));
 							deadlineText.setFont(UIManager.getFont("Label.font"));
 							deadlineText.setLineWrap(true);
@@ -388,6 +391,8 @@ public class UserInterface extends JFrame {
 							
 							if (currentEntry.getCategoryParameter() != null) {
 								JTextArea categoryText = new JTextArea();
+								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
+								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
 								categoryText.setFont(UIManager.getFont("Label.font"));
 								categoryText.setLineWrap(true);
@@ -448,6 +453,8 @@ public class UserInterface extends JFrame {
 								eventLabel.add(reminderIcon);
 							}
 							
+							DefaultCaret eventCaret = (DefaultCaret) eventText.getCaret();
+							eventCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							eventText.setText(getEventDisplayString(currentEntry));
 							eventText.setFont(UIManager.getFont("Label.font"));
 							eventText.setLineWrap(true);
@@ -458,6 +465,8 @@ public class UserInterface extends JFrame {
 							
 							if (currentEntry.getCategoryParameter() != null) {
 								JTextArea categoryText = new JTextArea();
+								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
+								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
 								categoryText.setFont(UIManager.getFont("Label.font"));
 								categoryText.setLineWrap(true);
@@ -490,6 +499,8 @@ public class UserInterface extends JFrame {
 							floatLabel.add(floatIcon);
 							
 							TransparentTextArea floatText = new TransparentTextArea(1.0f);
+							DefaultCaret floatCaret = (DefaultCaret) floatText.getCaret();
+							floatCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							floatText.setText(getFloatingTaskDisplayString(currentEntry));
 							floatText.setFont(UIManager.getFont("Label.font"));
 							floatText.setLineWrap(true);
@@ -500,6 +511,8 @@ public class UserInterface extends JFrame {
 							
 							if (currentEntry.getCategoryParameter() != null) {
 								JTextArea categoryText = new JTextArea();
+								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
+								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
 								categoryText.setFont(UIManager.getFont("Label.font"));
 								categoryText.setLineWrap(true);
@@ -523,6 +536,8 @@ public class UserInterface extends JFrame {
 							constraints.gridwidth = 2;
 							JTextPane helpLabel = new JTextPane();
 							helpLabel.setEditable(false);
+							DefaultCaret helpCaret = (DefaultCaret) helpLabel.getCaret();
+							helpCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							helpLabel.setText(currentEntry.toUIString());
 							helpLabel.setBackground(new Color(255, 165, 0, LABEL_RELATIVE_TRANSPARENCY));
 							helpLabel.setOpaque(true);
