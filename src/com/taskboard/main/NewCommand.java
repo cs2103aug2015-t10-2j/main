@@ -8,6 +8,7 @@ public class NewCommand extends Command {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
+	private static final String TITLE_AFTER_LAUNCH = "TaskBoard: Your Revolutionary Task Manager (%1$s)";
 	
 	public NewCommand(ArrayList<Parameter> parameters) {
 		assert parameters != null;
@@ -37,6 +38,7 @@ public class NewCommand extends Command {
 		try {
 			_tempStorageManipulator.initialise(fileName);
 			updateUIPreferences();
+			updateUITitle(fileName);
 			setSuccessResponseForLaunchNew(responseForNew);
 			_logger.log(Level.INFO, "Generated success response for creating new file");
 		} catch (IllegalArgumentException ex) {
@@ -69,8 +71,13 @@ public class NewCommand extends Command {
 	
 	private void updateUIPreferences() throws IOException {
 		String backgroundPath = _tempStorageManipulator.getBackgroundPath();
-		// int reminderHour = _tempStorageManipulator.getReminderHour();
+		int reminderHour = _tempStorageManipulator.getReminderHour();
 		UserInterface.getInstance().setBackgroundPath(backgroundPath);
-		// UserInterface.getInstance().setReminderHour(reminderHour);
+		UserInterface.getInstance().setReminderHour(reminderHour);
 	}
+
+	private void updateUITitle(String title) {
+		UserInterface.getInstance().setTitle(String.format(TITLE_AFTER_LAUNCH, title));
+	}
+	
 }
