@@ -1,3 +1,4 @@
+//@@author A0123935E
 package com.taskboard.main.command;
 
 import java.util.ArrayList;
@@ -231,7 +232,7 @@ public abstract class Command {
 		}
 	}
 
-	protected String getDetailFromParameter(Parameter parameter) {
+	public String getDetailFromParameter(Parameter parameter) {
 		String detail = "";
 		if (parameter != null) {
 			detail = parameter.getParameterValue();
@@ -239,10 +240,6 @@ public abstract class Command {
 		
 		return detail;
 	}
-	
-//	protected String getFeedbackForUser(String feedbackMessage, String detail) {
-//		return String.format(feedbackMessage, detail);
-//	}
-		
+			
 	public abstract Response executeCommand(); 	
 }
