@@ -22,7 +22,11 @@ import com.taskboard.main.util.Response;
 public class LogicTest {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
+	private static final String MESSAGE_FOR_FILENAME = "Scheduler \"%1$s\" is ready for use.";
 	private static final String MESSAGE_AFTER_ADD = "Entry successfully added:";
+	private static final String MESSAGE_AFTER_EDIT = "Entry successfully updated:";
+	private static final String MESSAGE_FOR_UPDATED_ENTRY = "Entry after update =>";
+	private static final String MESSAGE_FOR_OLD_ENTRY = "Entry before update =>";
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
 	private static final String MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND = "No parameters provided.";
@@ -34,7 +38,6 @@ public class LogicTest {
 	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
-	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_EDITED_DETAILS = "No edited details provided.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
@@ -66,22 +69,44 @@ public class LogicTest {
 		testPreferenceFileForOpen = new File("testOpen" + ".pref");
 		testPreferenceFileForOpen.createNewFile();
 		
-		Entry event = new Entry();
-		event.addToParameters(new Parameter(ParameterType.INDEX, "1"));
-		event.addToParameters(new Parameter(ParameterType.NAME, "EE2020 Final Quiz"));
-		event.addToParameters(new Parameter(ParameterType.START_DATE, "14/11/2015"));
-		event.addToParameters(new Parameter(ParameterType.START_TIME, "10:00"));
-		event.addToParameters(new Parameter(ParameterType.END_DATE, "14/11/2015"));
-		event.addToParameters(new Parameter(ParameterType.END_TIME, "11:30"));
-		event.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
+		Entry event1 = new Entry();
+		event1.addToParameters(new Parameter(ParameterType.INDEX, "1"));
+		event1.addToParameters(new Parameter(ParameterType.NAME, "Quaterly Meeting"));
+		event1.addToParameters(new Parameter(ParameterType.START_DATE, "03/03/2016"));
+		event1.addToParameters(new Parameter(ParameterType.START_TIME, "10:00"));
+		event1.addToParameters(new Parameter(ParameterType.END_DATE, "03/03/2016"));
+		event1.addToParameters(new Parameter(ParameterType.END_TIME, "11:30"));
+		event1.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
+		event1.addToParameters(new Parameter(ParameterType.CATEGORY, "Finance"));
 		expectedEntries = new ArrayList<Entry>();
-		expectedEntries.add(event);
+		expectedEntries.add(event1);
 		
-		Entry floatingTask = new Entry();
-		floatingTask.addToParameters(new Parameter(ParameterType.INDEX, "2"));
-		floatingTask.addToParameters(new Parameter(ParameterType.NAME, "EE2021 Revision"));
-		floatingTask.addToParameters(new Parameter(ParameterType.CATEGORY, "Exam Prep"));
-		expectedEntries.add(floatingTask);
+		Entry event2 = new Entry();
+		event2.addToParameters(new Parameter(ParameterType.INDEX, "2"));
+		event2.addToParameters(new Parameter(ParameterType.NAME, "Annual Meeting"));
+		event2.addToParameters(new Parameter(ParameterType.START_DATE, "14/04/2016"));
+		event2.addToParameters(new Parameter(ParameterType.START_TIME, "09:00"));
+		event2.addToParameters(new Parameter(ParameterType.END_DATE, "14/04/2016"));
+		event2.addToParameters(new Parameter(ParameterType.END_TIME, "11:00"));
+		event2.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
+		event2.addToParameters(new Parameter(ParameterType.CATEGORY, "Marketing"));
+		expectedEntries.add(event2);
+		
+		Entry deadlineTask1 = new Entry();
+		deadlineTask1.addToParameters(new Parameter(ParameterType.INDEX, "3"));
+		deadlineTask1.addToParameters(new Parameter(ParameterType.NAME, "Complete annual feedback survey"));
+		deadlineTask1.addToParameters(new Parameter(ParameterType.DATE, "25/04/2016"));
+		deadlineTask1.addToParameters(new Parameter(ParameterType.TIME, "14:00"));
+		deadlineTask1.addToParameters(new Parameter(ParameterType.PRIORITY, "low"));
+		expectedEntries.add(deadlineTask1);
+		
+		Entry deadlineTask2 = new Entry();
+		deadlineTask2.addToParameters(new Parameter(ParameterType.INDEX, "4"));
+		deadlineTask2.addToParameters(new Parameter(ParameterType.NAME, "Annual company dinner"));
+		deadlineTask2.addToParameters(new Parameter(ParameterType.DATE, "02/05/2016"));
+		deadlineTask2.addToParameters(new Parameter(ParameterType.TIME, "18:00"));
+		deadlineTask2.addToParameters(new Parameter(ParameterType.CATEGORY, "Functions"));
+		expectedEntries.add(deadlineTask2);
 		
 		FileWriter addToFile = new FileWriter(testStorageFileForOpen);
 		for (int i = 0; i < expectedEntries.size(); i++) {
@@ -95,27 +120,35 @@ public class LogicTest {
 		logic.processCommand("open testOpen");
 	}
 		
-//	@Test
-//	public void testResponsesForNew() {
-//		Response actualResponse = logic.processCommand("new testNew");
-//		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
-//		testResponseEquality("test failure Response for creating file that already exists", expectedResponse,
-//				             actualResponse);
-//			
-//		actualResponse = logic.processCommand("new AcademicManager");		
-//		ArrayList<Entry> expectedEntriesForNew = new ArrayList<Entry>();
-//		expectedResponse = createSuccessResponse(MESSAGE_WELCOME, expectedEntriesForNew);
-//		testResponseEquality("test success response for creating new file", expectedResponse, actualResponse);
-//		File storageFile = new File("AcademicManager" + ".str");
-//		storageFile.delete();
-//		File archiveFile = new File("AcademicManager" + ".arc");
-//		archiveFile.delete();
-//		File preferenceFile = new File("AcademicManager" + ".pref");
-//		preferenceFile.delete();
-//		
-//		logic.processCommand("open testOpen");
-//	}
-//	
+	@Test
+	public void testResponsesForNew() {
+		Response actualResponse = logic.processCommand("new testNew");
+		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
+		testResponseEquality("test failure Response for creating file that already exists", expectedResponse,
+				             actualResponse);
+			
+		actualResponse = logic.processCommand("new AcademicManager");		
+		ArrayList<Entry> expectedEntriesForNew = new ArrayList<Entry>();
+		String feedback = getFeedbackForSuccessfulLaunch("AcademicManager");
+		expectedResponse = createSuccessResponse(feedback, expectedEntriesForNew);
+		testResponseEquality("test success response for creating new file", expectedResponse, actualResponse);
+		File storageFile = new File("AcademicManager" + ".str");
+		storageFile.delete();
+		File archiveFile = new File("AcademicManager" + ".arc");
+		archiveFile.delete();
+		File preferenceFile = new File("AcademicManager" + ".pref");
+		preferenceFile.delete();
+		
+		logic.processCommand("open testOpen");
+	}
+	
+	private String getFeedbackForSuccessfulLaunch(String fileName) {
+		String feedback = MESSAGE_WELCOME.concat("<br>");
+		feedback = feedback.concat(String.format(MESSAGE_FOR_FILENAME, fileName));
+		
+		return feedback;
+	}
+	
 	@Test
 	public void testResponsesForOpen() {
 		Response actualResponse = logic.processCommand("open TaskManager");
@@ -124,7 +157,8 @@ public class LogicTest {
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("open testOpen");
-		expectedResponse = createSuccessResponse(MESSAGE_WELCOME, expectedEntries);
+		String feedback = getFeedbackForSuccessfulLaunch("testOpen");
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
 		testResponseEquality("test success response for opening existing file", expectedResponse, actualResponse);
 	}
 	
@@ -160,11 +194,6 @@ public class LogicTest {
 		actualResponse = logic.processCommand("add Submit MA3264 by 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_DATE);
 		testResponseEquality("test failure response for not providing date", expectedResponse, actualResponse);
-		
-		actualResponse = logic.processCommand("add Submit MA3264 by 11/13/2015 10am");
-		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
-		testResponseEquality("test failure response for providing invalid date time", expectedResponse, 
-				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 03/11/2015 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
@@ -260,11 +289,19 @@ public class LogicTest {
 		testResponseEquality("test failure response for not providing edited details", 
 	                         expectedResponse, actualResponse);
 	
-		actualResponse = logic.processCommand("edit 4 EE2021 Revision for circuits");
+		actualResponse = logic.processCommand("edit 5 Annual company dinner at Marina Mandarin");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
 		testResponseEquality("test failure response for providing invalid index", expectedResponse, actualResponse);	
+	}
+	
+	
+	private String getFeedbackForSuccessfulEdit(Entry entryBeforeUpdate, Entry entryAfterUpdate) {
+		String feedback = MESSAGE_AFTER_EDIT.concat("<br>").concat("<br>").concat(MESSAGE_FOR_UPDATED_ENTRY);
+		feedback = feedback.concat("<br>").concat(entryAfterUpdate.toHTMLString());
+		feedback = feedback.concat("<br>").concat(MESSAGE_FOR_OLD_ENTRY);
+		feedback = feedback.concat("<br>").concat(entryBeforeUpdate.toHTMLString());
 		
-		logic.processCommand("edit 1 right now");
+		return feedback;
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
@@ -290,12 +327,12 @@ public class LogicTest {
 	
 	@After
 	public void terminate() {
-//		testStorageFileForNew.delete();
-//		testArchiveFileForNew.delete();
-//		testPreferenceFileForNew.delete();
-//		testStorageFileForOpen.delete();
-//		testArchiveFileForOpen.delete();
-//		testPreferenceFileForOpen.delete();
+		testStorageFileForNew.delete();
+		testArchiveFileForNew.delete();
+		testPreferenceFileForNew.delete();
+		testStorageFileForOpen.delete();
+		testArchiveFileForOpen.delete();
+		testPreferenceFileForOpen.delete();
 	}
 	
 //	@Test

@@ -398,12 +398,18 @@ public class EditCommand extends Command {
 
 	private void setSuccessResponseForEdit(Response response, Entry entryBeforeUpdate, Entry entryAfterUpdate) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_EDIT.concat("<br>").concat("<br>").concat(MESSAGE_FOR_UPDATED_ENTRY);
-		userFeedback = userFeedback.concat("<br>").concat(entryAfterUpdate.toHTMLString());
-		userFeedback = userFeedback.concat("<br>").concat(MESSAGE_FOR_OLD_ENTRY);
-		userFeedback = userFeedback.concat("<br>").concat(entryBeforeUpdate.toHTMLString());
+		String userFeedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate, entryAfterUpdate);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
+	}
+	
+	private String getFeedbackForSuccessfulEdit(Entry entryBeforeUpdate, Entry entryAfterUpdate) {
+		String feedback = MESSAGE_AFTER_EDIT.concat("<br>").concat("<br>").concat(MESSAGE_FOR_UPDATED_ENTRY);
+		feedback = feedback.concat("<br>").concat(entryAfterUpdate.toHTMLString());
+		feedback = feedback.concat("<br>").concat(MESSAGE_FOR_OLD_ENTRY);
+		feedback = feedback.concat("<br>").concat(entryBeforeUpdate.toHTMLString());
+		
+		return feedback;
 	}
 	
 	private void setFailureResponseForEdit(Response response) {
