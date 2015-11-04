@@ -15,11 +15,11 @@ import java.text.ParseException;
 
 import javax.imageio.ImageIO;
 
-import com.taskboard.main.Entry;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.Logic;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.Response;
+import com.taskboard.main.util.Entry;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.Response;
 
 import java.io.File;
 import java.io.IOException;

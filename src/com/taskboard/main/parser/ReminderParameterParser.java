@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.Parameter;
 import com.taskboard.main.formatvalidator.NumberFormatValidator;
+import com.taskboard.main.util.Parameter;
 
 public class ReminderParameterParser implements ParameterParser {
 

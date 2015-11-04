@@ -9,16 +9,15 @@ import org.junit.After;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 import com.taskboard.main.DateComparator;
-import com.taskboard.main.Entry;
 import com.taskboard.main.Logic;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.ParameterType;
-import com.taskboard.main.Response;
+import com.taskboard.main.util.Entry;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
+import com.taskboard.main.util.Response;
 
 public class LogicTest {
 	

@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.ParameterType;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
 
 public class BackgroundParameterParser implements ParameterParser {
 

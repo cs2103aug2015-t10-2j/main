@@ -3,6 +3,8 @@ package com.taskboard.main;
 import java.util.Comparator;
 import java.util.Date;
 
+import com.taskboard.main.util.Entry;
+
 public class DateComparator implements Comparator<Entry>{
 	private DateTimeValidator dateTimeValidator = new DateTimeValidator();
 	

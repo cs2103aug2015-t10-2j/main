@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import com.taskboard.main.CommandType;
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.Parameter;
 import com.taskboard.main.command.AddCommand;
 import com.taskboard.main.command.ArchiveCommand;
 import com.taskboard.main.command.BackgroundCommand;
@@ -23,6 +21,8 @@ import com.taskboard.main.command.ReminderCommand;
 import com.taskboard.main.command.RestoreCommand;
 import com.taskboard.main.command.UndoCommand;
 import com.taskboard.main.command.ViewCommand;
+import com.taskboard.main.util.CommandType;
+import com.taskboard.main.util.Parameter;
 
 public class CommandParser {
 	

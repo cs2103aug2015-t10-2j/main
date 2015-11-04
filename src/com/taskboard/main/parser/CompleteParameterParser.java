@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.Parameter;
 import com.taskboard.main.formatvalidator.FormatValidator;
 import com.taskboard.main.formatvalidator.NumberFormatValidator;
+import com.taskboard.main.util.Parameter;
 
 public class CompleteParameterParser implements ParameterParser {
 

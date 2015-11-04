@@ -5,6 +5,11 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.taskboard.main.util.Entry;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
+import com.taskboard.main.util.Response;
+
 public class SelectiveFilterProcessor {
 	
 	private static final String MESSAGE_FILTER_RESULTS = "entries found based on search results!";

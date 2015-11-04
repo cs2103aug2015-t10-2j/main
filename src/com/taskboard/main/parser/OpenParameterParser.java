@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.ParameterType;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
 
 public class OpenParameterParser implements ParameterParser {
 	

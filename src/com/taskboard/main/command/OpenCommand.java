@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.Response;
 import com.taskboard.main.TempStorageManipulator;
 import com.taskboard.main.userinterface.UserInterface;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.Response;
 
 public class OpenCommand extends Command{
 	

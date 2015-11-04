@@ -1,7 +1,7 @@
 //@@author A0126536E
 package com.taskboard.main.parser;
 
-import com.taskboard.main.CommandType;
+import com.taskboard.main.util.CommandType;
 
 public class CommandTypeParser {
 

@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import com.taskboard.main.*;
+import com.taskboard.main.util.Entry;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
 
 public class TempStorageManipulatorTest {
 	

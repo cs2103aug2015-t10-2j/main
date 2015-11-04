@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import com.taskboard.main.ArchiveHandler;
-import com.taskboard.main.Entry;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.ParameterType;
+import com.taskboard.main.util.Entry;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
 
 public class ArchiveHandlerTest {
 

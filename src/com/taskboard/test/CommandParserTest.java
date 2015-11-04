@@ -9,9 +9,6 @@ import java.util.Date;
 import java.util.Collections;
 import java.text.SimpleDateFormat;
 
-import com.taskboard.main.CommandType;
-import com.taskboard.main.Parameter;
-import com.taskboard.main.ParameterType;
 import com.taskboard.main.ParameterComparator;
 import com.taskboard.main.parser.AddParameterParser;
 import com.taskboard.main.parser.CommandTypeParser;
@@ -19,6 +16,9 @@ import com.taskboard.main.parser.CompleteParameterParser;
 import com.taskboard.main.parser.DeleteParameterParser;
 import com.taskboard.main.parser.EditParameterParser;
 import com.taskboard.main.parser.ViewParameterParser;
+import com.taskboard.main.util.CommandType;
+import com.taskboard.main.util.Parameter;
+import com.taskboard.main.util.ParameterType;
 
 public class CommandParserTest {
 	

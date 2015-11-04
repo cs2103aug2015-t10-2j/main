@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.taskboard.main.util.Entry;
+import com.taskboard.main.util.Parameter;
+
 public class SelectiveFilter {
 	
 	private static final String FORMAT_DEADLINE_TASK_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";

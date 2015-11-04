@@ -1,5 +1,5 @@
 //@@author A0126536E
-package com.taskboard.main;
+package com.taskboard.main.util;
 
 public enum ParameterType {
 	INDEX, NAME, NEW_NAME, DATE, TIME, START_DATE, START_TIME, END_DATE, 
