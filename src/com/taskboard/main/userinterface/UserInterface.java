@@ -340,6 +340,7 @@ public class UserInterface extends JFrame {
 					String lastDate = "";
 					
 					int curGridY = 0;
+					int lastHelpX = 1;
 					for (int i = 0; i < entries.size(); i++) {
 						Entry currentEntry = entries.get(i);
 						constraints.gridx = 0;
@@ -572,20 +573,28 @@ public class UserInterface extends JFrame {
 							
 							_displayArea.add(floatLabel, constraints);
 						} else {
-							constraints.gridx = 0;
-							constraints.gridy = curGridY++;
-							constraints.gridwidth = 2;
+							if (lastHelpX == 1) {
+								constraints.gridx = 0;
+								constraints.gridy = curGridY;
+								lastHelpX = 0;
+							} else {
+								constraints.gridx = 1;
+								constraints.gridy = curGridY++;
+								lastHelpX = 1;
+							}
+							constraints.gridwidth = 1;
 							JTextPane helpLabel = new JTextPane();
+							helpLabel.setContentType("text/html");
 							helpLabel.setEditable(false);
 							DefaultCaret helpCaret = (DefaultCaret) helpLabel.getCaret();
 							helpCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							helpLabel.setText(currentEntry.toUIString());
-							helpLabel.setBackground(new Color(255, 165, 0, LABEL_RELATIVE_TRANSPARENCY));
-							helpLabel.setOpaque(true);
-							helpLabel.setPreferredSize(new Dimension(480, 320));
+							helpLabel.setBounds(0, 0, 300, 32);
 							helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+							helpLabel.setBackground(new Color(255, 255, 153, LABEL_RELATIVE_TRANSPARENCY));
+							helpLabel.setOpaque(true);
+							helpLabel.setPreferredSize(new Dimension(300, 32));
 							_displayArea.add(helpLabel, constraints);
-							constraints.gridwidth = 1;
 						}
 					}
 					
