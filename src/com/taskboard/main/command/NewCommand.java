@@ -14,7 +14,9 @@ import com.taskboard.main.util.Response;
 public class NewCommand extends Command {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
+	private static final String MESSAGE_FOR_FILENAME = "Scheduler \"%1$s\" is ready for use.";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
+	
 	private static final String TITLE_AFTER_LAUNCH = "TaskBoard: Your Revolutionary Task Manager (%1$s)";
 	
 	public NewCommand(ArrayList<Parameter> parameters) {
@@ -46,7 +48,7 @@ public class NewCommand extends Command {
 			_tempStorageManipulator.initialise(fileName);
 			updateUIPreferences();
 			updateUITitle(fileName);
-			setSuccessResponseForLaunchNew(responseForNew);
+			setSuccessResponseForLaunchNew(responseForNew, fileName);
 			_logger.log(Level.INFO, "Generated success response for creating new file");
 		} catch (IllegalArgumentException ex) {
 			setFailureResponseForInvalidNew(responseForNew, ex);
@@ -60,10 +62,18 @@ public class NewCommand extends Command {
 		return responseForNew;
 	}
 	
-	private void setSuccessResponseForLaunchNew(Response response) {
+	private void setSuccessResponseForLaunchNew(Response response, String fileName) {
 		response.setIsSuccess(true);
-		response.setFeedback(MESSAGE_WELCOME);
+		String userFeedback = getFeedbackForSuccessfulLaunchNew(fileName);
+		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
+	}
+	
+	private String getFeedbackForSuccessfulLaunchNew(String fileName) {
+		String feedback = MESSAGE_WELCOME.concat("<br>");
+		feedback = feedback.concat(String.format(MESSAGE_FOR_FILENAME, fileName));
+		
+		return feedback;
 	}
 	
 	private void setFailureResponseForInvalidNew(Response response, IllegalArgumentException ex) {
@@ -78,13 +88,12 @@ public class NewCommand extends Command {
 	
 	private void updateUIPreferences() throws IOException {
 		String backgroundPath = _tempStorageManipulator.getBackgroundPath();
-		int reminderHour = _tempStorageManipulator.getReminderHour();
 		UserInterface.getInstance().setBackgroundPath(backgroundPath);
+		int reminderHour = _tempStorageManipulator.getReminderHour();
 		UserInterface.getInstance().setReminderHour(reminderHour);
 	}
 
 	private void updateUITitle(String title) {
 		UserInterface.getInstance().setTitle(String.format(TITLE_AFTER_LAUNCH, title));
 	}
-	
 }
