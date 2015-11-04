@@ -1,6 +1,9 @@
 package com.taskboard.main.formatvalidator;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateFormatValidator implements FormatValidator {
@@ -15,6 +18,7 @@ public class DateFormatValidator implements FormatValidator {
 	public static final int DAY_INDEX_FRIDAY = 5;
 	public static final int DAY_INDEX_SATURDAY = 6;
 	public static final int DAY_INDEX_SUNDAY = 7;
+	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
 	
 	// constructors
 	
@@ -47,7 +51,37 @@ public class DateFormatValidator implements FormatValidator {
 			case "sunday":
 				return true;
 			default:
-				if (token.length() == 10 && token.indexOf('/') == 2 && token.lastIndexOf('/') == 5) {
+				if (isMatchingDateFormat(new SimpleDateFormat("d/MM/yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM/yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM-yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM-yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d/MM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM yyyy"), token)) {
+					return true;
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM yyyy"), token)) {
 					return true;
 				} else {
 					return false;
@@ -56,7 +90,7 @@ public class DateFormatValidator implements FormatValidator {
 	}
 	
 	public String toDefaultFormat(String token) {
-		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 		Date today = new Date();
 		
 		token = token.toLowerCase();
@@ -90,8 +124,38 @@ public class DateFormatValidator implements FormatValidator {
 			case "sunday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SUNDAY));
 			default:
-				if (token.length() == 10 && token.indexOf('/') == 2 && token.lastIndexOf('/') == 5) {
-					return token;
+				if (isMatchingDateFormat(new SimpleDateFormat("d/MM/yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d/MM/yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM/yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd/MM/yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM-yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d-MM-yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM-yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd-MM-yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d/MM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d/MM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd/MM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d-MM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd-MM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d MMM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd MMM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d MMMMM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd MMMMM"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d MMM yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd MMM yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("d MMMMM yyyy"), token);
+				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM yyyy"), token)) {
+					return toStandardDateFormat(new SimpleDateFormat("dd MMMMM yyyy"), token);
 				} else {
 					return null;
 				}
@@ -113,6 +177,45 @@ public class DateFormatValidator implements FormatValidator {
 					  	  (dayIndex - todayDayIndex + 7));
 			assert (!today.after(target)); // today must be either before or the same day as target
 			return target;
+		}
+	}
+	
+	private static boolean isMatchingDateFormat(SimpleDateFormat dateFormat, String input) {
+		try {
+			String output = dateFormat.format(dateFormat.parse(input));
+			if (output.equalsIgnoreCase(input)) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (ParseException e) {
+			return false;
+		}
+	}
+	
+	private static String toStandardDateFormat(SimpleDateFormat dateFormat, String input) {
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+		try {
+			if (!dateFormat.toPattern().contains("y")) {
+				Calendar currentDate = Calendar.getInstance();
+				Calendar parsedDate = Calendar.getInstance();
+				
+				parsedDate.setTime(dateFormat.parse(input));
+				parsedDate.set(Calendar.YEAR, currentDate.get(Calendar.YEAR));
+				
+				if (parsedDate.before(currentDate)) {
+					parsedDate.set(Calendar.YEAR, currentDate.get(Calendar.YEAR) + 1);
+				}
+				
+				String output = defaultDateFormat.format(parsedDate.getTime());
+				return output;
+			} else {
+				String output = defaultDateFormat.format(dateFormat.parse(input));
+				return output;
+			}
+		} catch (ParseException e) {
+			assert false: "Code should not be reached.";
+			return null;
 		}
 	}
 	

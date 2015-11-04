@@ -31,14 +31,27 @@ public interface ParameterParser {
 	static ArrayList<Parameter> getStartDateTime(String parameterString, FormatValidator dateFormatValidator, 
 														 FormatValidator timeFormatValidator) {
 		ArrayList<Parameter> startDateTime = new ArrayList<Parameter>();
-
-		for (String parameterToken : parameterString.split(" ")) {
-			if (dateFormatValidator.isValidFormat(parameterToken)) {
-				String startDate = dateFormatValidator.toDefaultFormat(parameterToken);
+		String parameterTokens[] = parameterString.split(" ");
+		String compoundToken = "";
+		
+		for (int i = parameterTokens.length - 1; i >= 0; i--) {
+			compoundToken = (parameterTokens[i] + " " + compoundToken).trim();
+			if (dateFormatValidator.isValidFormat(parameterTokens[i])) {
+				String startDate = dateFormatValidator.toDefaultFormat(parameterTokens[i]);
 				startDateTime.add(new Parameter(ParameterType.START_DATE, startDate));
-			} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-				String startTime = timeFormatValidator.toDefaultFormat(parameterToken);
+				compoundToken = "";
+			} else if (dateFormatValidator.isValidFormat(compoundToken)) {
+				String startDate = dateFormatValidator.toDefaultFormat(compoundToken);
+				startDateTime.add(new Parameter(ParameterType.START_DATE, startDate));
+				compoundToken = "";
+			} else if (timeFormatValidator.isValidFormat(parameterTokens[i])) {
+				String startTime = timeFormatValidator.toDefaultFormat(parameterTokens[i]);
 				startDateTime.add(new Parameter(ParameterType.START_TIME, startTime));
+				compoundToken = "";
+			} else if (timeFormatValidator.isValidFormat(compoundToken)) {
+				String startTime = timeFormatValidator.toDefaultFormat(compoundToken);
+				startDateTime.add(new Parameter(ParameterType.START_TIME, startTime));
+				compoundToken = "";
 			}
 		}
 
@@ -48,14 +61,27 @@ public interface ParameterParser {
 	static ArrayList<Parameter> getEndDateTime(String parameterString, FormatValidator dateFormatValidator, 
 													   FormatValidator timeFormatValidator) {
 		ArrayList<Parameter> endDateTime = new ArrayList<Parameter>();
+		String parameterTokens[] = parameterString.split(" ");
+		String compoundToken = "";
 
-		for (String parameterToken : parameterString.split(" ")) {
-			if (dateFormatValidator.isValidFormat(parameterToken)) {
-				String endDate = dateFormatValidator.toDefaultFormat(parameterToken);
+		for (int i = parameterTokens.length - 1; i >= 0; i--) {
+			compoundToken = (parameterTokens[i] + " " + compoundToken).trim();
+			if (dateFormatValidator.isValidFormat(parameterTokens[i])) {
+				String endDate = dateFormatValidator.toDefaultFormat(parameterTokens[i]);
 				endDateTime.add(new Parameter(ParameterType.END_DATE, endDate));
-			} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-				String endTime = timeFormatValidator.toDefaultFormat(parameterToken);
+				compoundToken = "";
+			} else if (dateFormatValidator.isValidFormat(compoundToken)) {
+				String endDate = dateFormatValidator.toDefaultFormat(compoundToken);
+				endDateTime.add(new Parameter(ParameterType.END_DATE, endDate));
+				compoundToken = "";
+			} else if (timeFormatValidator.isValidFormat(parameterTokens[i])) {
+				String endTime = timeFormatValidator.toDefaultFormat(parameterTokens[i]);
 				endDateTime.add(new Parameter(ParameterType.END_TIME, endTime));
+				compoundToken = "";
+			} else if (timeFormatValidator.isValidFormat(compoundToken)) {
+				String endTime = timeFormatValidator.toDefaultFormat(compoundToken);
+				endDateTime.add(new Parameter(ParameterType.END_TIME, endTime));
+				compoundToken = "";
 			}
 		}
 
@@ -65,17 +91,30 @@ public interface ParameterParser {
 	static ArrayList<Parameter> getDueDateTime(String parameterString, FormatValidator dateFormatValidator, 
 													   FormatValidator timeFormatValidator) {
 		ArrayList<Parameter> dueDateTime = new ArrayList<Parameter>();
+		String parameterTokens[] = parameterString.split(" ");
+		String compoundToken = "";
 
-		for (String parameterToken : parameterString.split(" ")) {
-			if (dateFormatValidator.isValidFormat(parameterToken)) {
-				String date = dateFormatValidator.toDefaultFormat(parameterToken);
+		for (int i = parameterTokens.length - 1; i >= 0; i--) {
+			compoundToken = (parameterTokens[i] + " " + compoundToken).trim();
+			if (dateFormatValidator.isValidFormat(parameterTokens[i])) {
+				String date = dateFormatValidator.toDefaultFormat(parameterTokens[i]);
 				dueDateTime.add(new Parameter(ParameterType.DATE, date));
-			} else if (timeFormatValidator.isValidFormat(parameterToken)) {
-				String time = timeFormatValidator.toDefaultFormat(parameterToken);
+				compoundToken = "";
+			} else if (dateFormatValidator.isValidFormat(compoundToken)) {
+				String date = dateFormatValidator.toDefaultFormat(compoundToken);
+				dueDateTime.add(new Parameter(ParameterType.DATE, date));
+				compoundToken = "";
+			} else if (timeFormatValidator.isValidFormat(parameterTokens[i])) {
+				String time = timeFormatValidator.toDefaultFormat(parameterTokens[i]);
 				dueDateTime.add(new Parameter(ParameterType.TIME, time));
+				compoundToken = "";
+			} else if (timeFormatValidator.isValidFormat(compoundToken)) {
+				String time = timeFormatValidator.toDefaultFormat(compoundToken);
+				dueDateTime.add(new Parameter(ParameterType.TIME, time));
+				compoundToken = "";
 			}
 		}
-
+		
 		return dueDateTime;
 	}
 
