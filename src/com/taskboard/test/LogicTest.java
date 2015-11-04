@@ -36,6 +36,8 @@ public class LogicTest {
 	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_EDITED_DETAILS = "No edited details provided.";
+	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
 	
 	private File testStorageFileForNew;
 	private File testArchiveFileForNew;
@@ -89,27 +91,31 @@ public class LogicTest {
 			addToFile.flush();
 		}
 		addToFile.close();
+		
+		logic.processCommand("open testOpen");
 	}
 		
-	@Test
-	public void testResponsesForNew() {
-		Response actualResponse = logic.processCommand("new testNew");
-		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
-		testResponseEquality("test failure Response for creating file that already exists", expectedResponse,
-				             actualResponse);
-			
-		actualResponse = logic.processCommand("new AcademicManager");		
-		ArrayList<Entry> expectedEntriesForNew = new ArrayList<Entry>();
-		expectedResponse = createSuccessResponse(MESSAGE_WELCOME, expectedEntriesForNew);
-		testResponseEquality("test success response for creating new file", expectedResponse, actualResponse);
-		File storageFile = new File("AcademicManager" + ".str");
-		storageFile.delete();
-		File archiveFile = new File("AcademicManager" + ".arc");
-		archiveFile.delete();
-		File preferenceFile = new File("AcademicManager" + ".pref");
-		preferenceFile.delete();
-	}
-	
+//	@Test
+//	public void testResponsesForNew() {
+//		Response actualResponse = logic.processCommand("new testNew");
+//		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
+//		testResponseEquality("test failure Response for creating file that already exists", expectedResponse,
+//				             actualResponse);
+//			
+//		actualResponse = logic.processCommand("new AcademicManager");		
+//		ArrayList<Entry> expectedEntriesForNew = new ArrayList<Entry>();
+//		expectedResponse = createSuccessResponse(MESSAGE_WELCOME, expectedEntriesForNew);
+//		testResponseEquality("test success response for creating new file", expectedResponse, actualResponse);
+//		File storageFile = new File("AcademicManager" + ".str");
+//		storageFile.delete();
+//		File archiveFile = new File("AcademicManager" + ".arc");
+//		archiveFile.delete();
+//		File preferenceFile = new File("AcademicManager" + ".pref");
+//		preferenceFile.delete();
+//		
+//		logic.processCommand("open testOpen");
+//	}
+//	
 	@Test
 	public void testResponsesForOpen() {
 		Response actualResponse = logic.processCommand("open TaskManager");
@@ -123,7 +129,7 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void testResponsesForAdd() {
+	public void testResponsesForAdd() { 
 		Response actualResponse = logic.processCommand("add ");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
 		testResponseEquality("test failure response for not providing parameters after add command", 
@@ -242,6 +248,25 @@ public class LogicTest {
 		return feedback;
 	}
 	
+	@Test
+	public void testResponsesForEdit() {
+		Response actualResponse = logic.processCommand("edit ");
+		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
+		testResponseEquality("test failure response for not providing parameters after edit command", 
+				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("edit 2");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_EDITED_DETAILS);
+		testResponseEquality("test failure response for not providing edited details", 
+	                         expectedResponse, actualResponse);
+	
+		actualResponse = logic.processCommand("edit 4 EE2021 Revision for circuits");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
+		testResponseEquality("test failure response for providing invalid index", expectedResponse, actualResponse);	
+		
+		logic.processCommand("edit 1 right now");
+	}
+	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
 		Response response = new Response();
 		response.setIsSuccess(true);
@@ -265,12 +290,12 @@ public class LogicTest {
 	
 	@After
 	public void terminate() {
-		testStorageFileForNew.delete();
-		testArchiveFileForNew.delete();
-		testPreferenceFileForNew.delete();
-		testStorageFileForOpen.delete();
-		testArchiveFileForOpen.delete();
-		testPreferenceFileForOpen.delete();
+//		testStorageFileForNew.delete();
+//		testArchiveFileForNew.delete();
+//		testPreferenceFileForNew.delete();
+//		testStorageFileForOpen.delete();
+//		testArchiveFileForOpen.delete();
+//		testPreferenceFileForOpen.delete();
 	}
 	
 //	@Test

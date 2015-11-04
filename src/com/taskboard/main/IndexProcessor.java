@@ -12,6 +12,7 @@ import com.taskboard.main.util.Response;
 public class IndexProcessor {
 	
 	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
+	
 	private static final int MIN_ENTRY_INDEX = 1;
 	
 	// attribute

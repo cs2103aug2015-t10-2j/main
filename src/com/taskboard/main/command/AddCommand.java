@@ -143,9 +143,15 @@ public class AddCommand extends Command {
 	
 	private void setSuccessResponseForAdd(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		String userFeedback = getFeedbackforSuccessfulAdd(entry);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
+	}
+	
+	private String getFeedbackforSuccessfulAdd(Entry entry) {
+		String feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		
+		return feedback;
 	}
 	
 	private void setFailureResponseForAdd(Response response) {
