@@ -43,7 +43,7 @@ public class UserInterface extends JFrame {
 	private static final String MESSAGE_PROMPT_COMMAND = "Enter command below:";
 	private static final String MESSAGE_NO_FEEDBACK = "No feedback to display.";
 	
-	private static final float DISPLAY_AREA_RELATIVE_TRANSPARENCY = 0.9f;
+	private static final float DISPLAY_AREA_RELATIVE_TRANSPARENCY = 0.8f;
 	private static final int LABEL_RELATIVE_TRANSPARENCY = 255;
 	
 	private static final String UP_BUTTON_CODE = "UP";
@@ -440,7 +440,7 @@ public class UserInterface extends JFrame {
 								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
 								categoryText.setBounds(320, 27, 160, 37);
 								categoryText.setPreferredSize(new Dimension(160, 37));
-								categoryText.setBackground(new Color(245, 182, 193, LABEL_RELATIVE_TRANSPARENCY));
+								categoryText.setBackground(new Color(255, 162, 173, LABEL_RELATIVE_TRANSPARENCY));
 								categoryText.setOpaque(true);
 								deadlineLabel.add(categoryText);
 							}
@@ -514,7 +514,7 @@ public class UserInterface extends JFrame {
 								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
 								categoryText.setBounds(320, 27, 160, 37);
 								categoryText.setPreferredSize(new Dimension(160, 37));
-								categoryText.setBackground(new Color(165, 245, 153, LABEL_RELATIVE_TRANSPARENCY));
+								categoryText.setBackground(new Color(135, 255, 123, LABEL_RELATIVE_TRANSPARENCY));
 								categoryText.setOpaque(true);
 								eventLabel.add(categoryText);
 							}
@@ -560,7 +560,7 @@ public class UserInterface extends JFrame {
 								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
 								categoryText.setBounds(320, 27, 160, 37);
 								categoryText.setPreferredSize(new Dimension(160, 37));
-								categoryText.setBackground(new Color(188, 245, 240, LABEL_RELATIVE_TRANSPARENCY));
+								categoryText.setBackground(new Color(168, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 								categoryText.setOpaque(true);
 								floatLabel.add(categoryText);
 							}
