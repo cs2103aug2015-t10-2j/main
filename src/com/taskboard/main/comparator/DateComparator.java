@@ -1,8 +1,9 @@
-package com.taskboard.main;
+package com.taskboard.main.comparator;
 
 import java.util.Comparator;
 import java.util.Date;
 
+import com.taskboard.main.DateTimeValidator;
 import com.taskboard.main.util.Entry;
 
 public class DateComparator implements Comparator<Entry>{

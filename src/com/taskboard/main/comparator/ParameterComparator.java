@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.main.comparator;
 
 import java.util.Comparator;
 

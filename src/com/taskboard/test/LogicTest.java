@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.taskboard.main.DateComparator;
 import com.taskboard.main.Logic;
+import com.taskboard.main.comparator.DateComparator;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;

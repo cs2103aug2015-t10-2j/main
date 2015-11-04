@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.*;
 
+import com.taskboard.main.comparator.DateComparator;
+import com.taskboard.main.comparator.ParameterComparator;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
