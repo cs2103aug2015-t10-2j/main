@@ -589,11 +589,11 @@ public class UserInterface extends JFrame {
 							DefaultCaret helpCaret = (DefaultCaret) helpLabel.getCaret();
 							helpCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							helpLabel.setText(currentEntry.toUIString());
-							helpLabel.setBounds(0, 0, 300, 32);
+							helpLabel.setBounds(0, 0, 310, 32);
 							helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							helpLabel.setBackground(new Color(255, 255, 153, LABEL_RELATIVE_TRANSPARENCY));
 							helpLabel.setOpaque(true);
-							helpLabel.setPreferredSize(new Dimension(300, 32));
+							helpLabel.setPreferredSize(new Dimension(310, 32));
 							_displayArea.add(helpLabel, constraints);
 						}
 					}

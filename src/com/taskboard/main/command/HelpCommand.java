@@ -37,10 +37,10 @@ public class HelpCommand extends Command {
 		helpList.get(7).addToParameters(new Parameter(null, "Add a side task"));
 		
 		helpList.get(8).addToParameters(new Parameter(null, "<b>edit</b> INDEX SPECIFICATIONS <font color='red'>*</font>"));
-		helpList.get(9).addToParameters(new Parameter(null, "Edit entry with the specified index"));
+		helpList.get(9).addToParameters(new Parameter(null, "Edit entry with specified index"));
 		
 		helpList.get(10).addToParameters(new Parameter(null, "<b>delete</b> INDEX"));
-		helpList.get(11).addToParameters(new Parameter(null, "Delete entry with the specified index"));
+		helpList.get(11).addToParameters(new Parameter(null, "Delete entry with specified index"));
 		
 		helpList.get(12).addToParameters(new Parameter(null, "<b>delete</b> SPECIFICATIONS <font color='red'>*</font>"));
 		helpList.get(13).addToParameters(new Parameter(null, "Delete entries that meet the specifications"));
@@ -49,10 +49,10 @@ public class HelpCommand extends Command {
 		helpList.get(15).addToParameters(new Parameter(null, "View entries that meet the specifications"));
 		
 		helpList.get(16).addToParameters(new Parameter(null, "<b>complete</b> INDEX"));
-		helpList.get(17).addToParameters(new Parameter(null, "Mark entry with the specified index as completed"));
+		helpList.get(17).addToParameters(new Parameter(null, "Mark entry with specified index as completed"));
 		
 		helpList.get(18).addToParameters(new Parameter(null, "<b>restore</b> INDEX"));
-		helpList.get(19).addToParameters(new Parameter(null, "Restore entry with the specified index from archive"));
+		helpList.get(19).addToParameters(new Parameter(null, "Restore entry with specified index from archive"));
 		
 		helpList.get(20).addToParameters(new Parameter(null, "<b>archive</b>"));
 		helpList.get(21).addToParameters(new Parameter(null, "Display archived entries"));
