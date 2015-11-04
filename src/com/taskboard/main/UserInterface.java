@@ -25,7 +25,7 @@ import java.net.MalformedURLException;
 
 public class UserInterface extends JFrame {
 	
-	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
+	private static final String DEFAULT_TITLE = "TaskBoard: Your Revolutionary Task Manager";
 	private static final String TITLE_IMAGE_FILE_PATH = "resources/images/TaskBoard-title2-v03.png";
 	private static final String HIGH_PRIORITY_FILE_PATH = "resources/images/HighPriority.jpg";
 	private static final String MEDIUM_PRIORITY_FILE_PATH = "resources/images/MediumPriority.jpg";
@@ -33,7 +33,7 @@ public class UserInterface extends JFrame {
 	private static final String NORMAL_PRIORITY_FILE_PATH = "resources/images/NormalPriority.jpg";
 	private static final String PAST_ENTRY_FILE_PATH = "resources/images/Past.png";
 	private static final String REMINDER_FILE_PATH = "resources/images/Soon.png";
-	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/Nice-Island-background.jpg";
+	private static final String DEFAULT_BACKGROUND_FILE_PATH = "resources/images/cool-backround-279.jpg";
 	private static final int DEFAULT_REMINDER_HOUR = 1;
 	
 	private static final String MESSAGE_PROMPT_COMMAND = "Enter command below:";
@@ -60,6 +60,7 @@ public class UserInterface extends JFrame {
 	private static UserInterface _instance;
 	private Logic _logic;
 	private JFrame _frame;
+	private String _title;
 	private JLabel _backgroundPane;
 	private JPanel _displayArea;
 	private JScrollPane _displayScroll;
@@ -67,9 +68,10 @@ public class UserInterface extends JFrame {
 	private JTextPane _feedbackArea;
 	private JScrollPane _feedbackScroll;
 	private JScrollBar _verticalFeedbackScroll;
+	private JPanel _commandArea;
 	private JLabel _commandLabel;
 	private JTextField _commandField;
-	private JLabel _title;
+	private JLabel _titleLabel;
 	private String _backgroundPath;
 	private ImageIcon _backgroundImageIcon;
 	private int _reminderHour;
@@ -77,7 +79,8 @@ public class UserInterface extends JFrame {
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
 	private UserInterface() {
-		_frame = new JFrame(TITLE);
+		_title = DEFAULT_TITLE;
+		_frame = new JFrame(_title);
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		_frame.setPreferredSize(new Dimension(800, 720));
 		_frame.addComponentListener(new WindowResizeListener());
@@ -120,16 +123,33 @@ public class UserInterface extends JFrame {
 		return _commandField;
 	}
 	
-	public String getBackgroundFilePath() {
+	public String getBackgroundPath() {
 		return _backgroundPath;
+	}
+	
+	public String getDefaultBackgroundFilePath() {
+		return DEFAULT_BACKGROUND_FILE_PATH;
 	}
 	
 	public int getReminderHour() {
 		return _reminderHour;
 	}
 	
+	public int getDefaultReminderHour() {
+		return DEFAULT_REMINDER_HOUR;
+	}
+	
 	public JTextPane getFeedbackArea() {
 		return _feedbackArea;
+	}
+	
+	public void setTitle(String newTitle) {
+		_title = newTitle;
+		updateTitle();
+	}
+	
+	public void updateTitle() {
+		_frame.setTitle(_title);
 	}
 	
 	public void setBackgroundPath(String newBackgroundFilePath) throws IOException {
@@ -186,13 +206,13 @@ public class UserInterface extends JFrame {
 		_logic = new Logic();
 		
 		ImageIcon titleImage = new ImageIcon(TITLE_IMAGE_FILE_PATH);
-		_title = new JLabel(titleImage);
+		_titleLabel = new JLabel(titleImage);
 		constraints.anchor = GridBagConstraints.PAGE_START;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.1;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		pane.add(_title, constraints);
+		pane.add(_titleLabel, constraints);
 		
 		_displayArea = new TransparentPanel(DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayArea.setBackground(Color.WHITE);
@@ -243,28 +263,42 @@ public class UserInterface extends JFrame {
 		InputMap feedbackScrollIM = _verticalFeedbackScroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		feedbackScrollIM.put(KeyStroke.getKeyStroke(PAGE_DOWN_BUTTON_CODE), POSITIVE_SCROLL_CODE);
 		feedbackScrollIM.put(KeyStroke.getKeyStroke(PAGE_UP_BUTTON_CODE), NEGATIVE_SCROLL_CODE);
-
-		_commandLabel = new JLabel(MESSAGE_PROMPT_COMMAND);
-		_commandLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 14));
-		_commandLabel.setForeground(Color.WHITE);
-		_commandLabel.setBackground(new Color(0, 0, 0, 96));
-		_commandLabel.setOpaque(true);
-		_commandLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+		
+		_commandArea = new TransparentPanel(DISPLAY_AREA_RELATIVE_TRANSPARENCY);
+		_commandArea.setLayout(new GridBagLayout());
+		_commandArea.setPreferredSize(new Dimension(640, 50));
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
-		constraints.weighty = 0.1;
+		constraints.weighty = 0.2;
 		constraints.gridx = 0;
 		constraints.gridy = 3;
-		pane.add(_commandLabel, constraints);
+		pane.add(_commandArea, constraints);
+		
+		constraints = new GridBagConstraints();
+		constraints.anchor = GridBagConstraints.PAGE_START;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		
+		_commandLabel = new JLabel(MESSAGE_PROMPT_COMMAND);
+		_commandLabel.setHorizontalAlignment(JLabel.CENTER);
+		_commandLabel.setFont(new Font("Sans-Serif", Font.BOLD, 16));
+		_commandLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+		_commandLabel.setForeground(Color.WHITE);
+		_commandLabel.setBackground(new Color(0, 0, 0, 216));
+		_commandLabel.setOpaque(true);
+		constraints.weightx = 0.1;
+		constraints.weighty = 0.1;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		_commandArea.add(_commandLabel, constraints);
 
 		_commandField = new JTextField();
 		_commandField.setEditable(true);
 		_commandField.addKeyListener(new ShortcutListener());
-		constraints.weightx = 0.0;
+		constraints.weightx = 0.1;
 		constraints.weighty = 0.1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
-		constraints.gridy = 4;
-		pane.add(_commandField, constraints);
+		constraints.gridy = 1;
+		_commandArea.add(_commandField, constraints);
 
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

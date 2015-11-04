@@ -7,6 +7,10 @@ import java.util.logging.Logger;
 
 public class SelectiveFilter {
 	
+	private static final String FORMAT_DEADLINE_TASK_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";
+	private static final String FORMAT_EVENT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE = "00:00";
+	private static final String FORMAT_EVENT_DEFAULT_END_TIME_FOR_FILTER_BY_DATE = "23:59";
+	
 	// attribute
 	
 	private Logger _logger;
@@ -67,6 +71,77 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
+	public ArrayList<Entry> filterByDate(ArrayList<Entry> entries, Date inputDate) {
+		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
+		for (int i = 0; i < entries.size(); i++) {
+			Entry entry = entries.get(i);
+			Parameter dateParameter = entry.getDateParameter();
+			Parameter startDateParameter = entry.getStartDateParameter();
+			Parameter endDateParameter = entry.getEndDateParameter();
+			
+			boolean hasDeadlineDateMatched = false;
+			boolean hasEventDateMatched = false;
+			if (dateParameter != null) {
+				_logger.log(Level.INFO, "Start checking whether to filter deadline task: "
+					        + entry.getNameParameter().getParameterValue());
+				hasDeadlineDateMatched = hasDeadlineDateMatched(dateParameter, inputDate);
+			} else if (startDateParameter != null) {
+				_logger.log(Level.INFO, "Start checking whether to filter event: "
+					        + entry.getNameParameter().getParameterValue());
+			    hasEventDateMatched = hasEventDateMatched(startDateParameter, endDateParameter,  
+					                                      inputDate); 		
+			}
+			
+			if (hasDeadlineDateMatched || hasEventDateMatched) {
+				filteredEntries.add(entry);
+				_logger.log(Level.INFO, "Successfully filtered entry by date: " 
+		                    + entry.getNameParameter().getParameterValue());
+			}
+		}
+			
+		return filteredEntries;
+	}
+		
+	private boolean hasDeadlineDateMatched(Parameter dateParameter, Date referenceDate) {
+		String date = dateParameter.getParameterValue();
+		String time = FORMAT_DEADLINE_TASK_DEFAULT_TIME_FOR_FILTER_BY_DATE;
+		Date deadlineDate = retrieveDateFromDateTimeDetails(date, time);
+		if (deadlineDate.equals(referenceDate)) {
+			_logger.log(Level.INFO, "Deadline task successfully satisfied filter by date");
+			return true;
+		}
+	
+		return false;
+	}
+	
+	private Date retrieveDateFromDateTimeDetails(String date, String time) {
+		DateTimeValidator dateTimeValidator = new DateTimeValidator();
+		dateTimeValidator.validateDateTimeDetails(date, time, null);
+		Date convertedDate = dateTimeValidator.getDate();
+		
+		return convertedDate;
+	}
+	
+	private boolean hasEventDateMatched(Parameter startDateParameter, Parameter endDateParameter,
+			                            Date referenceDate) {
+		String startDate = startDateParameter.getParameterValue();
+		String startTime = FORMAT_EVENT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE;
+		String endDate = endDateParameter.getParameterValue();
+		String endTime = FORMAT_EVENT_DEFAULT_END_TIME_FOR_FILTER_BY_DATE;
+		
+		Date eventStartDate = retrieveDateFromDateTimeDetails(startDate, startTime);
+		int referenceDateIndicatorForEventStartDate = eventStartDate.compareTo(referenceDate);
+		Date eventEndDate = retrieveDateFromDateTimeDetails(endDate, endTime);
+		int referenceDateIndicatorForEventEndDate = eventEndDate.compareTo(referenceDate);
+		if (referenceDateIndicatorForEventStartDate <= 0 && referenceDateIndicatorForEventEndDate >= 0) {
+			_logger.log(Level.INFO, "Event successfully satisfied filter by date");
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
 	public ArrayList<Entry> filterByDateTime(ArrayList<Entry> entries, Date inputDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		for (int i = 0; i < entries.size(); i++) {
@@ -119,15 +194,7 @@ public class SelectiveFilter {
 	
 		return false;
 	}
-			
-	private Date retrieveDateFromDateTimeDetails(String date, String time) {
-		DateTimeValidator dateTimeValidator = new DateTimeValidator();
-		dateTimeValidator.validateDateTimeDetails(date, time, null);
-		Date convertedDate = dateTimeValidator.getDate();
-		
-		return convertedDate;
-	}
-	
+				
 	private boolean hasEventDateTimeMatched(Parameter startDateParameter, Parameter startTimeParameter,
 			                                Parameter endDateParameter, Parameter endTimeParameter, 
 			                                Date referenceDate) {

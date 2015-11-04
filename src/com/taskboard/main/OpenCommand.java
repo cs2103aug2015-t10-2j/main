@@ -1,7 +1,6 @@
 package com.taskboard.main;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -9,6 +8,7 @@ public class OpenCommand extends Command{
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_OPEN = "Failed to open file.";
+	private static final String TITLE_AFTER_LAUNCH = "TaskBoard: Your Revolutionary Task Manager (%1$s)";
 	
 	public OpenCommand(ArrayList<Parameter> parameters) {
 		assert parameters != null;
@@ -38,6 +38,7 @@ public class OpenCommand extends Command{
 		try {
 			_tempStorageManipulator.repopulate(fileName);
 			updateUIPreferences();
+			updateUITitle(fileName);
 			setSuccessResponseForLaunchOpen(responseForOpen);
 			_logger.log(Level.INFO, "Generated success response for opening existing file");
 		} catch (IllegalArgumentException ex) {
@@ -73,4 +74,9 @@ public class OpenCommand extends Command{
 		UserInterface.getInstance().setBackgroundPath(backgroundPath);
 		UserInterface.getInstance().setReminderHour(reminderHour);
 	}
+
+	private void updateUITitle(String title) {
+		UserInterface.getInstance().setTitle(String.format(TITLE_AFTER_LAUNCH, title));
+	}
+	
 }

@@ -26,7 +26,9 @@ public class ShortcutListener implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-			UserInterface.getInstance().executeInputCommand();
+			if (!UserInterface.getInstance().getCommandField().getText().isEmpty()) {
+				UserInterface.getInstance().executeInputCommand();
+			}
 		} else if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
 			pressed.add(new Integer(KeyEvent.VK_CONTROL));
 		} else if (pressed.contains(new Integer(KeyEvent.VK_CONTROL))) {
