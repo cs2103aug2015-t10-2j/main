@@ -10,6 +10,7 @@ import com.taskboard.main.TempStorageManipulator;
 import com.taskboard.main.userinterface.UserInterface;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
+import com.taskboard.main.util.Entry;
 
 public class NewCommand extends Command {
 	
@@ -38,7 +39,14 @@ public class NewCommand extends Command {
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		
-		return getResponseForLaunch(fileName);
+		Response responseForNew = getResponseForLaunch(fileName);
+		
+		if (responseForNew.isSuccess()) {
+			_tempStorageManipulator.setLastTempStorage(new ArrayList<Entry>());
+			_tempStorageManipulator.setLastTempArchive(new ArrayList<Entry>());
+		}
+		
+		return responseForNew;
 	}
 	
 	private Response getResponseForLaunch(String fileName) {

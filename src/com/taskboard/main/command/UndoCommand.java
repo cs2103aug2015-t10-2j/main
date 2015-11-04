@@ -22,6 +22,8 @@ public class UndoCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		Response responseForUndo = new Response();
+		
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
@@ -40,10 +42,7 @@ public class UndoCommand extends Command {
 			lastTempArchive.add(new Entry(entry));
 		}
 		
-		Response responseForUndo = new Response();
-		
-		if (lastTempStorage != null && lastTempArchive != null) {
-			System.out.println(_tempStorageManipulator.getTempStorage().toString() + _tempStorageManipulator.getLastTempStorage().toString());
+		if (!lastTempStorage.isEmpty() && !lastTempArchive.isEmpty()) {
 			responseForUndo.setIsSuccess(true);
 			responseForUndo.setFeedback(MESSAGE_UNDO_SUCCESS);
 			responseForUndo.setEntries(lastTempStorage);
