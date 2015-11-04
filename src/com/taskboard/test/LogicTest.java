@@ -30,6 +30,13 @@ public class LogicTest {
 	private static final String MESSAGE_ERROR_FOR_EMPTY_PRI_PARAMETER = "Empty pri parameter provided.";
 	private static final String MESSAGE_ERROR_FOR_EMPTY_BY_PARAMETER = "Empty by parameter provided.";
 	private static final String MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER = "Empty cat parameter provided.";
+	private static final String MESSAGE_ERROR_FOR_EMPTY_FROM_PARAMETER = "Empty from parameter provided.";
+	private static final String MESSAGE_ERROR_FOR_EMPTY_TO_PARAMETER = "Empty to parameter provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
+	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
+	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	
 	private File testStorageFileForNew;
 	private File testArchiveFileForNew;
@@ -143,9 +150,61 @@ public class LogicTest {
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_BY_PARAMETER);
 		testResponseEquality("test failure response for empty by parameter", expectedResponse, actualResponse);
 		
+		actualResponse = logic.processCommand("add Submit MA3264 by 10am");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_DATE);
+		testResponseEquality("test failure response for no date", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Submit MA3264 by 11/13/2015 10am");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
+		testResponseEquality("test failure response for invalid date time", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Submit MA3264 by 03/11/2015 10am");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
+		testResponseEquality("test failure response for past date time for deadline task", expectedResponse, 
+				             actualResponse);
+		
 		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER);
 		testResponseEquality("test failure response for empty cat parameter", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat Mathematics");
+		Entry deadlineTask = new Entry();
+		deadlineTask.addToParameters(new Parameter(ParameterType.INDEX, ""));
+		deadlineTask.addToParameters(new Parameter(ParameterType.NAME, "Submit MA3264"));
+		deadlineTask.addToParameters(new Parameter(ParameterType.DATE, "06/11/2015"));
+		deadlineTask.addToParameters(new Parameter(ParameterType.TIME, "10:00"));
+		deadlineTask.addToParameters(new Parameter(ParameterType.CATEGORY, "Mathematics"));
+		expectedEntries.add(deadlineTask);
+		updateSortingOfEntries(expectedEntries);
+		feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(deadlineTask.toHTMLString());
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for adding deadline task with category", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("add Final Exam from");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_FROM_PARAMETER);
+		testResponseEquality("test failure response for empty from parameter", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
+		testResponseEquality("test failure response for no end date time", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_TO_PARAMETER);
+		testResponseEquality("test failure response for empty to parameter", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Final Exam from 1pm to 3pm");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_START_DATE);
+		testResponseEquality("test failure response for no start date", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 12pm");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
+		testResponseEquality("test failure response for past date time for event", expectedResponse, 
+				             actualResponse);
+		
+//		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 3pm pri H cat EE2020");
+//		Entry event = new Entry();
+		
 	}
 	
 	private void updateSortingOfEntries(ArrayList<Entry> entries) {

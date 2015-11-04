@@ -10,6 +10,7 @@ public class SelectiveFilterProcessor {
 	private static final String MESSAGE_FILTER_RESULTS = "entries found based on search results!";
 	
 	private static final String FORMAT_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";
+	private static final String FORMAT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE_TIME_RANGE = "00:00";
 	
 	// attribute
 	
@@ -331,6 +332,10 @@ public class SelectiveFilterProcessor {
 		String endDate = getDetailFromParameter(getEndDateParameter(parameters));
 		String endTime = getDetailFromParameter(getEndTimeParameter(parameters));
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
+		if (startTime.isEmpty()) {
+			startTime = FORMAT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE_TIME_RANGE; 
+		}
+		
 		_logger.log(Level.INFO, "Start processing range of date time details");
 		Response responseForDateTime = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
 				                                                                          endDate, endTime);
