@@ -30,7 +30,7 @@ public class SelectiveFilter {
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			String entryName = entry.getNameParameter().getParameterValue();
-			if (entryName.contains(searchKey)) {
+			if (entryName.toLowerCase().contains(searchKey.toLowerCase())) {
 				filteredEntries.add(entry);
 				_logger.log(Level.INFO, "Successfully filtered entry by name: " + entryName);
 			}
@@ -64,7 +64,7 @@ public class SelectiveFilter {
 			Parameter categoryParameter = entry.getCategoryParameter();
 			if (categoryParameter != null) {
 				String category = categoryParameter.getParameterValue();
-				if (category.equals(searchCategory)) {
+				if (category.equalsIgnoreCase(searchCategory)) {
 					filteredEntries.add(entry);
 					_logger.log(Level.INFO, "Successfully filtered entry by category: " 
 				                + entry.getNameParameter().getParameterValue());
