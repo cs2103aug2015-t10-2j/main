@@ -8,7 +8,7 @@ import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.Parameter;
 import com.taskboard.main.Response;
 import com.taskboard.main.TempStorageManipulator;
-import com.taskboard.main.UserInterface;
+import com.taskboard.main.userinterface.UserInterface;
 
 public class OpenCommand extends Command{
 	

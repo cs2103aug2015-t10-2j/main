@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.main.userinterface;
 
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;

@@ -1,24 +1,27 @@
-package com.taskboard.main;
+package com.taskboard.main.userinterface;
 
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.text.DefaultCaret;
 
 import java.awt.*;
-
 import java.util.logging.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
-
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import javax.imageio.ImageIO;
 
+import com.taskboard.main.Entry;
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.Logic;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.Response;
+
 import java.io.File;
 import java.io.IOException;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;

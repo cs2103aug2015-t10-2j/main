@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.main.userinterface;
 
 import java.awt.event.*;
 

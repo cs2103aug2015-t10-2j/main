@@ -1,20 +1,20 @@
-package com.taskboard.main;
+package com.taskboard.main.userinterface;
+
+import javax.swing.JPanel;
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.JTextArea;
+public class TransparentPanel extends JPanel {
 
-public class TransparentTextArea extends JTextArea {
-	
-	static final long serialVersionUID = 4;
+	static final long serialVersionUID = 2;
 	private float _transparency;
 
-	public TransparentTextArea(float transparency) {
+	public TransparentPanel(float transparency) {
 		super();
 		_transparency = transparency;
 		setOpaque(false);
-		setEditable(false);
 	}
 
 	public void setTransparency(float newTransparency) {
@@ -28,5 +28,5 @@ public class TransparentTextArea extends JTextArea {
 		super.paint(g2);
 		g2.dispose();
 	} 
-	
+
 }

@@ -9,6 +9,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.taskboard.main.userinterface.UserInterface;
+
 public class PreferenceHandler {
 	
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
