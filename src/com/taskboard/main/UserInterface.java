@@ -26,7 +26,7 @@ import java.net.MalformedURLException;
 public class UserInterface extends JFrame {
 	
 	private static final String TITLE = "TaskBoard: Your Revolutionary Task Manager";
-	private static final String TITLE_IMAGE_FILE_PATH = "resources/images/TaskBoard-title2-v03.png";
+	private static final String TITLE_IMAGE_FILE_PATH = "resources/images/TaskBoard-title1-v04.png";
 	private static final String HIGH_PRIORITY_FILE_PATH = "resources/images/HighPriority.jpg";
 	private static final String MEDIUM_PRIORITY_FILE_PATH = "resources/images/MediumPriority.jpg";
 	private static final String LOW_PRIORITY_FILE_PATH = "resources/images/LowPriority.jpg";
