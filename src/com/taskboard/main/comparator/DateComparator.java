@@ -8,7 +8,7 @@ import com.taskboard.main.util.Entry;
 
 public class DateComparator implements Comparator<Entry>{
 	private DateTimeValidator dateTimeValidator = new DateTimeValidator();
-	
+	//@@author A0129889A 
 	public int compare(Entry entry1, Entry entry2) {
 		Date date1 = getDateObject(entry1);
 		Date date2 = getDateObject(entry2);

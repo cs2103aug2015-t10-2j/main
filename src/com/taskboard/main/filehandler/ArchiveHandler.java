@@ -16,6 +16,7 @@ import com.taskboard.main.util.ParameterType;
 
 public class ArchiveHandler {
 	
+	//@@author A0129889A 
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "INDEX:";
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";

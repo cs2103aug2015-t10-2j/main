@@ -17,7 +17,7 @@ import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 
 public class TempStorageManipulatorTest {
-	
+	//@@author A0129889A 
 	TempStorageManipulator tempStorageManipulator = new TempStorageManipulator();
 	String fileNameNew = "testFileNew";
 	String fileNameOpen = "testFileOpen";

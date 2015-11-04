@@ -13,7 +13,7 @@ import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.userinterface.UserInterface;
 
 public class PreferenceHandler {
-	
+	//@@author A0129889A 
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
 
