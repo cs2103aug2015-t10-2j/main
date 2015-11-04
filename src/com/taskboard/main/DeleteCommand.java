@@ -107,7 +107,7 @@ public class DeleteCommand extends Command {
 				_tempStorageManipulator.deleteFromTempStorage(filteredEntries);
 			}
 			
-			setSuccessResponseForDeleteByFiltering(responseForFiltering);
+			setSuccessResponseForDeleteByFiltering(responseForFiltering, filteredEntries);
 			_logger.log(Level.INFO, "Generated success response for delete by filtering");
 			
 			return responseForFiltering;
@@ -120,8 +120,14 @@ public class DeleteCommand extends Command {
 		}
 	}
 	
-	private void setSuccessResponseForDeleteByFiltering(Response response) {
+	private void setSuccessResponseForDeleteByFiltering(Response response, ArrayList<Entry> filteredEntries) {
 		String userFeedback = response.getFeedback().replace("found", "deleted");
+		userFeedback = userFeedback.replace(".", ":");
+		userFeedback = userFeedback.concat("<br>");
+		for (int i = 0; i < filteredEntries.size(); i++) {
+			Entry entry = filteredEntries.get(i);
+			userFeedback = userFeedback.concat("<br>").concat(entry.toHTMLString());
+		}
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
