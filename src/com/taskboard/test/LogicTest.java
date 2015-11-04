@@ -127,12 +127,13 @@ public class LogicTest {
 	public void testResponsesForAdd() {
 		Response actualResponse = logic.processCommand("add ");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
-		testResponseEquality("test failure response for no parameters after add command", expectedResponse,
-				             actualResponse);
+		testResponseEquality("test failure response for not providing parameters after add command", 
+				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("a Prepare for EE2020 Final Quiz pri ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_PRI_PARAMETER);
-		testResponseEquality("test failure response for empty pri parameter", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for providing empty pri parameter", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("a Prepare for EE2020 Final Quiz pri H");
 		Entry floatingTask = new Entry();
@@ -141,31 +142,34 @@ public class LogicTest {
 		floatingTask.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
 		expectedEntries.add(floatingTask);
 		updateSortingOfEntries(expectedEntries);
-		String feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(floatingTask.toHTMLString());
+		String feedback = getFeedbackForSuccessfulAdd(floatingTask);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
 		testResponseEquality("test success response for adding floating task with priority", expectedResponse, 
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_BY_PARAMETER);
-		testResponseEquality("test failure response for empty by parameter", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for providing empty by parameter", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_DATE);
-		testResponseEquality("test failure response for no date", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for not providing date", expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 11/13/2015 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
-		testResponseEquality("test failure response for invalid date time", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for providing invalid date time", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 03/11/2015 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
-		testResponseEquality("test failure response for past date time for deadline task", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("test failure response for providing past date time", 
+				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER);
-		testResponseEquality("test failure response for empty cat parameter", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for providing empty cat parameter", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat Mathematics");
 		Entry deadlineTask = new Entry();
@@ -176,35 +180,52 @@ public class LogicTest {
 		deadlineTask.addToParameters(new Parameter(ParameterType.CATEGORY, "Mathematics"));
 		expectedEntries.add(deadlineTask);
 		updateSortingOfEntries(expectedEntries);
-		feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(deadlineTask.toHTMLString());
+		feedback = getFeedbackForSuccessfulAdd(deadlineTask);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
 		testResponseEquality("test success response for adding deadline task with category", expectedResponse, 
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_FROM_PARAMETER);
-		testResponseEquality("test failure response for empty from parameter", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for providing empty from parameter", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
-		testResponseEquality("test failure response for no end date time", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for not providing end date time", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_TO_PARAMETER);
-		testResponseEquality("test failure response for empty to parameter", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for providing empty to parameter", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 1pm to 3pm");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_START_DATE);
-		testResponseEquality("test failure response for no start date", expectedResponse, actualResponse);
+		testResponseEquality("test failure response for not providing start date", expectedResponse, 
+				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 12pm");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
-		testResponseEquality("test failure response for past date time for event", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("test failure response for providing end date time earlier than start date time", 
+				             expectedResponse, actualResponse);
 		
-//		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 3pm pri H cat EE2020");
-//		Entry event = new Entry();
-		
+		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 3pm pri H cat EE2020");
+		Entry event = new Entry();
+		event.addToParameters(new Parameter(ParameterType.INDEX, ""));
+		event.addToParameters(new Parameter(ParameterType.NAME, "Final Exam"));
+		event.addToParameters(new Parameter(ParameterType.START_DATE, "27/11/2015"));
+		event.addToParameters(new Parameter(ParameterType.START_TIME, "13:00"));
+		event.addToParameters(new Parameter(ParameterType.END_DATE, "27/11/2015"));
+		event.addToParameters(new Parameter(ParameterType.END_TIME, "15:00"));
+		event.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
+		event.addToParameters(new Parameter(ParameterType.CATEGORY, "EE2020"));
+		expectedEntries.add(event);
+		updateSortingOfEntries(expectedEntries);
+		feedback = getFeedbackForSuccessfulAdd(event);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for adding event with priority and category", 
+			                 expectedResponse, actualResponse);
 	}
 	
 	private void updateSortingOfEntries(ArrayList<Entry> entries) {
@@ -214,6 +235,12 @@ public class LogicTest {
 			Parameter indexParameter = new Parameter(ParameterType.INDEX, String.valueOf(i+1));
 			entry.setIndexParameter(indexParameter);
 		}
+	}
+	
+	private String getFeedbackForSuccessfulAdd(Entry entry) {
+		String feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		
+		return feedback;
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
