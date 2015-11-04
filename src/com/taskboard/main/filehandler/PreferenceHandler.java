@@ -1,4 +1,4 @@
-package com.taskboard.main;
+package com.taskboard.main.filehandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.userinterface.UserInterface;
 
 public class PreferenceHandler {

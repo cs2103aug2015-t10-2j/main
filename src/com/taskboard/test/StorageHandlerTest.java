@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.taskboard.main.*;
+import com.taskboard.main.filehandler.StorageHandler;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
