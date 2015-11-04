@@ -1,5 +1,6 @@
  package com.taskboard.main;
 
+import com.taskboard.main.command.Command;
 import com.taskboard.main.parser.CommandParser;
 
 public class Logic {

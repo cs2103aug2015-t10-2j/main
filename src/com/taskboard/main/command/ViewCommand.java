@@ -1,7 +1,14 @@
-package com.taskboard.main;
+package com.taskboard.main.command;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import com.taskboard.main.Entry;
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.Response;
+import com.taskboard.main.SelectiveFilterProcessor;
+import com.taskboard.main.TempStorageManipulator;
 
 public class ViewCommand extends Command {
 	

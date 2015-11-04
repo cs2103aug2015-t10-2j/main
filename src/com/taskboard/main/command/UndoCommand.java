@@ -1,7 +1,12 @@
-package com.taskboard.main;
+package com.taskboard.main.command;
 
 import java.util.ArrayList;
 import java.io.IOException;
+
+import com.taskboard.main.Entry;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.Response;
+import com.taskboard.main.TempStorageManipulator;
 
 public class UndoCommand extends Command {
 	

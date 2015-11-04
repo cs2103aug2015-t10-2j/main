@@ -1,7 +1,12 @@
-package com.taskboard.main;
+package com.taskboard.main.command;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import com.taskboard.main.Parameter;
+import com.taskboard.main.ParameterType;
+import com.taskboard.main.Response;
+import com.taskboard.main.TempStorageManipulator;
 
 public abstract class Command {
 	

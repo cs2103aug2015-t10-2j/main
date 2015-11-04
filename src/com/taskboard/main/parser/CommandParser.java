@@ -5,24 +5,24 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import com.taskboard.main.AddCommand;
-import com.taskboard.main.ArchiveCommand;
-import com.taskboard.main.BackgroundCommand;
-import com.taskboard.main.Command;
 import com.taskboard.main.CommandType;
-import com.taskboard.main.CompleteCommand;
-import com.taskboard.main.DeleteCommand;
-import com.taskboard.main.EditCommand;
 import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.HelpCommand;
-import com.taskboard.main.InvalidCommand;
-import com.taskboard.main.NewCommand;
-import com.taskboard.main.OpenCommand;
 import com.taskboard.main.Parameter;
-import com.taskboard.main.ReminderCommand;
-import com.taskboard.main.RestoreCommand;
-import com.taskboard.main.UndoCommand;
-import com.taskboard.main.ViewCommand;
+import com.taskboard.main.command.AddCommand;
+import com.taskboard.main.command.ArchiveCommand;
+import com.taskboard.main.command.BackgroundCommand;
+import com.taskboard.main.command.Command;
+import com.taskboard.main.command.CompleteCommand;
+import com.taskboard.main.command.DeleteCommand;
+import com.taskboard.main.command.EditCommand;
+import com.taskboard.main.command.HelpCommand;
+import com.taskboard.main.command.InvalidCommand;
+import com.taskboard.main.command.NewCommand;
+import com.taskboard.main.command.OpenCommand;
+import com.taskboard.main.command.ReminderCommand;
+import com.taskboard.main.command.RestoreCommand;
+import com.taskboard.main.command.UndoCommand;
+import com.taskboard.main.command.ViewCommand;
 
 public class CommandParser {
 	

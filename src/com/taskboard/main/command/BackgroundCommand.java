@@ -1,17 +1,19 @@
-package com.taskboard.main;
+package com.taskboard.main.command;
 
 import java.util.ArrayList;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-
 import java.awt.Image;
 
 import javax.imageio.ImageIO;
+
+import com.taskboard.main.Parameter;
+import com.taskboard.main.Response;
+import com.taskboard.main.TempStorageManipulator;
+import com.taskboard.main.UserInterface;
 
 public class BackgroundCommand extends Command {
 

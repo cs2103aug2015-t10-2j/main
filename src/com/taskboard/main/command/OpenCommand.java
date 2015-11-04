@@ -1,16 +1,22 @@
-package com.taskboard.main;
+package com.taskboard.main.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-public class NewCommand extends Command {
+import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.Parameter;
+import com.taskboard.main.Response;
+import com.taskboard.main.TempStorageManipulator;
+import com.taskboard.main.UserInterface;
+
+public class OpenCommand extends Command{
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
-	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
+	private static final String MESSAGE_ERROR_FOR_LAUNCH_OPEN = "Failed to open file.";
 	private static final String TITLE_AFTER_LAUNCH = "TaskBoard: Your Revolutionary Task Manager (%1$s)";
 	
-	public NewCommand(ArrayList<Parameter> parameters) {
+	public OpenCommand(ArrayList<Parameter> parameters) {
 		assert parameters != null;
 		_parameters = parameters;
 		
@@ -23,50 +29,49 @@ public class NewCommand extends Command {
 	
 	public Response executeCommand() {
 		assert _parameters.size() > 0;
-		_logger.log(Level.INFO, "Commenced execution of NewCommand");
+		_logger.log(Level.INFO, "Commenced execution of OpenCommand");
 		
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
-		
+	
 		return getResponseForLaunch(fileName);
 	}
 	
 	private Response getResponseForLaunch(String fileName) {
-		Response responseForNew = new Response();
-		
+		Response responseForOpen = new Response();
+			
 		try {
-			_tempStorageManipulator.initialise(fileName);
+			_tempStorageManipulator.repopulate(fileName);
 			updateUIPreferences();
 			updateUITitle(fileName);
-			setSuccessResponseForLaunchNew(responseForNew);
-			_logger.log(Level.INFO, "Generated success response for creating new file");
+			setSuccessResponseForLaunchOpen(responseForOpen);
+			_logger.log(Level.INFO, "Generated success response for opening existing file");
 		} catch (IllegalArgumentException ex) {
-			setFailureResponseForInvalidNew(responseForNew, ex);
-			_logger.log(Level.INFO, "Generated failure response for creating new file with "
-					    + "existing filename");
+			setFailureResponseForInvalidOpen(responseForOpen, ex);
+			_logger.log(Level.INFO, "Generated failure response for opening non-existent file");
 		} catch (IOException ex) {
-			setFailureResponseForLaunchNew(responseForNew);
-			_logger.log(Level.INFO, "Generated failure response for creating new file");
+			setFailureResponseForLaunchOpen(responseForOpen);
+			_logger.log(Level.INFO, "Generated failure response for opening existing file");
 		}
-		
-		return responseForNew;
+	
+		return responseForOpen;
 	}
 	
-	private void setSuccessResponseForLaunchNew(Response response) {
+	private void setSuccessResponseForLaunchOpen(Response response) {
 		response.setIsSuccess(true);
 		response.setFeedback(MESSAGE_WELCOME);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}
 	
-	private void setFailureResponseForInvalidNew(Response response, IllegalArgumentException ex) {
+	private void setFailureResponseForInvalidOpen(Response response, IllegalArgumentException ex) {
 		response.setIsSuccess(false);
 		response.setFeedback(ex.getMessage());
 	}
 	
-	private void setFailureResponseForLaunchNew(Response response) {
+	private void setFailureResponseForLaunchOpen(Response response) {
 		response.setIsSuccess(false);
-		response.setFeedback(MESSAGE_ERROR_FOR_LAUNCH_NEW);
+		response.setFeedback(MESSAGE_ERROR_FOR_LAUNCH_OPEN);
 	}
 	
 	private void updateUIPreferences() throws IOException {
