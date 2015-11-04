@@ -1,3 +1,4 @@
+	//@@author A0129889A 
 package com.taskboard.test;
 
 import static org.junit.Assert.*;
@@ -15,7 +16,7 @@ import com.taskboard.main.util.ParameterType;
 
 public class ArchiveHandlerTest {
 	
-	//@@author A0129889A 
+
 	
 	ArchiveHandler archiveHandler = new ArchiveHandler();
 

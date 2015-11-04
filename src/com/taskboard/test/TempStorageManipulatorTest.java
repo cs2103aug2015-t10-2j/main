@@ -1,3 +1,4 @@
+	//@@author A0129889A 
 package com.taskboard.test;
 
 import static org.junit.Assert.*;
@@ -16,8 +17,7 @@ import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 
-public class TempStorageManipulatorTest {
-	//@@author A0129889A 
+public class TempStorageManipulatorTest {	
 	TempStorageManipulator tempStorageManipulator = new TempStorageManipulator();
 	String fileNameNew = "testFileNew";
 	String fileNameOpen = "testFileOpen";

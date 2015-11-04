@@ -1,3 +1,4 @@
+	//@@author A0129889A 
 package com.taskboard.main.filehandler;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class StorageHandler {
 	public StorageHandler() {
 
 	}
-	//@@author A0129889A 
+
 	public ArrayList<Entry> createNewFile(String fileName) throws IllegalArgumentException, IOException {
 		String newFileName = fileName + ".str";
 		_original = new File(newFileName);
@@ -54,7 +55,7 @@ public class StorageHandler {
 		_logger.log(Level.INFO, "Create a new file.");
 		return entries;
 	}
-	//@@author A0129889A 
+
 	public ArrayList<Entry> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		String newFileName = fileName + ".str";
 		_original = new File(newFileName);
@@ -122,13 +123,13 @@ public class StorageHandler {
 		_logger.log(Level.INFO, "Copy data from temp storage to file.");
 	}
 
-	//@@author A0129889A 
+
 	private void copyAllEntriesToFile(FileWriter fileToAdd, ArrayList<Entry> entries) throws IOException {
 		for (int i = 0; i < entries.size(); i++) {
 			addSingleEntryToFile(fileToAdd, entries.get(i));
 		}
 	}
-	//@@author A0129889A 
+
 	private void addSingleEntryToFile(FileWriter fileToAdd, Entry entry) throws IOException {
 		String entrydetails = entry.toString();
 		fileToAdd.write(entrydetails);
