@@ -1,7 +1,6 @@
 /bin/
 /logs/
 *.txt
-*.jar
 *.str
 *.arc
 *.pref
