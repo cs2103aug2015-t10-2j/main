@@ -202,6 +202,8 @@ public class DateFormatValidator implements FormatValidator {
 				Calendar parsedDate = Calendar.getInstance();
 				
 				parsedDate.setTime(dateFormat.parse(input));
+				parsedDate.set(Calendar.HOUR, 23);
+				parsedDate.set(Calendar.MINUTE, 59);
 				parsedDate.set(Calendar.YEAR, currentDate.get(Calendar.YEAR));
 				
 				if (parsedDate.before(currentDate)) {
