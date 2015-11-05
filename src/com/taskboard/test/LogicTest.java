@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import com.taskboard.main.Logic;
 import com.taskboard.main.comparator.DateComparator;
+import com.taskboard.main.comparator.ParameterComparator;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
@@ -206,13 +207,13 @@ public class LogicTest {
 		testResponseEquality("test failure response for providing empty cat parameter", expectedResponse, 
 				             actualResponse);
 		
-		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat Mathematics");
+		actualResponse = logic.processCommand("add Submit HW2 by 3 Sep 2016 10am cat MA3264");
 		Entry deadlineTask = new Entry();
 		deadlineTask.addToParameters(new Parameter(ParameterType.INDEX, ""));
-		deadlineTask.addToParameters(new Parameter(ParameterType.NAME, "Submit MA3264"));
-		deadlineTask.addToParameters(new Parameter(ParameterType.DATE, "06/11/2015"));
+		deadlineTask.addToParameters(new Parameter(ParameterType.NAME, "Submit HW2"));
+		deadlineTask.addToParameters(new Parameter(ParameterType.DATE, "03/09/2016"));
 		deadlineTask.addToParameters(new Parameter(ParameterType.TIME, "10:00"));
-		deadlineTask.addToParameters(new Parameter(ParameterType.CATEGORY, "Mathematics"));
+		deadlineTask.addToParameters(new Parameter(ParameterType.CATEGORY, "MA3264"));
 		expectedEntries.add(deadlineTask);
 		updateSortingOfEntries(expectedEntries);
 		feedback = getFeedbackForSuccessfulAdd(deadlineTask);
@@ -245,16 +246,16 @@ public class LogicTest {
 		testResponseEquality("test failure response for providing end date time earlier than start date time", 
 				             expectedResponse, actualResponse);
 		
-		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 3pm pri H cat EE2020");
+		actualResponse = logic.processCommand("add Final Exam from 27 Nov 2016 1pm to 3pm pri H cat MA3264");
 		Entry event = new Entry();
 		event.addToParameters(new Parameter(ParameterType.INDEX, ""));
 		event.addToParameters(new Parameter(ParameterType.NAME, "Final Exam"));
-		event.addToParameters(new Parameter(ParameterType.START_DATE, "27/11/2015"));
+		event.addToParameters(new Parameter(ParameterType.START_DATE, "27/11/2016"));
 		event.addToParameters(new Parameter(ParameterType.START_TIME, "13:00"));
-		event.addToParameters(new Parameter(ParameterType.END_DATE, "27/11/2015"));
+		event.addToParameters(new Parameter(ParameterType.END_DATE, "27/11/2016"));
 		event.addToParameters(new Parameter(ParameterType.END_TIME, "15:00"));
 		event.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
-		event.addToParameters(new Parameter(ParameterType.CATEGORY, "EE2020"));
+		event.addToParameters(new Parameter(ParameterType.CATEGORY, "MA3264"));
 		expectedEntries.add(event);
 		updateSortingOfEntries(expectedEntries);
 		feedback = getFeedbackForSuccessfulAdd(event);
@@ -290,11 +291,117 @@ public class LogicTest {
 		testResponseEquality("test failure response for not providing edited details", 
 	                         expectedResponse, actualResponse);
 	
-		actualResponse = logic.processCommand("edit 5 Annual company dinner at Marina Mandarin");
+		actualResponse = logic.processCommand("edit 9 Annual company dinner at Marina Mandarin");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
 		testResponseEquality("test failure response for providing invalid index", expectedResponse, actualResponse);	
-	}
 	
+		actualResponse = logic.processCommand("edit 4 Annual company dinner at Marina Mandarin");
+		Entry entryToBeEdited1 = expectedEntries.get(3);
+		Entry entryBeforeUpdate1 = new Entry(entryToBeEdited1);
+		ArrayList<Parameter> entryDetails1 = entryToBeEdited1.getParameters();
+		for (int i = 0; i < entryDetails1.size(); i++) {
+			if (entryDetails1.get(i).getParameterType() == ParameterType.NAME) {
+				entryDetails1.get(i).setParameterValue("Annual company dinner at Marina Mandarin");
+			}
+		}
+		entryToBeEdited1.setParameters(entryDetails1);
+		Entry entryAfterUpdate1 = new Entry(entryToBeEdited1);
+		expectedEntries.set(3, entryToBeEdited1);
+		updateSortingOfEntries(expectedEntries);
+		String feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate1, entryAfterUpdate1);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for editing entry name", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("edit 3 cat Administrative pri m by 4pm");
+		Entry entryToBeEdited2 = expectedEntries.get(2);
+		Entry entryBeforeUpdate2 = new Entry(entryToBeEdited2);
+		ArrayList<Parameter> entryDetails2 = entryToBeEdited2.getParameters();
+		for (int i = 0; i < entryDetails2.size(); i++) {
+			if (entryDetails2.get(i).getParameterType() == ParameterType.PRIORITY) {
+				entryDetails2.get(i).setParameterValue("medium");
+			}
+			
+			if (entryDetails2.get(i).getParameterType() == ParameterType.TIME) {
+				entryDetails2.get(i).setParameterValue("16:00");
+			}
+		}
+		entryDetails2.add(new Parameter(ParameterType.CATEGORY, "Administrative"));
+		Collections.sort(entryDetails2, new ParameterComparator());
+		entryToBeEdited2.setParameters(entryDetails2);
+		Entry entryAfterUpdate2 = new Entry(entryToBeEdited2);
+		expectedEntries.set(2, entryToBeEdited2);
+		updateSortingOfEntries(expectedEntries);
+		feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate2, entryAfterUpdate2);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for editing multiple parameters of entry", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("edit 4 from 2 May 2016 6pm to 9pm");
+		Entry entryToBeEdited3 = expectedEntries.get(3);
+		Entry entryBeforeUpdate3 = new Entry(entryToBeEdited3);
+		ArrayList<Parameter> entryDetails3 = entryToBeEdited3.getParameters();
+		ArrayList<Parameter> newEntryDetails = new ArrayList<Parameter>();
+		for (int i = 0; i < entryDetails3.size(); i++) {
+			if (entryDetails3.get(i).getParameterType() == ParameterType.INDEX) {
+				newEntryDetails.add(entryDetails3.get(i));
+			}
+			
+			if (entryDetails3.get(i).getParameterType() == ParameterType.NAME) {
+				newEntryDetails.add(entryDetails3.get(i));
+			}
+				
+			if (entryDetails3.get(i).getParameterType() == ParameterType.CATEGORY) {
+				newEntryDetails.add(entryDetails3.get(i));
+			}
+		}
+		newEntryDetails.add(new Parameter(ParameterType.START_DATE, "02/05/2016"));
+		newEntryDetails.add(new Parameter(ParameterType.START_TIME, "18:00"));
+		newEntryDetails.add(new Parameter(ParameterType.END_DATE, "02/05/2016"));
+		newEntryDetails.add(new Parameter(ParameterType.END_TIME, "21:00"));
+		Collections.sort(newEntryDetails, new ParameterComparator());
+		entryToBeEdited3.setParameters(newEntryDetails);
+		Entry entryAfterUpdate3 = new Entry(entryToBeEdited3);
+		expectedEntries.set(3, entryToBeEdited3);
+		updateSortingOfEntries(expectedEntries);
+		feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate3, entryAfterUpdate3);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for changing entry type from deadline task to event", 
+				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("edit 1 at 10:30 4 Mar 2016");
+		Entry entryToBeEdited4 = expectedEntries.get(0);
+		Entry entryBeforeUpdate4 = new Entry(entryToBeEdited4);
+		ArrayList<Parameter> entryDetails4 = entryToBeEdited4.getParameters();
+		ArrayList<Parameter> newEntryDetails2 = new ArrayList<Parameter>();
+		for (int i = 0; i < entryDetails4.size(); i++) {
+			if (entryDetails4.get(i).getParameterType() == ParameterType.INDEX) {
+				newEntryDetails2.add(entryDetails4.get(i));
+			}
+			
+			if (entryDetails4.get(i).getParameterType() == ParameterType.NAME) {
+				newEntryDetails2.add(entryDetails4.get(i));
+			}
+			
+			if (entryDetails4.get(i).getParameterType() == ParameterType.PRIORITY) {
+				newEntryDetails2.add(entryDetails4.get(i));
+			}
+				
+			if (entryDetails4.get(i).getParameterType() == ParameterType.CATEGORY) {
+				newEntryDetails2.add(entryDetails4.get(i));
+			}
+		}
+		newEntryDetails2.add(new Parameter(ParameterType.DATE, "04/03/2016"));
+		newEntryDetails2.add(new Parameter(ParameterType.TIME, "10:30"));
+		Collections.sort(newEntryDetails2, new ParameterComparator());
+		entryToBeEdited4.setParameters(newEntryDetails2);
+		Entry entryAfterUpdate4 = new Entry(entryToBeEdited4);
+		expectedEntries.set(0, entryToBeEdited4);
+		updateSortingOfEntries(expectedEntries);
+		feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate4, entryAfterUpdate4);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for changing entry type from event to deadline task", 
+				             expectedResponse, actualResponse);
+	}
 	
 	private String getFeedbackForSuccessfulEdit(Entry entryBeforeUpdate, Entry entryAfterUpdate) {
 		String feedback = MESSAGE_AFTER_EDIT.concat("<br>").concat("<br>").concat(MESSAGE_FOR_UPDATED_ENTRY);
