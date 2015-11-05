@@ -9,9 +9,9 @@ import com.taskboard.main.util.Response;
 
 public class DateTimeProcessor {
 	
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No valid date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No valid start date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No valid end date time provided.";
 	
 	// attribute
 	
