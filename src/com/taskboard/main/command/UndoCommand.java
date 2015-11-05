@@ -43,7 +43,7 @@ public class UndoCommand extends Command {
 			lastTempArchive.add(new Entry(entry));
 		}
 		
-		if (!lastTempStorage.isEmpty() && !lastTempArchive.isEmpty()) {
+		if (!lastTempStorage.isEmpty() || !lastTempArchive.isEmpty()) {
 			responseForUndo.setIsSuccess(true);
 			responseForUndo.setFeedback(MESSAGE_UNDO_SUCCESS);
 			responseForUndo.setEntries(lastTempStorage);
