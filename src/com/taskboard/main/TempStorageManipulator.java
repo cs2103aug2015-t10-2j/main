@@ -243,6 +243,7 @@ public class TempStorageManipulator {
 		_tempArchive.add(entry);
 		_logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
 		Collections.sort(_tempStorage, new DateComparator());
+		Collections.sort(_tempArchive, new DateComparator());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
