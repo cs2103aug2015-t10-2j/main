@@ -65,8 +65,9 @@ public class CompleteCommand extends Command {
 		Response responseForComplete = new Response();
 		try {
 			Entry entryToComplete = _tempStorageManipulator.getTempStorage().get(tempStorageIndex);
+			Entry entryBeforeComplete = new Entry(entryToComplete);
 			_tempStorageManipulator.setCompletedInTempStorage(tempStorageIndex);
-			setSuccessResponseForComplete(responseForComplete, entryToComplete);
+			setSuccessResponseForComplete(responseForComplete, entryBeforeComplete);
 			_logger.log(Level.INFO, "Generated success response for indicating entry completion");
 		} catch (IOException ex) {
 			setFailureResponseForComplete(responseForComplete);
@@ -78,9 +79,15 @@ public class CompleteCommand extends Command {
 	
 	private void setSuccessResponseForComplete(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_COMPLETE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		String userFeedback = getFeedbackForSuccessfulComplete(entry);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
+	}
+	
+	private String getFeedbackForSuccessfulComplete(Entry entry) {
+		String feedback = MESSAGE_AFTER_COMPLETE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		
+		return feedback;
 	}
 	
 	private void setFailureResponseForComplete(Response response) {

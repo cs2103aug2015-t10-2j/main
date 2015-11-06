@@ -65,8 +65,9 @@ public class RestoreCommand extends Command {
 		Response responseForRestore = new Response();
 		try {
 			Entry entryToRestore = _tempStorageManipulator.getTempArchive().get(tempArchiveIndex);
+			Entry entryBeforeRestore = new Entry(entryToRestore);
 			_tempStorageManipulator.restoreToTempStorage(tempArchiveIndex);
-			setSuccessResponseForRestore(responseForRestore, entryToRestore);
+			setSuccessResponseForRestore(responseForRestore, entryBeforeRestore);
 			_logger.log(Level.INFO, "Generated success response for restoring entry");
 		} catch (IOException ex) {
 			setFailureResponseForRestore(responseForRestore);
@@ -78,9 +79,15 @@ public class RestoreCommand extends Command {
 	
 	private void setSuccessResponseForRestore(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_RESTORE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		String userFeedback = getFeedbackForSuccessfulRestore(entry);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempArchive());
+	}
+	
+	private String getFeedbackForSuccessfulRestore(Entry entry) {
+		String feedback = MESSAGE_AFTER_RESTORE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		
+		return feedback;
 	}
 	
 	private void setFailureResponseForRestore(Response response) {
