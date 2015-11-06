@@ -96,9 +96,15 @@ public class DeleteCommand extends Command {
 	
 	private void setSuccessResponseForDeleteByIndex(Response response, Entry entry) {
 		response.setIsSuccess(true);
-		String userFeedback = MESSAGE_AFTER_DELETE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		String userFeedback = getFeedbackForSuccessfulDeleteByIndex(entry);
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
+	}
+	
+	private String getFeedbackForSuccessfulDeleteByIndex(Entry entry) {
+		String feedback = MESSAGE_AFTER_DELETE.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+		
+		return feedback;
 	}
 	
 	private void setFailureResponseForDelete(Response response) {

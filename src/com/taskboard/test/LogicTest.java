@@ -34,6 +34,7 @@ public class LogicTest {
 	private static final String MESSAGE_RETRIEVE_ARCHIVE_SUCCESS = "Successfully retrieved all archived entries.";
 	private static final String MESSAGE_AFTER_RESTORE = "Entry successfully restored:";
 	private static final String MESSAGE_FILTER_RESULTS = "%1$s entries found based on search results!";
+	private static final String MESSAGE_AFTER_DELETE = "Entry successfully deleted:";
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
 	private static final String MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND = "No parameters provided.";
@@ -291,12 +292,12 @@ public class LogicTest {
 		testResponseEquality("test failure response for not providing parameters after edit command", 
 				             expectedResponse, actualResponse);
 		
-		actualResponse = logic.processCommand("edit 2");
+		actualResponse = logic.processCommand("edit 4");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_EDITED_DETAILS);
 		testResponseEquality("test failure response for not providing edited details", 
 	                         expectedResponse, actualResponse);
 	
-		actualResponse = logic.processCommand("edit 9 Annual company dinner at Marina Mandarin");
+		actualResponse = logic.processCommand("edit 14 Annual company dinner at Marina Mandarin");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
 		testResponseEquality("test failure response for providing invalid index with edit", expectedResponse, 
 				             actualResponse);	
@@ -430,7 +431,7 @@ public class LogicTest {
 		expectedResponse = createSuccessResponse(MESSAGE_EMPTY_ARCHIVE, completedEntries);
 		testResponseEquality("test success response for empty archive", expectedResponse, actualResponse);
 		
-		actualResponse = logic.processCommand("complete 9");
+		actualResponse = logic.processCommand("complete 12");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
 		testResponseEquality("test failure response for providing invalid index with complete", expectedResponse, 
 				             actualResponse);
@@ -499,6 +500,27 @@ public class LogicTest {
 		expectedResponse = createSuccessResponse(feedback, filteredEntries);
 		testResponseEquality("test success response for filtering entries using multiple filters", 
 				             expectedResponse, actualResponse);
+	}
+	
+	@Test
+	public void testResponsesForDelete() {
+		Response actualResponse = logic.processCommand("delete ");
+		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
+		testResponseEquality("test failure response for not providing parameters after delete command", 
+				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("delete 10");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
+		testResponseEquality("test failure response for providing invalid index with delete", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("delete 4");
+		Entry entryDeleted = expectedEntries.remove(3);
+		updateSortingOfEntries(expectedEntries);
+		String feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_DELETE, entryDeleted);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for deleting entry by index", expectedResponse, 
+				             actualResponse);
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
