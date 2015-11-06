@@ -9,9 +9,9 @@ import com.taskboard.main.util.Response;
 
 public class DateTimeProcessor {
 	
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No valid date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No valid start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No valid end date time provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_VALID_DATE = "No valid date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_VALID_START_DATE = "No valid start date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_VALID_END_DATE_TIME = "No valid end date time provided.";
 	
 	// attribute
 	
@@ -37,7 +37,7 @@ public class DateTimeProcessor {
 	
 	private void setFailureResponseForNoDate(Response response) {
 		response.setIsSuccess(false);
-		response.setFeedback(MESSAGE_ERROR_FOR_NO_DATE);
+		response.setFeedback(MESSAGE_ERROR_FOR_NO_VALID_DATE);
 	}
 	
 	public Response validateDeadlineDateTimeDetails(String date, String time) {
@@ -66,12 +66,12 @@ public class DateTimeProcessor {
 	
 	private void setFailureResponseForNoStartDate(Response response) {
 		response.setIsSuccess(false);
-		response.setFeedback(MESSAGE_ERROR_FOR_NO_START_DATE);
+		response.setFeedback(MESSAGE_ERROR_FOR_NO_VALID_START_DATE);
 	}
 	
 	private void setFailureResponseForNoEndDateTime(Response response) {
 		response.setIsSuccess(false);
-		response.setFeedback(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
+		response.setFeedback(MESSAGE_ERROR_FOR_NO_VALID_END_DATE_TIME);
 	}
 	
 	public Response validateEventDateTimeDetails(String startDate, String startTime, String endDate, 

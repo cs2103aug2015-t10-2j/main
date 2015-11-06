@@ -13,8 +13,8 @@ import com.taskboard.main.util.Response;
 
 public class ViewCommand extends Command {
 	
-	private static final String MESSAGE_EMPTY_FILE = "There are no registered entries.";
-	private static final String MESSAGE_RETRIEVE_SUCCESS = "Successfully retrieved all entries.";
+	private static final String MESSAGE_EMPTY_ENTRY_LIST = "There are no registered entries.";
+	private static final String MESSAGE_RETRIEVE_ENTRIES_SUCCESS = "Successfully retrieved all entries.";
 
 	public ViewCommand(ArrayList<Parameter> parameters) {
 		assert parameters != null;
@@ -56,9 +56,9 @@ public class ViewCommand extends Command {
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
 		response.setEntries(entries);
 		if (entries.isEmpty()) {
-			response.setFeedback(MESSAGE_EMPTY_FILE);
+			response.setFeedback(MESSAGE_EMPTY_ENTRY_LIST);
 		} else {
-			response.setFeedback(MESSAGE_RETRIEVE_SUCCESS);
+			response.setFeedback(MESSAGE_RETRIEVE_ENTRIES_SUCCESS);
 		}
 	}
 }

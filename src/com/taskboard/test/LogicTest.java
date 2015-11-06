@@ -29,6 +29,10 @@ public class LogicTest {
 	private static final String MESSAGE_AFTER_EDIT = "Entry successfully updated:";
 	private static final String MESSAGE_FOR_UPDATED_ENTRY = "Entry after update =>";
 	private static final String MESSAGE_FOR_OLD_ENTRY = "Entry before update =>";
+	private static final String MESSAGE_AFTER_COMPLETE = "Entry successfully indicated as completed:";
+	private static final String MESSAGE_EMPTY_ARCHIVE = "There are no completed entries.";
+	private static final String MESSAGE_RETRIEVE_ARCHIVE_SUCCESS = "Successfully retrieved all archived entries.";
+	private static final String MESSAGE_AFTER_RESTORE = "Entry successfully restored:";
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
 	private static final String MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND = "No parameters provided.";
@@ -37,9 +41,9 @@ public class LogicTest {
 	private static final String MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER = "Empty cat parameter provided.";
 	private static final String MESSAGE_ERROR_FOR_EMPTY_FROM_PARAMETER = "Empty from parameter provided.";
 	private static final String MESSAGE_ERROR_FOR_EMPTY_TO_PARAMETER = "Empty to parameter provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No end date time provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No valid date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No valid start date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No valid end date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_EDITED_DETAILS = "No edited details provided.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
@@ -183,7 +187,7 @@ public class LogicTest {
 		floatingTask.addToParameters(new Parameter(ParameterType.PRIORITY, "high"));
 		expectedEntries.add(floatingTask);
 		updateSortingOfEntries(expectedEntries);
-		String feedback = getFeedbackForSuccessfulAdd(floatingTask);
+		String feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_ADD, floatingTask);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
 		testResponseEquality("test success response for adding floating task with priority", expectedResponse, 
 				             actualResponse);
@@ -216,7 +220,7 @@ public class LogicTest {
 		deadlineTask.addToParameters(new Parameter(ParameterType.CATEGORY, "MA3264"));
 		expectedEntries.add(deadlineTask);
 		updateSortingOfEntries(expectedEntries);
-		feedback = getFeedbackForSuccessfulAdd(deadlineTask);
+		feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_ADD, deadlineTask);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
 		testResponseEquality("test success response for adding deadline task with category", expectedResponse, 
 				             actualResponse);
@@ -258,7 +262,7 @@ public class LogicTest {
 		event.addToParameters(new Parameter(ParameterType.CATEGORY, "MA3264"));
 		expectedEntries.add(event);
 		updateSortingOfEntries(expectedEntries);
-		feedback = getFeedbackForSuccessfulAdd(event);
+		feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_ADD, event);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
 		testResponseEquality("test success response for adding event with priority and category", 
 			                 expectedResponse, actualResponse);
@@ -273,8 +277,8 @@ public class LogicTest {
 		}
 	}
 	
-	private String getFeedbackForSuccessfulAdd(Entry entry) {
-		String feedback = MESSAGE_AFTER_ADD.concat("<br>").concat("<br>").concat(entry.toHTMLString());
+	private String getSuccessFeedbackForSingleEntryDetails(String message, Entry entry) {
+		String feedback = message.concat("<br>").concat("<br>").concat(entry.toHTMLString());
 		
 		return feedback;
 	}
@@ -293,7 +297,8 @@ public class LogicTest {
 	
 		actualResponse = logic.processCommand("edit 9 Annual company dinner at Marina Mandarin");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
-		testResponseEquality("test failure response for providing invalid index", expectedResponse, actualResponse);	
+		testResponseEquality("test failure response for providing invalid index with edit", expectedResponse, 
+				             actualResponse);	
 	
 		actualResponse = logic.processCommand("edit 4 Annual company dinner at Marina Mandarin");
 		Entry entryToBeEdited1 = expectedEntries.get(3);
@@ -410,6 +415,59 @@ public class LogicTest {
 		feedback = feedback.concat("<br>").concat(entryBeforeUpdate.toHTMLString());
 		
 		return feedback;
+	}
+	
+	@Test
+	public void testResponsesForCompletionAndArchive() {
+		Response actualResponse = logic.processCommand("complete ");
+		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
+		testResponseEquality("test failure response for not providing parameters after complete command", 
+				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("archive");
+		ArrayList<Entry> completedEntries = new ArrayList<Entry>();
+		expectedResponse = createSuccessResponse(MESSAGE_EMPTY_ARCHIVE, completedEntries);
+		testResponseEquality("test success response for empty archive", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("complete 9");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
+		testResponseEquality("test failure response for providing invalid index with complete", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("complete 2");
+		Entry entryCompleted = expectedEntries.remove(1);
+		updateSortingOfEntries(expectedEntries);
+		String feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_COMPLETE, entryCompleted);
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("test success response for completing entry", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("archive");		
+		ArrayList<Parameter> entryDetails = entryCompleted.getParameters();
+		for (int i = 0; i < entryDetails.size(); i++) {
+			if (entryDetails.get(i).getParameterType() == ParameterType.INDEX) {
+				entryDetails.get(i).setParameterValue("1");
+			}
+		}
+		entryCompleted.setParameters(entryDetails);
+		completedEntries.add(entryCompleted);
+		expectedResponse = createSuccessResponse(MESSAGE_RETRIEVE_ARCHIVE_SUCCESS, completedEntries);
+		testResponseEquality("test success response for retrieving completed entries", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("restore 2");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
+		testResponseEquality("test failure response for providing invalid index with restore", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("restore 1");
+		Entry entryRestored = new Entry(entryCompleted);
+		expectedEntries.add(entryCompleted);
+		updateSortingOfEntries(expectedEntries);
+		feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_RESTORE, entryRestored);
+		completedEntries.clear();
+		expectedResponse = createSuccessResponse(feedback, completedEntries);
+		testResponseEquality("test success response for restoring completed entry", expectedResponse, 
+				             actualResponse);
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
