@@ -33,6 +33,7 @@ public class LogicTest {
 	private static final String MESSAGE_EMPTY_ARCHIVE = "There are no completed entries.";
 	private static final String MESSAGE_RETRIEVE_ARCHIVE_SUCCESS = "Successfully retrieved all archived entries.";
 	private static final String MESSAGE_AFTER_RESTORE = "Entry successfully restored:";
+	private static final String MESSAGE_FILTER_RESULTS = "%1$s entries found based on search results!";
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
 	private static final String MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND = "No parameters provided.";
@@ -41,9 +42,9 @@ public class LogicTest {
 	private static final String MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER = "Empty cat parameter provided.";
 	private static final String MESSAGE_ERROR_FOR_EMPTY_FROM_PARAMETER = "Empty from parameter provided.";
 	private static final String MESSAGE_ERROR_FOR_EMPTY_TO_PARAMETER = "Empty to parameter provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_DATE = "No valid date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_START_DATE = "No valid start date provided.";
-	private static final String MESSAGE_ERROR_FOR_NO_END_DATE_TIME = "No valid end date time provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_VALID_DATE = "No valid date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_VALID_START_DATE = "No valid start date provided.";
+	private static final String MESSAGE_ERROR_FOR_NO_VALID_END_DATE_TIME = "No valid end date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_EDITED_DETAILS = "No edited details provided.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
@@ -198,7 +199,7 @@ public class LogicTest {
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 10am");
-		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_DATE);
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_VALID_DATE);
 		testResponseEquality("test failure response for not providing date", expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 03/11/2015 10am");
@@ -231,7 +232,7 @@ public class LogicTest {
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm");
-		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_END_DATE_TIME);
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_VALID_END_DATE_TIME);
 		testResponseEquality("test failure response for not providing end date time", expectedResponse, 
 				             actualResponse);
 		
@@ -241,7 +242,7 @@ public class LogicTest {
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 1pm to 3pm");
-		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_START_DATE);
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_VALID_START_DATE);
 		testResponseEquality("test failure response for not providing start date", expectedResponse, 
 				             actualResponse);
 		
@@ -468,6 +469,36 @@ public class LogicTest {
 		expectedResponse = createSuccessResponse(feedback, completedEntries);
 		testResponseEquality("test success response for restoring completed entry", expectedResponse, 
 				             actualResponse);
+	}
+	
+	@Test
+	public void testResponsesForView() {
+		Response actualResponse = logic.processCommand("view meeting");
+		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
+		filteredEntries.add(expectedEntries.get(0));
+		filteredEntries.add(expectedEntries.get(1));
+		String feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
+		Response expectedResponse = createSuccessResponse(feedback, filteredEntries);
+		testResponseEquality("test success response for filtering entries based on substring of entry names", 
+				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("view pri low");
+		filteredEntries.clear();
+		filteredEntries.add(expectedEntries.get(2));
+		feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
+		feedback = feedback.replace("entries", "entry");
+		expectedResponse = createSuccessResponse(feedback, filteredEntries);
+		testResponseEquality("test success response for filter results with only 1 entry", expectedResponse, 
+				             actualResponse);
+		
+		actualResponse = logic.processCommand("view from 3 Mar 2016 to 14 Apr 2016 pri H cat marketing");
+		filteredEntries.clear();
+		filteredEntries.add(expectedEntries.get(1));
+		feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
+		feedback = feedback.replace("entries", "entry");
+		expectedResponse = createSuccessResponse(feedback, filteredEntries);
+		testResponseEquality("test success response for filtering entries using multiple filters", 
+				             expectedResponse, actualResponse);
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {

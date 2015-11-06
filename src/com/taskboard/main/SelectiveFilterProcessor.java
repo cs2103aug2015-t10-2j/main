@@ -13,7 +13,7 @@ import com.taskboard.main.util.Response;
 
 public class SelectiveFilterProcessor {
 	
-	private static final String MESSAGE_FILTER_RESULTS = "entries found based on search results!";
+	private static final String MESSAGE_FILTER_RESULTS = "%1$s entries found based on search results!";
 	
 	private static final String FORMAT_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";
 	private static final String FORMAT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE_TIME_RANGE = "00:00";
@@ -379,12 +379,19 @@ public class SelectiveFilterProcessor {
 	
 	private void setSuccessResponseForViewWithFilter(Response response) {
 		response.setIsSuccess(true);
-		int numOfFilteredEntries = _filteredEntries.size();
-		String userFeedback = String.valueOf(numOfFilteredEntries).concat(" ").concat(MESSAGE_FILTER_RESULTS);
-		if (numOfFilteredEntries == 1) {
-			userFeedback = userFeedback.replace("entries", "entry");
-		}
+		String userFeedback = getFeedbackForSuccessfulViewWithFilter();
 		response.setFeedback(userFeedback);
 		response.setEntries(_filteredEntries);
+	}
+	
+	private String getFeedbackForSuccessfulViewWithFilter() {
+		int numOfFilteredEntries = _filteredEntries.size();
+		String feedback = String.format(MESSAGE_FILTER_RESULTS, numOfFilteredEntries);
+		if (numOfFilteredEntries == 1) {
+			feedback = feedback.replace("entries", "entry");
+		}
+		
+		return feedback;
+		
 	}
 }
