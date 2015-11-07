@@ -92,6 +92,7 @@ public class DateFormatValidator implements FormatValidator {
 	
 	public String toDefaultFormat(String token) {
 		SimpleDateFormat defaultDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+		defaultDateFormat.setLenient(false);
 		Date today = new Date();
 		
 		token = token.toLowerCase();
@@ -165,6 +166,7 @@ public class DateFormatValidator implements FormatValidator {
 	
 	private static Date getNextOccurenceDate(int dayIndex) {
 		SimpleDateFormat dayIndexFormat = new SimpleDateFormat("u");
+		dayIndexFormat.setLenient(false);
 		Date today = new Date();
 		int todayDayIndex = Integer.parseInt(dayIndexFormat.format(today));
 		
@@ -182,6 +184,7 @@ public class DateFormatValidator implements FormatValidator {
 	}
 	
 	private static boolean isMatchingDateFormat(SimpleDateFormat dateFormat, String input) {
+		dateFormat.setLenient(false);
 		try {
 			String output = dateFormat.format(dateFormat.parse(input));
 			if (output.equalsIgnoreCase(input)) {
@@ -196,6 +199,7 @@ public class DateFormatValidator implements FormatValidator {
 	
 	private static String toStandardDateFormat(SimpleDateFormat dateFormat, String input) {
 		SimpleDateFormat defaultDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+		defaultDateFormat.setLenient(false);
 		try {
 			if (!dateFormat.toPattern().contains("y")) {
 				Calendar currentDate = Calendar.getInstance();
