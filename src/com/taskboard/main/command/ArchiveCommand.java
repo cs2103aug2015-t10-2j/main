@@ -6,12 +6,19 @@ import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class inherits from the Command class and executes the Archive command.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class ArchiveCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_EMPTY_ARCHIVE = "There are no completed entries.";
 	private static final String MESSAGE_RETRIEVE_ARCHIVE_SUCCESS = "Successfully retrieved all archived entries.";  
 
@@ -35,6 +42,7 @@ public class ArchiveCommand extends Command {
 		} else {
 			responseForArchive.setFeedback(MESSAGE_RETRIEVE_ARCHIVE_SUCCESS);
 		}
+		
 		_logger.log(Level.INFO, "Generated success response for accessing archive");
 		
 		return responseForArchive;

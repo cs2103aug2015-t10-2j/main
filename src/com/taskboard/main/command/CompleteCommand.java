@@ -2,18 +2,26 @@
 package com.taskboard.main.command;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.IndexProcessor;
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class inherits from the Command class and executes the Complete command.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class CompleteCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_AFTER_COMPLETE = "Entry successfully indicated as completed:";
 	private static final String MESSAGE_ERROR_FOR_COMPLETE = "The entry could not be indicated as completed.";
 	
@@ -29,14 +37,17 @@ public class CompleteCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		// _parameters must have the index of entry to be completed for Complete command to be valid
 		assert _parameters.size() > 0;
-		_logger.log(Level.INFO, "Commenced execution of CompleteCommand");
+		_logger.log(Level.INFO, "Commence execution of CompleteCommand");
 		
+		// facilitates the Undo command
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
 		
+		// facilitates the Undo command
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
@@ -45,11 +56,13 @@ public class CompleteCommand extends Command {
 		IndexProcessor indexProcessorForComplete = new IndexProcessor();
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
 		Response responseForComplete = indexProcessorForComplete.processInputIndex(_parameters, entries);
+		
 		if (responseForComplete.isSuccess()) {
 			_logger.log(Level.INFO, "Start process of indicating entry completion");
 			responseForComplete = processEntryCompletion();
 		}
-				
+		
+		// facilitates the Undo command
 		if (responseForComplete.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);

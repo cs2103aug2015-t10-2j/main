@@ -2,18 +2,26 @@
 package com.taskboard.main.command;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.IndexProcessor;
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class inherits from the Command class and executes the Restore command.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class RestoreCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_AFTER_RESTORE = "Entry successfully restored:";
 	private static final String MESSAGE_ERROR_FOR_RESTORE = "The entry could not be restored.";
 	
@@ -29,14 +37,17 @@ public class RestoreCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		// _parameters must have the index of entry to be restored for Restore command to be valid
 		assert _parameters.size() > 0;
-		_logger.log(Level.INFO, "Commenced execution of RestoreCommand");
+		_logger.log(Level.INFO, "Commence execution of RestoreCommand");
 		
+		// facilitates the Undo command
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
 		
+		// facilitates the Undo command
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
@@ -45,11 +56,13 @@ public class RestoreCommand extends Command {
 		IndexProcessor indexProcessorForRestore = new IndexProcessor();
 		ArrayList<Entry> entries = _tempStorageManipulator.getTempArchive();
 		Response responseForRestore = indexProcessorForRestore.processInputIndex(_parameters, entries);
+		
 		if (responseForRestore.isSuccess()) {
 			_logger.log(Level.INFO, "Start process of restoring entry");
 			responseForRestore = processRestoringOfEntry();
 		}
 		
+		// facilitates the Undo command
 		if (responseForRestore.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
