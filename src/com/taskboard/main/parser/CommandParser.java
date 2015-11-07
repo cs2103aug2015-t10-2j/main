@@ -24,6 +24,11 @@ import com.taskboard.main.command.ViewCommand;
 import com.taskboard.main.util.CommandType;
 import com.taskboard.main.util.Parameter;
 
+/**
+ * This class is a facade class that is used to parse a command string into 
+ * a Command object containing CommandType and ArrayList of Parameters.
+ * @author Alvian Prasetya
+ */
 public class CommandParser {
 	
 	private CommandTypeParser _commandTypeParser;

@@ -3,8 +3,14 @@ package com.taskboard.main.parser;
 
 import com.taskboard.main.util.CommandType;
 
+/**
+ * This class is used to parse a command string into its respective CommandType.
+ * @author Alvian Prasetya
+ */
 public class CommandTypeParser {
-
+	
+	private static final String STRING_SPACE = " ";
+	
 	public CommandTypeParser() {
 		
 	}
@@ -69,10 +75,10 @@ public class CommandTypeParser {
 	}
 	
 	public static String extractCommandTypeString(String commandString) {
-		if (commandString.indexOf(' ') == -1) {
+		if (commandString.indexOf(STRING_SPACE) == -1) {
 			return commandString;
 		} else {
-			return commandString.substring(0, commandString.indexOf(' ')).toLowerCase();
+			return commandString.substring(0, commandString.indexOf(STRING_SPACE)).toLowerCase();
 		}
 	}
 	
