@@ -363,6 +363,7 @@ public class UserInterface extends JFrame {
 							constraints.gridwidth = 2;
 							JLabel dateLabel = new JLabel();
 							dateLabel.setText(pivotDate);
+							dateLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 							dateLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 							dateLabel.setBackground(Color.WHITE);
 							dateLabel.setOpaque(true);
@@ -380,6 +381,7 @@ public class UserInterface extends JFrame {
 						JLabel indexLabel = new JLabel();
 						if (currentEntry.getIndexParameter() != null) {
 							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
+							indexLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 						}
 						indexLabel.setVerticalAlignment(JLabel.TOP);
 						indexLabel.setPreferredSize(new Dimension(30, 30));
@@ -424,7 +426,7 @@ public class UserInterface extends JFrame {
 							DefaultCaret deadlineCaret = (DefaultCaret) deadlineText.getCaret();
 							deadlineCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							deadlineText.setText(getDeadlineTaskDisplayString(currentEntry));
-							deadlineText.setFont(UIManager.getFont("Label.font"));
+							deadlineText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 							deadlineText.setLineWrap(true);
 							deadlineText.setBorder(new EmptyBorder(5, 5, 5, 5));
 							deadlineText.setBounds(0, 0, 320, 64);
@@ -498,7 +500,7 @@ public class UserInterface extends JFrame {
 							DefaultCaret eventCaret = (DefaultCaret) eventText.getCaret();
 							eventCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							eventText.setText(getEventDisplayString(currentEntry));
-							eventText.setFont(UIManager.getFont("Label.font"));
+							eventText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 							eventText.setLineWrap(true);
 							eventText.setBorder(new EmptyBorder(5, 5, 5, 5));
 							eventText.setBounds(0, 0, 320, 64);
@@ -544,7 +546,7 @@ public class UserInterface extends JFrame {
 							DefaultCaret floatCaret = (DefaultCaret) floatText.getCaret();
 							floatCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 							floatText.setText(getFloatingTaskDisplayString(currentEntry));
-							floatText.setFont(UIManager.getFont("Label.font"));
+							floatText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 							floatText.setLineWrap(true);
 							floatText.setBorder(new EmptyBorder(5, 5, 5, 5));
 							floatText.setBounds(0, 0, 320, 64);
