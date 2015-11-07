@@ -13,6 +13,7 @@ import com.taskboard.main.util.Response;
 
 /**
  * This class inherits from the Command class and executes the Archive command.
+ * It returns a corresponding Response that denotes the success of the operation.
  * @author Amarparkash Singh Mavi
  *
  */

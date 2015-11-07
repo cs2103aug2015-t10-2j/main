@@ -16,6 +16,7 @@ import com.taskboard.main.util.Entry;
 
 /**
  * This class inherits from the Command class and executes the New command.
+ * It returns a corresponding Response that denotes the success of the operation.
  * @author Amarparkash Singh Mavi
  *
  */
