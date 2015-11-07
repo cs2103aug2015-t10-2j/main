@@ -5,16 +5,32 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class is an abstract class that is inherited by the relevant commands.
+ * CommandParser creates the command class corresponding to the operation as indicated
+ * by the user input.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public abstract class Command {
 	
 	// attributes
 	
+	/** This class attribute is an instance of the tempStorageManipulator class which manipulates the 
+	 *  temporary storage of entries based on the command executed.
+	 */
 	protected static TempStorageManipulator _tempStorageManipulator;
+	
+	/** This attribute is the ArrayList of parameter objects returned by CommandParser, corresponding 
+	 *  to the details input by the user.
+	 */
 	protected ArrayList<Parameter> _parameters;
+	
 	protected Logger _logger;
 	
 	// accessors
@@ -27,16 +43,6 @@ public abstract class Command {
 		return _tempStorageManipulator;
 	}
 	
-	public Parameter getNameParameter() {
-		for (int i = 0; i < _parameters.size(); i++) {
-			if (_parameters.get(i).getParameterType() == ParameterType.NAME) {
-				return _parameters.get(i);
-			}
-		}
-		
-		return null;
-	}
-	
 	public Parameter getIndexParameter() {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.INDEX) {
@@ -47,6 +53,16 @@ public abstract class Command {
 		return null;
 	}
 	
+	public Parameter getNameParameter() {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.NAME) {
+				return _parameters.get(i);
+			}
+		}
+		
+		return null;
+	}
+		
 	public Parameter getNewNameParameter() {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.NEW_NAME) {
@@ -142,14 +158,6 @@ public abstract class Command {
 	public void setParameters(ArrayList<Parameter> newParameters) {
 		_parameters = newParameters;
 	}
-		
-	public void setNameParameter(Parameter newNameParameter) {
-		for (int i = 0; i < _parameters.size(); i++) {
-			if (_parameters.get(i).getParameterType() == ParameterType.NAME) {
-				_parameters.set(i, newNameParameter);
-			}
-		}
-	}
 	
 	public void setIndexParameter(Parameter newIndexParameter) {
 		for (int i = 0; i < _parameters.size(); i++) {
@@ -158,8 +166,15 @@ public abstract class Command {
 			}
 		}
 	}
-	
-	
+		
+	public void setNameParameter(Parameter newNameParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.NAME) {
+				_parameters.set(i, newNameParameter);
+			}
+		}
+	}
+		
 	public void setNewNameParameter(Parameter newNewNameParameter) {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.NEW_NAME) {
@@ -216,6 +231,14 @@ public abstract class Command {
 		}
 	}
 	
+	public void setPriorityParameter(Parameter newPriorityParameter) {
+		for (int i = 0; i < _parameters.size(); i++) {
+			if (_parameters.get(i).getParameterType() == ParameterType.PRIORITY) {
+				_parameters.set(i, newPriorityParameter);
+			}
+		}
+	}
+	
 	public void setCategoryParameter(Parameter newCategoryParameter) {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.CATEGORY) {
@@ -224,14 +247,8 @@ public abstract class Command {
 		}
 	}
 	
-	public void setPriorityParameter(Parameter newPriorityParameter) {
-		for (int i = 0; i < _parameters.size(); i++) {
-			if (_parameters.get(i).getParameterType() == ParameterType.PRIORITY) {
-				_parameters.set(i, newPriorityParameter);
-			}
-		}
-	}
-
+	// other functionalities
+	
 	public String getDetailFromParameter(Parameter parameter) {
 		String detail = "";
 		if (parameter != null) {
@@ -240,6 +257,13 @@ public abstract class Command {
 		
 		return detail;
 	}
-			
+	
+	/** 
+	 * This is an abstract method that is implemented by the respective commands that
+	 * inherit from the Command class. It executes the respective command and returns
+	 * a Response based on the success of the operation.
+	 * 
+	 * @return Response.
+	 */
 	public abstract Response executeCommand(); 	
 }

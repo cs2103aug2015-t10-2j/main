@@ -2,19 +2,27 @@
 package com.taskboard.main.command;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.taskboard.main.DateTimeProcessor;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class inherits from the Command class and executes the add operation.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class AddCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_AFTER_ADD = "Entry successfully added:";
 	private static final String MESSAGE_ERROR_FOR_ADD = "The entry could not be added to the file.";
 
@@ -30,14 +38,17 @@ public class AddCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		// _parameters should minimally have the name of entry for add operation to be valid
 		assert _parameters.size() > 0;
-		_logger.log(Level.INFO, "Commenced execution of AddCommand");
+		_logger.log(Level.INFO, "Commence execution of AddCommand");
 		
+		// facilitate the UNDO operation if executed
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
 		
+		// facilitate the UNDO operation if executed
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
@@ -55,6 +66,7 @@ public class AddCommand extends Command {
 			responseForAdd = addEvent();
 		}
 		
+		// facilitate the UNDO operation if executed
 		if (responseForAdd.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
@@ -98,20 +110,21 @@ public class AddCommand extends Command {
 		
 		String priority = getDetailFromParameter(getPriorityParameter());
 		String category = getDetailFromParameter(getCategoryParameter());
+		_logger.log(Level.INFO, "Start processing floating task for storage");
 		Response responseForAddFloating = processFloatingTaskForStorage(taskName, priority, category);
 		
 		return responseForAddFloating;
 	}
 	
 	private Response processFloatingTaskForStorage(String taskName, String priority, String category) {
-		Entry floatingTask = constructFloatingTaskParameters(taskName, priority, category);
+		Entry floatingTask = createFloatingTask(taskName, priority, category);
 		_logger.log(Level.INFO, "Successfully created floating task");
 		Response responseForAddFloating = updateNewEntryToStorage(floatingTask);
 			
 		return responseForAddFloating;
 	}
 		
-	private Entry constructFloatingTaskParameters(String taskName, String priority, String category) {
+	private Entry createFloatingTask(String taskName, String priority, String category) {
 		Entry floatingTask = new Entry();
 		addParameterToEntry(floatingTask, ParameterType.INDEX, "");
 		addParameterToEntry(floatingTask, ParameterType.NAME, taskName);
@@ -173,29 +186,31 @@ public class AddCommand extends Command {
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start processing date time details for deadline task");
 		Response responseForAddDeadline = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
+		
 		if (responseForAddDeadline.isSuccess()) {
 			_logger.log(Level.INFO, "Start validating date time details for deadline task");
 			responseForAddDeadline = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(date, time);
 			if (responseForAddDeadline.isSuccess()) {
 				_logger.log(Level.INFO, "Start processing deadline task for storage");
-				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, category);  	                                               
+				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, 
+						                                               category);  	                                               
 			}
 		}
 
 		return responseForAddDeadline;
 	}
 	
-	private Response processDeadlineTaskForStorage(String taskName, String date, String time,  
-			                                       String priority, String category) {
-		Entry deadlineTask = constructDeadlineTaskParameters(taskName, date, time, priority, category);
+	private Response processDeadlineTaskForStorage(String taskName, String date, String time,  String priority, 
+			                                       String category) {
+		Entry deadlineTask = createDeadlineTask(taskName, date, time, priority, category);
 		_logger.log(Level.INFO, "Successfully created deadline task");
 		Response responseForAddDeadline = updateNewEntryToStorage(deadlineTask);
 		
 		return responseForAddDeadline;
 	}
 	
-	private Entry constructDeadlineTaskParameters(String taskName, String date, String time, 
-			                                      String priority, String category) {
+	private Entry createDeadlineTask(String taskName, String date, String time, String priority, 
+			                         String category) {
 		Entry deadlineTask = new Entry();
 		addParameterToEntry(deadlineTask, ParameterType.INDEX, "");
 		addParameterToEntry(deadlineTask, ParameterType.NAME, taskName);
@@ -227,10 +242,12 @@ public class AddCommand extends Command {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
 		}
+		
+		// This implies date time details are in accepted event format and can proceed for validation
 		if (responseForAddEvent.getFeedback() == null) {
 			_logger.log(Level.INFO, "Start validating date time details for event");
 			responseForAddEvent = eventDateTimeProcessor.validateEventDateTimeDetails(startDate, startTime, 
-					                                                                  endDate, endTime);	
+					                                                                  endDate, endTime);
 			if (responseForAddEvent.isSuccess()) {
 				_logger.log(Level.INFO, "Start processing event for storage");
 				responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, 
@@ -243,16 +260,15 @@ public class AddCommand extends Command {
 		
 	private Response processEventForStorage(String eventName, String startDate, String startTime,  
 			                                String endDate, String endTime, String priority, String category) {
-		Entry event = constructEventParameters(eventName, startDate, startTime, endDate, endTime,  
-				                               priority, category);
+		Entry event = createEvent(eventName, startDate, startTime, endDate, endTime, priority, category);
 		_logger.log(Level.INFO, "Successfully created event");
 		Response responseForEvent = updateNewEntryToStorage(event);
 		
 		return responseForEvent;
 	}
 	
-	private Entry constructEventParameters(String eventName, String startDate, String startTime, String endDate,
-                                           String endTime, String priority, String category) {
+	private Entry createEvent(String eventName, String startDate, String startTime, String endDate,
+                              String endTime, String priority, String category) {
 		Entry event = new Entry();
 		addParameterToEntry(event, ParameterType.INDEX, "");
 		addParameterToEntry(event, ParameterType.NAME, eventName);

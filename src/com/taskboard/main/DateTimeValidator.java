@@ -4,23 +4,38 @@ package com.taskboard.main;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.taskboard.main.util.Response;
 
+/**
+ * This class validates the provided date time details and creates a corresponding Date object
+ * if the details are valid. If a reference Date is provided, it goes on to verify the currency
+ * of the created Date against the reference Date. It returns a corresponding Response upon
+ * verification.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class DateTimeValidator {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_ERROR_FOR_INVALID_DATE_TIME = "Invalid date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	
+	// This is the default time format assigned during validation, if no time detail is provided
 	private static final String FORMAT_DEFAULT_TIME = "23:59";
+	
+	// This is the date time format used when validating the date time details
 	private static final String FORMAT_DATE_TIME = "dd/MM/yyyy'T'HH:mm";
 	
-	// attribute
+	// attributes
 	
+	/** This attribute is the Date object created if the provided date time details are valid.*/
 	private Date _inputDate;
+	
 	private Logger _logger;
 	
 	// constructor
@@ -35,16 +50,29 @@ public class DateTimeValidator {
 		return _inputDate;
 	}
 	
+	// other functionalities
+	
+	/** 
+	 * This method validates the date time details provided. If the details are valid, 
+	 * it creates a Date object that initialises _inputDate. If referenceDate is not null,
+	 * it goes on to verify the currency of the created Date against referenceDate.
+	 * It returns the corresponding Response upon verification.
+	 * 
+	 * @param date			Date in string format.
+	 * @param time          Time in string format.
+	 * @param referenceDate Date to be compared against.
+	 * @return				Response.
+	 */
 	public Response validateDateTimeDetails(String date, String time, Date referenceDate) {
-		Response responseForDateTime = new Response();
-		
 		String dateTime = getDateTimeFormat(date, time);
 		_inputDate = getInputDate(dateTime);
+		Response responseForDateTime = new Response();
+		
 		if (_inputDate == null) {
 			setFailureResponseForInvalidDateTime(responseForDateTime);
 			_logger.log(Level.INFO, "Generated failure response for invalid date time");
 		} else if (referenceDate != null){
-			responseForDateTime = checkValidityOfInputDate(referenceDate);
+			responseForDateTime = checkCurrencyOfInputDate(referenceDate);
 		}
 		
 		return responseForDateTime;
@@ -54,6 +82,7 @@ public class DateTimeValidator {
 		if (time.isEmpty()) {
 			time = FORMAT_DEFAULT_TIME;
 		}
+		
 		String dateTime = date.concat("T").concat(time);
 		
 		return dateTime;
@@ -76,7 +105,7 @@ public class DateTimeValidator {
 		response.setFeedback(MESSAGE_ERROR_FOR_INVALID_DATE_TIME);
 	}
 	
-	private Response checkValidityOfInputDate(Date referenceDate) {
+	private Response checkCurrencyOfInputDate(Date referenceDate) {
 		Response responseForInputDate = new Response();
 		if (_inputDate.after(referenceDate)) {
 			responseForInputDate.setIsSuccess(true);
