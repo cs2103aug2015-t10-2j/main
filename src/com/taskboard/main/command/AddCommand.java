@@ -16,7 +16,7 @@ import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
 /**
- * This class inherits from the Command class and executes the add operation.
+ * This class inherits from the Command class and executes the Add command.
  * @author Amarparkash Singh Mavi
  *
  */
@@ -38,17 +38,17 @@ public class AddCommand extends Command {
 	}
 	
 	public Response executeCommand() {
-		// _parameters should minimally have the name of entry for add operation to be valid
+		// _parameters should minimally have the name of entry for Add command to be valid
 		assert _parameters.size() > 0;
 		_logger.log(Level.INFO, "Commence execution of AddCommand");
 		
-		// facilitate the UNDO operation if executed
+		// facilitates the Undo command 
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
 		
-		// facilitate the UNDO operation if executed
+		// facilitates the Undo command 
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
@@ -66,7 +66,7 @@ public class AddCommand extends Command {
 			responseForAdd = addEvent();
 		}
 		
-		// facilitate the UNDO operation if executed
+		// facilitates the Undo command 
 		if (responseForAdd.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);

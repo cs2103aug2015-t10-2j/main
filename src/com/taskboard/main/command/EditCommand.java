@@ -17,7 +17,7 @@ import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
 /**
- * This class inherits from the Command class and executes the edit operation.
+ * This class inherits from the Command class and executes the Edit command.
  * @author Amarparkash Singh Mavi
  *
  */
@@ -42,17 +42,17 @@ public class EditCommand extends Command {
 	
 	public Response executeCommand() {
 		// _parameters should minimally have the index of the entry to be edited 
-		//  and a edited detail for the edit operation to be valid
+		//  and a edited detail for the Edit command to be valid
 		assert _parameters.size() > 1;
 		_logger.log(Level.INFO, "Commence execution of EditCommand");
 		
-		// facilitate the UNDO operation if executed
+		// facilitates the Undo command 
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
 		
-		// facilitate the UNDO operation if executed
+		// facilitates the Undo command 
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
@@ -67,7 +67,7 @@ public class EditCommand extends Command {
 			responseForEdit = processEditedDetailsForStorage();
 		}
 		
-		// facilitate the UNDO operation if executed
+		// facilitates the Undo command 
 		if (responseForEdit.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);

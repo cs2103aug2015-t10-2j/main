@@ -2,18 +2,26 @@
 package com.taskboard.main.command;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.TempStorageManipulator;
 import com.taskboard.main.userinterface.UserInterface;
+
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 import com.taskboard.main.util.Entry;
 
+/**
+ * This class inherits from the Command class and executes the New command.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class NewCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_FOR_FILENAME = "Scheduler \"%1$s\" is ready for use.";
 	private static final String MESSAGE_ERROR_FOR_LAUNCH_NEW = "Failed to create new file.";
@@ -32,15 +40,16 @@ public class NewCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		// _parameters must have the name of the file to be created for New command to be valid
 		assert _parameters.size() > 0;
-		_logger.log(Level.INFO, "Commenced execution of NewCommand");
+		_logger.log(Level.INFO, "Commence execution of NewCommand");
 		
 		String fileName = getDetailFromParameter(getNameParameter());
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
-		
 		Response responseForNew = getResponseForLaunch(fileName);
 		
+		// facilitates the Undo command 
 		if (responseForNew.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(new ArrayList<Entry>());
 			_tempStorageManipulator.setLastTempArchive(new ArrayList<Entry>());
@@ -51,7 +60,6 @@ public class NewCommand extends Command {
 	
 	private Response getResponseForLaunch(String fileName) {
 		Response responseForNew = new Response();
-		
 		try {
 			_tempStorageManipulator.initialise(fileName);
 			updateUIPreferences();
@@ -97,6 +105,7 @@ public class NewCommand extends Command {
 	private void updateUIPreferences() throws IOException {
 		String backgroundPath = _tempStorageManipulator.getBackgroundPath();
 		UserInterface.getInstance().setBackgroundPath(backgroundPath);
+		
 		int reminderHour = _tempStorageManipulator.getReminderHour();
 		UserInterface.getInstance().setReminderHour(reminderHour);
 	}
