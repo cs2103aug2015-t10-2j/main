@@ -438,7 +438,7 @@ public class UserInterface extends JFrame {
 								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
 								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
-								categoryText.setFont(UIManager.getFont("Label.font"));
+								categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 								categoryText.setLineWrap(true);
 								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
 								categoryText.setBounds(320, 27, 160, 37);
@@ -512,7 +512,7 @@ public class UserInterface extends JFrame {
 								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
 								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
-								categoryText.setFont(UIManager.getFont("Label.font"));
+								categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 								categoryText.setLineWrap(true);
 								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
 								categoryText.setBounds(320, 27, 160, 37);
@@ -558,7 +558,7 @@ public class UserInterface extends JFrame {
 								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
 								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
-								categoryText.setFont(UIManager.getFont("Label.font"));
+								categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 								categoryText.setLineWrap(true);
 								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
 								categoryText.setBounds(320, 27, 160, 37);
