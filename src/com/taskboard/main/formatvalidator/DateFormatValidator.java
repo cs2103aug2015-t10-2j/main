@@ -11,15 +11,39 @@ public class DateFormatValidator implements FormatValidator {
 	
 	// constants
 	
-	public static final int MILLISECONDS_PER_DAY = 86400000;
-	public static final int DAY_INDEX_MONDAY = 1;
-	public static final int DAY_INDEX_TUESDAY = 2;
-	public static final int DAY_INDEX_WEDNESDAY = 3;
-	public static final int DAY_INDEX_THURSDAY = 4;
-	public static final int DAY_INDEX_FRIDAY = 5;
-	public static final int DAY_INDEX_SATURDAY = 6;
-	public static final int DAY_INDEX_SUNDAY = 7;
-	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
+	private static final int MILLISECONDS_PER_DAY = 86400000;
+	private static final int DAY_INDEX_MONDAY = 1;
+	private static final int DAY_INDEX_TUESDAY = 2;
+	private static final int DAY_INDEX_WEDNESDAY = 3;
+	private static final int DAY_INDEX_THURSDAY = 4;
+	private static final int DAY_INDEX_FRIDAY = 5;
+	private static final int DAY_INDEX_SATURDAY = 6;
+	private static final int DAY_INDEX_SUNDAY = 7;
+	private static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
+	private static final String[] DATE_FORMATS = {"d/MM/yyyy", 
+												 "d/M/yyyy", 
+												 "dd/MM/yyyy", 
+												 "dd/M/yyyy", 
+												 "d-MM-yyyy", 
+												 "d-M-yyyy", 
+												 "dd-MM-yyyy", 
+												 "dd-M-yyyy", 
+												 "d/MM", 
+												 "d/M", 
+												 "dd/MM", 
+												 "dd/M", 
+												 "d-MM", 
+												 "d-M", 
+												 "dd-MM", 
+												 "dd-M", 
+												 "d MMM", 
+												 "dd MMM", 
+												 "d MMMMM", 
+												 "dd MMMMM", 
+												 "d MMM yyyy", 
+												 "dd MMM yyyy", 
+												 "d MMMMM yyyy", 
+												 "dd MMMMM yyyy"};
 	
 	// constructors
 	
@@ -52,57 +76,12 @@ public class DateFormatValidator implements FormatValidator {
 			case "sunday":
 				return true;
 			default:
-				if (isMatchingDateFormat(new SimpleDateFormat("d/MM/yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d/M/yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM/yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/M/yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM-yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-M-yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM-yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-M-yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d/MM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d/M"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/M"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-M"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-M"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM yyyy"), token)) {
-					return true;
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM yyyy"), token)) {
-					return true;
-				} else {
-					return false;
+				for (String currentDateFormat: DATE_FORMATS) {
+					if (isMatchingDateFormat(new SimpleDateFormat(currentDateFormat), token)) {
+						return true;
+					}
 				}
+				return false;
 		}
 	}
 	
@@ -142,57 +121,12 @@ public class DateFormatValidator implements FormatValidator {
 			case "sunday":
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SUNDAY));
 			default:
-				if (isMatchingDateFormat(new SimpleDateFormat("d/MM/yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d/MM/yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d/M/yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d/M/yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM/yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd/MM/yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/M/yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd/M/yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM-yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d-MM-yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-M-yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d-M-yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM-yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd-MM-yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-M-yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd-M-yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d/MM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d/MM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d/M"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d/M"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/MM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd/MM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd/M"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd/M"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-MM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d-MM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d-M"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d-M"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-MM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd-MM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd-M"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd-M"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d MMM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd MMM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d MMMMM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd MMMMM"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMM yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d MMM yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMM yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd MMM yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("d MMMMM yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("d MMMMM yyyy"), token);
-				} else if (isMatchingDateFormat(new SimpleDateFormat("dd MMMMM yyyy"), token)) {
-					return toStandardDateFormat(new SimpleDateFormat("dd MMMMM yyyy"), token);
-				} else {
-					return null;
+				for (String currentDateFormat: DATE_FORMATS) {
+					if (isMatchingDateFormat(new SimpleDateFormat(currentDateFormat), token)) {
+						return toStandardDateFormat(new SimpleDateFormat(currentDateFormat), token);
+					}
 				}
+				return null;
 		}
 	}
 	
