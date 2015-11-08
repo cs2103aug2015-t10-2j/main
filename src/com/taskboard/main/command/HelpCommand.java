@@ -22,11 +22,11 @@ public class HelpCommand extends Command {
 		Response responseForHelp = new Response();
 		ArrayList<Entry> helpList = new ArrayList<Entry>();
 		
-		for (int i = 0; i < 32; i++) {
+		for (int i = 0; i < 42; i++) {
 			helpList.add(new Entry());
 		}
-		helpList.get(0).addToParameters(new Parameter(null, "<center><b>Command</b></center>"));
-		helpList.get(1).addToParameters(new Parameter(null, "<center><b>Description</b></center>"));
+		helpList.get(0).addToParameters(new Parameter(null, "<center><b>COMMAND</b></center>"));
+		helpList.get(1).addToParameters(new Parameter(null, "<center><b>DESCRIPTION</b></center>"));
 		
 		helpList.get(2).addToParameters(new Parameter(null, "<b>add</b> NAME <b>by</b> DATE TIME"));
 		helpList.get(3).addToParameters(new Parameter(null, "Add a deadline task"));
@@ -58,7 +58,7 @@ public class HelpCommand extends Command {
 		helpList.get(20).addToParameters(new Parameter(null, "<b>archive</b>"));
 		helpList.get(21).addToParameters(new Parameter(null, "Display archived entries"));
 		
-		helpList.get(22).addToParameters(new Parameter(null, "<b>reminder</b> NUM_OF_HOUR(S)"));
+		helpList.get(22).addToParameters(new Parameter(null, "<b>remind</b> NUM_OF_HOUR(S)"));
 		helpList.get(23).addToParameters(new Parameter(null, "Set reminder to the specified number of hours"));
 		
 		helpList.get(24).addToParameters(new Parameter(null, "<b>background</b> IMAGE_FILE_PATH"));
@@ -72,6 +72,21 @@ public class HelpCommand extends Command {
 		
 		helpList.get(30).addToParameters(new Parameter(null, "<b>exit</b>"));
 		helpList.get(31).addToParameters(new Parameter(null, "Quit the program"));
+		
+		helpList.get(32).addToParameters(new Parameter(null, ""));
+		helpList.get(33).addToParameters(new Parameter(null, ""));
+		
+		helpList.get(34).addToParameters(new Parameter(null, "<center><b>SPECIFICATIONS</b></center>"));
+		helpList.get(35).addToParameters(new Parameter(null, "<center><b>DESCRIPTION</b></center>"));
+		
+		helpList.get(36).addToParameters(new Parameter(null, "<b>name</b>"));
+		helpList.get(37).addToParameters(new Parameter(null, "Delete or View tasks that include the name"));
+		
+		helpList.get(38).addToParameters(new Parameter(null, "<b>by</b> DATE"));
+		helpList.get(39).addToParameters(new Parameter(null, "Delete or View tasks up to the specified date"));
+		
+		helpList.get(40).addToParameters(new Parameter(null, "<b>from</b> DATE <b>to</b> DATE"));
+		helpList.get(41).addToParameters(new Parameter(null, "Delete or View tasks from and up to a specified date"));
 		
 		responseForHelp.setIsSuccess(true);
 		responseForHelp.setFeedback("Successfully displayed all entries in command list.");
