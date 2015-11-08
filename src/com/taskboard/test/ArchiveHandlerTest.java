@@ -85,7 +85,7 @@ public class ArchiveHandlerTest {
 		Entry entry2 = createNewEntry(2, "test2");
 		entries.add(entry1);
 		entries.add(entry2);
-		archiveHandler.updateTempStorageToFile(entries);
+		archiveHandler.updateTempArchiveToFile(entries);
 		String expected = convertArrayListToString(entries);
 		String actual = convertArrayListToString(archiveHandler.openExistingFile("tempTestFile"));
 		assertEquals(expected, actual);

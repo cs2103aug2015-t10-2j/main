@@ -38,7 +38,7 @@ public class PreferenceHandler {
 			contents = new ArrayList<String>();
 			contents.add(UserInterface.getInstance().getDefaultBackgroundFilePath());
 			contents.add(Integer.toString(UserInterface.getInstance().getDefaultReminderHour()));
-			updateTempStorageToFile(contents);
+			updateTempPreferenceToFile(contents);
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
 		}
@@ -60,7 +60,7 @@ public class PreferenceHandler {
 				contents.add(UserInterface.getInstance().getDefaultBackgroundFilePath());
 				contents.add(Integer.toString(UserInterface.getInstance().getDefaultReminderHour()));
 				try {
-					updateTempStorageToFile(contents);
+					updateTempPreferenceToFile(contents);
 				} catch (IOException e) {
 					_logger.log(Level.SEVERE, "Reopening existing file, exception should not occur");
 					assert false: "Reopening existing file, exception should not occur.";
@@ -129,7 +129,7 @@ public class PreferenceHandler {
 		fileToAdd.flush();
 	}
 	
-	public void updateTempStorageToFile(ArrayList<String> contents) throws IOException {
+	public void updateTempPreferenceToFile(ArrayList<String> contents) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_preferenceFile);
 		copyAllEntriesToFile(fileToAdd, contents);
 		fileToAdd.close();

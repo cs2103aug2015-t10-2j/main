@@ -266,12 +266,12 @@ public class TempStorageManipulator {
 	}
 
 	public void setTempArchiveToFile(ArrayList<Entry> entries) throws IOException {
-		_archiveHandler.updateTempStorageToFile(entries);
+		_archiveHandler.updateTempArchiveToFile(entries);
 		_logger.log(Level.INFO, "Transfer the temp storage into archive.");
 	}
 
 	public void setTempPreferenceToFile(ArrayList<String> contents) throws IOException {
-		_preferenceHandler.updateTempStorageToFile(contents);
+		_preferenceHandler.updateTempPreferenceToFile(contents);
 		_logger.log(Level.INFO, "Transfer the temp storage into preference.");
 	}
 

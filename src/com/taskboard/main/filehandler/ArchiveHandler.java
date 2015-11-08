@@ -115,7 +115,7 @@ public class ArchiveHandler {
 		return true;
 	}
 	
-	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
+	public void updateTempArchiveToFile(ArrayList<Entry> entries) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_archiveFile);
 		copyAllEntriesToFile(fileToAdd, entries);
 		fileToAdd.close();
