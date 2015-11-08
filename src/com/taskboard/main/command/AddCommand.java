@@ -109,39 +109,36 @@ public class AddCommand extends Command {
 		assert !taskName.isEmpty();
 		_logger.log(Level.INFO, "Successfully retrieved name of floating task: " + taskName);
 		
-		String priority = getDetailFromParameter(getPriorityParameter());
-		String category = getDetailFromParameter(getCategoryParameter());
 		_logger.log(Level.INFO, "Start processing floating task for storage");
-		Response responseForAddFloating = processFloatingTaskForStorage(taskName, priority, category);
+		Response responseForAddFloating = processFloatingTaskForStorage();
 		
 		return responseForAddFloating;
 	}
 	
-	private Response processFloatingTaskForStorage(String taskName, String priority, String category) {
-		Entry floatingTask = createFloatingTask(taskName, priority, category);
+	private Response processFloatingTaskForStorage() {
+		Entry floatingTask = createFloatingTask();
 		_logger.log(Level.INFO, "Successfully created floating task");
 		Response responseForAddFloating = updateNewEntryToStorage(floatingTask);
 			
 		return responseForAddFloating;
 	}
 		
-	private Entry createFloatingTask(String taskName, String priority, String category) {
+	private Entry createFloatingTask() {
 		Entry floatingTask = new Entry();
-		addParameterToEntry(floatingTask, ParameterType.INDEX, "");
-		addParameterToEntry(floatingTask, ParameterType.NAME, taskName);
-		addParameterToEntry(floatingTask, ParameterType.PRIORITY, priority);
-		addParameterToEntry(floatingTask, ParameterType.CATEGORY, category);
-		
+		addParameterToEntry(floatingTask, new Parameter(ParameterType.INDEX, ""));
+		addParameterToEntry(floatingTask, getNameParameter());
+		addParameterToEntry(floatingTask, getPriorityParameter());
+		addParameterToEntry(floatingTask, getCategoryParameter());
+			
 		return floatingTask;
 	}
 	
-	private void addParameterToEntry(Entry entry, ParameterType parameterType, String detail) {
-		if (parameterType == ParameterType.INDEX || !detail.isEmpty()) {
-			Parameter parameter = new Parameter(parameterType, detail);
+	private void addParameterToEntry(Entry entry, Parameter parameter) {
+		if (parameter != null) {
 			entry.addToParameters(parameter);
 		}
 	}
-	
+		
 	private Response updateNewEntryToStorage(Entry entry) {
 		Response responseForAdd = new Response();
 		try {
@@ -181,8 +178,6 @@ public class AddCommand extends Command {
 		
 		String date = getDetailFromParameter(getDateParameter());
 		String time = getDetailFromParameter(getTimeParameter());
-		String priority = getDetailFromParameter(getPriorityParameter());
-		String category = getDetailFromParameter(getCategoryParameter());
 		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start processing date time details for deadline task");
@@ -193,33 +188,30 @@ public class AddCommand extends Command {
 			responseForAddDeadline = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(date, time);
 			if (responseForAddDeadline.isSuccess()) {
 				_logger.log(Level.INFO, "Start processing deadline task for storage");
-				responseForAddDeadline = processDeadlineTaskForStorage(taskName, date, time, priority, 
-						                                               category);  	                                               
+				responseForAddDeadline = processDeadlineTaskForStorage();  	                                               
 			}
 		}
 
 		return responseForAddDeadline;
 	}
 	
-	private Response processDeadlineTaskForStorage(String taskName, String date, String time,  String priority, 
-			                                       String category) {
-		Entry deadlineTask = createDeadlineTask(taskName, date, time, priority, category);
+	private Response processDeadlineTaskForStorage() {
+		Entry deadlineTask = createDeadlineTask();
 		_logger.log(Level.INFO, "Successfully created deadline task");
 		Response responseForAddDeadline = updateNewEntryToStorage(deadlineTask);
 		
 		return responseForAddDeadline;
 	}
 	
-	private Entry createDeadlineTask(String taskName, String date, String time, String priority, 
-			                         String category) {
-		Entry deadlineTask = new Entry();
-		addParameterToEntry(deadlineTask, ParameterType.INDEX, "");
-		addParameterToEntry(deadlineTask, ParameterType.NAME, taskName);
-		addParameterToEntry(deadlineTask, ParameterType.DATE, date);
-		addParameterToEntry(deadlineTask, ParameterType.TIME, time);
-		addParameterToEntry(deadlineTask, ParameterType.PRIORITY, priority);
-		addParameterToEntry(deadlineTask, ParameterType.CATEGORY, category);
-	
+	private Entry createDeadlineTask() {
+		Entry deadlineTask = new Entry();		
+		addParameterToEntry(deadlineTask, new Parameter(ParameterType.INDEX, ""));
+		addParameterToEntry(deadlineTask, getNameParameter());
+		addParameterToEntry(deadlineTask, getDateParameter());
+		addParameterToEntry(deadlineTask, getTimeParameter());
+		addParameterToEntry(deadlineTask, getPriorityParameter());
+		addParameterToEntry(deadlineTask, getCategoryParameter());
+
 		return deadlineTask;
 	}
 		
@@ -232,9 +224,7 @@ public class AddCommand extends Command {
 		String startTime = getDetailFromParameter(getStartTimeParameter());
 		String endDate = getDetailFromParameter(getEndDateParameter());
 		String endTime = getDetailFromParameter(getEndTimeParameter());
-		String priority = getDetailFromParameter(getPriorityParameter());
-		String category = getDetailFromParameter(getCategoryParameter());
-		
+
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start processing date time details for event");
 		Response responseForAddEvent = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
@@ -242,6 +232,7 @@ public class AddCommand extends Command {
 		if (responseForAddEvent.isSuccess()) {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
+			_parameters.add(new Parameter(ParameterType.END_DATE, startDate));
 		}
 		
 		// This implies date time details are in accepted event format and can proceed for validation
@@ -251,34 +242,31 @@ public class AddCommand extends Command {
 					                                                                  endDate, endTime);
 			if (responseForAddEvent.isSuccess()) {
 				_logger.log(Level.INFO, "Start processing event for storage");
-				responseForAddEvent = processEventForStorage(eventName, startDate, startTime, endDate, 
-						                                     endTime, priority, category);
+				responseForAddEvent = processEventForStorage();
 			}
 		}
 
 		return responseForAddEvent;
 	}
 		
-	private Response processEventForStorage(String eventName, String startDate, String startTime,  
-			                                String endDate, String endTime, String priority, String category) {
-		Entry event = createEvent(eventName, startDate, startTime, endDate, endTime, priority, category);
+	private Response processEventForStorage() {
+		Entry event = createEvent();
 		_logger.log(Level.INFO, "Successfully created event");
 		Response responseForEvent = updateNewEntryToStorage(event);
 		
 		return responseForEvent;
 	}
 	
-	private Entry createEvent(String eventName, String startDate, String startTime, String endDate,
-                              String endTime, String priority, String category) {
+	private Entry createEvent() {
 		Entry event = new Entry();
-		addParameterToEntry(event, ParameterType.INDEX, "");
-		addParameterToEntry(event, ParameterType.NAME, eventName);
-		addParameterToEntry(event, ParameterType.START_DATE, startDate);
-		addParameterToEntry(event, ParameterType.START_TIME, startTime);
-		addParameterToEntry(event, ParameterType.END_DATE, endDate);
-		addParameterToEntry(event, ParameterType.END_TIME, endTime);
-		addParameterToEntry(event, ParameterType.PRIORITY, priority);
-		addParameterToEntry(event, ParameterType.CATEGORY, category);
+		addParameterToEntry(event, new Parameter(ParameterType.INDEX, ""));
+		addParameterToEntry(event, getNameParameter());
+		addParameterToEntry(event, getStartDateParameter());
+		addParameterToEntry(event, getStartTimeParameter());
+		addParameterToEntry(event, getEndDateParameter());
+		addParameterToEntry(event, getEndTimeParameter());
+		addParameterToEntry(event, getPriorityParameter());
+		addParameterToEntry(event, getCategoryParameter());
 		
 		return event;
 	}
