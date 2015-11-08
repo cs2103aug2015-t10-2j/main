@@ -7,12 +7,20 @@ import java.util.logging.Level;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.SelectiveFilterProcessor;
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class inherits from the Command class and executes the View command.
+ * It returns a corresponding Response that denotes the success of the operation.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class ViewCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_EMPTY_ENTRY_LIST = "There are no registered entries.";
 	private static final String MESSAGE_RETRIEVE_ENTRIES_SUCCESS = "Successfully retrieved all entries.";
 
@@ -28,7 +36,7 @@ public class ViewCommand extends Command {
 	}
 	 
 	public Response executeCommand() {
-		_logger.log(Level.INFO, "Commenced execution of ViewCommand");
+		_logger.log(Level.INFO, "Commence execution of ViewCommand");
 		Response responseForView = new Response();
 		if (isViewWithoutFilter()) {
 			setSuccessResponseForViewWithoutFilter(responseForView);

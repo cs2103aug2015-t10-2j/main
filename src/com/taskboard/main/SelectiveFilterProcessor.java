@@ -11,16 +11,26 @@ import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class determines the type of filtering required and processes it accordingly
+ * to obtain the filtered entries. It returns a corresponding Response upon verification.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class SelectiveFilterProcessor {
 	
+	// This is the feedback message to be displayed to the user
 	private static final String MESSAGE_FILTER_RESULTS = "%1$s entries found based on search results!";
 	
-	private static final String FORMAT_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";
+	// These are the time formats assigned for the respective filters, when the time detail is not provided
+	private static final String FORMAT_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00"; 
 	private static final String FORMAT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE_TIME_RANGE = "00:00";
 	
-	// attribute
+	// attributes
 	
+	/** This attribute is the ArrayList of entries filtered*/
 	private ArrayList<Entry> _filteredEntries;
+	
 	private Logger _logger;
 	
 	// constructor
@@ -35,8 +45,19 @@ public class SelectiveFilterProcessor {
 		return _filteredEntries;
 	}
 	
+	// other functionalities
+	
+	/**
+	 * This method determines the type of filtering required and processes it accordingly.
+	 * It returns a corresponding Response.  
+	 * 
+	 * @param entries    ArrayList of entry objects which represents the current entries registered.
+	 * @param parameters ArrayList of parameter objects which determine the type of filter
+	 * @return			 Response
+	 */
 	public Response processFiltering(ArrayList<Entry> entries, ArrayList<Parameter> parameters) {
 		_filteredEntries = entries;
+		
 		if (isFilterByName(parameters)) {
 			_logger.log(Level.INFO, "Start processing filter by name");
 			_filteredEntries = processFilterByName(parameters);
@@ -337,11 +358,11 @@ public class SelectiveFilterProcessor {
 		String startTime = getDetailFromParameter(getStartTimeParameter(parameters));
 		String endDate = getDetailFromParameter(getEndDateParameter(parameters));
 		String endTime = getDetailFromParameter(getEndTimeParameter(parameters));
-		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
 		if (startTime.isEmpty()) {
 			startTime = FORMAT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE_TIME_RANGE; 
 		}
 		
+		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start processing range of date time details");
 		Response responseForDateTime = eventDateTimeProcessor.processEventDateTimeDetails(startDate, startTime, 
 				                                                                          endDate, endTime);
@@ -349,6 +370,8 @@ public class SelectiveFilterProcessor {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			endDate = startDate;
 		}
+		
+		// This implies date time details are in accepted event format and can proceed for validation
 		if (responseForDateTime.getFeedback() == null) {
 			_logger.log(Level.INFO, "Start validating start date time details");
 			responseForDateTime = startDateTimeValidator.validateDateTimeDetails(startDate, startTime, null);	

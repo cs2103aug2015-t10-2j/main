@@ -12,7 +12,7 @@ import com.taskboard.main.util.Response;
 
 /**
  * This class is an abstract class that is inherited by the relevant commands.
- * CommandParser creates the command class corresponding to the operation as indicated
+ * CommandParser creates the command class corresponding to the command specified
  * by the user input.
  * @author Amarparkash Singh Mavi
  *
