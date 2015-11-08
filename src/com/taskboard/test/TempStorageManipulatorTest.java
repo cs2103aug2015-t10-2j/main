@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.taskboard.main.*;
 import com.taskboard.main.filehandler.ArchiveHandler;
+import com.taskboard.main.filehandler.PreferenceHandler;
 import com.taskboard.main.filehandler.StorageHandler;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
@@ -23,6 +24,7 @@ public class TempStorageManipulatorTest {
 	String fileNameOpen = "testFileOpen";
 	StorageHandler storageHandler = new StorageHandler();
 	ArchiveHandler archiveHandler = new ArchiveHandler();
+	PreferenceHandler preferenceHandler = new PreferenceHandler();
 	ArrayList<Entry> _entries = new ArrayList<Entry>();
 	ArrayList<Entry> _completedEntries = new ArrayList<Entry>();
 	
@@ -31,6 +33,8 @@ public class TempStorageManipulatorTest {
 		testFileOpen.createNewFile();
 		File archiveFileOpen = new File("testFileOpen.arc");
 		archiveFileOpen.createNewFile();
+		File prefFileOpen = new File("testFileOpen.pref");
+		prefFileOpen.createNewFile();
 		FileWriter writer = new FileWriter(testFileOpen);
 		writer.write("INDEX: 1");
 		writer.write(System.lineSeparator());
@@ -69,13 +73,16 @@ public class TempStorageManipulatorTest {
 		tempStorageManipulator.initialise(fileNameNew);
 		File newFile = new File("testFileNew.str");
 		File newArchive = new File("testFileNew.arc");
+		File newPref = new File("testFileNew.pref");
 		ArrayList<Entry> entries = new ArrayList<Entry>();
 		assertEquals(entries, tempStorageManipulator.getTempStorage());
 		
 		newFile.delete();
 		newArchive.delete();
+		newPref.delete();
 		assert newFile.delete(): true;
 		assert newArchive.delete(): true;
+		assert newPref.delete(): true;
 	}
 	
 	public void addEntryToArrayListOfEntries(ArrayList<Entry> entries, String name, int i) {
