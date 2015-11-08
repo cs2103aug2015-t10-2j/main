@@ -412,8 +412,8 @@ public class UserInterface extends JFrame {
 			indexLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
 		}
 		indexLabel.setVerticalAlignment(JLabel.TOP);
-		indexLabel.setPreferredSize(new Dimension(30, 30));
-		indexLabel.setBorder(new EmptyBorder(6, 10, 5, 5));
+		indexLabel.setMinimumSize(new Dimension(30, 30));
+		indexLabel.setBorder(new EmptyBorder(6, 8, 5, 5));
 		indexLabel.setOpaque(true);
 	}
 
