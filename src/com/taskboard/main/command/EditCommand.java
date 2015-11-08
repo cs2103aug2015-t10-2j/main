@@ -175,61 +175,60 @@ public class EditCommand extends Command {
 	private Response processConversionToDeadlineTask(ArrayList<Parameter> editedParameters, int index, 
 			                                         String newDate, String newTime) {
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
-		Response responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(newDate, newTime);
+		Response responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(newDate, 
+				                                                                                newTime);
 		
 		if (responseForDateTime.isSuccess()) {
 			_logger.log(Level.INFO, "Start validating edited date time details for deadline task");
 			responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, newTime);
 			if (responseForDateTime.isSuccess()) {
 				boolean isEntryTypeChanged = true;
-				responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, 
-						                                                               newDate, newTime, 
-						                                                               isEntryTypeChanged);
+				responseForDateTime = addEditedDateTimeParametersForDeadlineTask(editedParameters, index,  
+						                                                         isEntryTypeChanged);
 			}
 		}
 		
 		return responseForDateTime;
 	}
 	
-	private Response constructEditedDateTimeParametersForDeadlineTask(ArrayList<Parameter> editedParameters, 
-			                                                          int index, String newDate, String newTime, 
-			                                                          boolean isEntryTypeChanged) {
-		addParameterToEditedParameters(editedParameters, ParameterType.DATE, newDate);
-		addParameterToEditedParameters(editedParameters, ParameterType.TIME, newTime);
+	private Response addEditedDateTimeParametersForDeadlineTask(ArrayList<Parameter> editedParameters, 
+			                                                    int index, boolean isEntryTypeChanged) {
+		addParameterToEditedParameters(editedParameters, getDateParameter());
+		addParameterToEditedParameters(editedParameters, getTimeParameter());
+		
 		_logger.log(Level.INFO, "Start processing edited details for storage");
-		Response responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, isEntryTypeChanged);
+		Response responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, 
+				                                                    isEntryTypeChanged);
 		
 		return responseForDateTime;
 	}
 	
-	private void addParameterToEditedParameters(ArrayList<Parameter> editedParameters,  
-			                                    ParameterType parameterType, String detail) {
-		if (!detail.isEmpty()) {
-			Parameter parameter = new Parameter(parameterType, detail);
+	private void addParameterToEditedParameters(ArrayList<Parameter> editedParameters, Parameter parameter) {
+		if (parameter != null) {
 			editedParameters.add(parameter);
 		}
 	}
-	
+		
 	private Response processEditingDeadlineTask(ArrayList<Parameter> editedParameters, int index, 
 			                                    String newDate, String newTime) {
 		if (newDate.isEmpty()) {
 			newDate = getDateFromEntry(index);
+			_parameters.add(new Parameter(ParameterType.DATE, newDate));
 		}
 		
 		if (newTime.isEmpty()) {
 			newTime = getTimeFromEntry(index);
+			_parameters.add(new Parameter(ParameterType.TIME, newTime));
 		}
 		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start validating edited date time details for deadline task");
 		Response responseForDateTime = deadlineDateTimeProcessor.validateDeadlineDateTimeDetails(newDate, 
 				                                                                                 newTime);
-		
 		if (responseForDateTime.isSuccess()) {
 			boolean isEntryTypeChanged = false;
-			responseForDateTime = constructEditedDateTimeParametersForDeadlineTask(editedParameters, index, 
-					                                                               newDate, newTime, 
-					                                                               isEntryTypeChanged);
+			responseForDateTime = addEditedDateTimeParametersForDeadlineTask(editedParameters, index,  
+					                                                         isEntryTypeChanged);
 		}
 		
 		return responseForDateTime;
@@ -298,6 +297,7 @@ public class EditCommand extends Command {
 		if (responseForDateTime.isSuccess()) {
 			_logger.log(Level.INFO, "Assign start date to end date");
 			newEndDate = newStartDate;
+			_parameters.add(new Parameter(ParameterType.END_DATE, newStartDate));
 		}
 		
 		// This implies date time details are in accepted event format and can proceed for validation
@@ -307,26 +307,24 @@ public class EditCommand extends Command {
 					                                                                  newEndDate, newEndTime);
 			if (responseForDateTime.isSuccess()) {
 				boolean isEntryTypeChanged = true;
-				responseForDateTime = constructEditedDateTimeParametersForEvent(editedParameters, index, 
-						                                                        newStartDate, newStartTime, 
-						                                                        newEndDate, newEndTime,
-						                                                        isEntryTypeChanged);
+				responseForDateTime = addEditedDateTimeParametersForEvent(editedParameters, index, 
+						                                                  isEntryTypeChanged);
 			}
 		}
 		
 		return responseForDateTime;
 	}
 	
-	private Response constructEditedDateTimeParametersForEvent(ArrayList<Parameter> editedParameters, int index,
-			                                                   String newStartDate, String newStartTime, 
-			                                                   String newEndDate, String newEndTime, 
-			                                                   boolean isEntryTypeChanged) {                      
-		addParameterToEditedParameters(editedParameters, ParameterType.START_DATE, newStartDate);
-		addParameterToEditedParameters(editedParameters, ParameterType.START_TIME, newStartTime);
-		addParameterToEditedParameters(editedParameters, ParameterType.END_DATE, newEndDate);
-		addParameterToEditedParameters(editedParameters, ParameterType.END_TIME, newEndTime);
+	private Response addEditedDateTimeParametersForEvent(ArrayList<Parameter> editedParameters, int index,
+			                                             boolean isEntryTypeChanged) {                      
+		addParameterToEditedParameters(editedParameters, getStartDateParameter());
+		addParameterToEditedParameters(editedParameters, getStartTimeParameter());
+		addParameterToEditedParameters(editedParameters, getEndDateParameter());
+		addParameterToEditedParameters(editedParameters, getEndTimeParameter());
+		
 		_logger.log(Level.INFO, "Start processing edited details for storage");
-		Response responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, isEntryTypeChanged);
+		Response responseForDateTime = updateEditedDetailsToStorage(editedParameters, index, 
+				                                                    isEntryTypeChanged);
 		
 		return responseForDateTime;
 	}
@@ -335,30 +333,32 @@ public class EditCommand extends Command {
 			                             String newStartTime, String newEndDate, String newEndTime) {
 		if (newStartDate.isEmpty()) {
 			newStartDate = getStartDateFromEntry(index);
+			_parameters.add(new Parameter(ParameterType.START_DATE, newStartDate));
 		}
 		
 		if (newStartTime.isEmpty()) {
 			newStartTime = getStartTimeFromEntry(index);
+			_parameters.add(new Parameter(ParameterType.START_TIME, newStartTime));
 		}
 		
 		if (newEndDate.isEmpty()) {
 			newEndDate = getEndDateFromEntry(index);
+			_parameters.add(new Parameter(ParameterType.END_DATE, newEndDate));
 		}
 		
 		if (newEndTime.isEmpty()) {
 			newEndTime = getEndTimeFromEntry(index);
+			_parameters.add(new Parameter(ParameterType.END_TIME, newEndTime));
 		}
 		
 		DateTimeProcessor eventDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start validating edited date time details for event");
 		Response responseForDateTime = eventDateTimeProcessor.validateEventDateTimeDetails(newStartDate, newStartTime, 
 				                                                                           newEndDate, newEndTime);
-		
 		if (responseForDateTime.isSuccess()) {
 			boolean isEntryTypeChanged = false;
-			responseForDateTime = constructEditedDateTimeParametersForEvent(editedParameters, index, newStartDate,  
-					                                                        newStartTime, newEndDate, newEndTime,
-					                                                        isEntryTypeChanged);
+			responseForDateTime = addEditedDateTimeParametersForEvent(editedParameters, index, 
+					                                                  isEntryTypeChanged);
 		}
 		
 		return responseForDateTime;
