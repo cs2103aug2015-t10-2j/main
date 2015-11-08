@@ -171,7 +171,7 @@ public class TempStorageManipulator {
 		} else {
 			replaceParameters(entryDetails, newContent);
 			while (!checkParameter(entryDetails)) {
-				removingSomeContent(entryDetails);
+				removeDetails(entryDetails);
 			}
 			addParameters(entryDetails, newContent);
 			Collections.sort(entryDetails, new ParameterComparator());
@@ -179,7 +179,7 @@ public class TempStorageManipulator {
 	}
 
 	// Removing non Name/Index/Category/Priority
-	private void removingSomeContent(ArrayList<Parameter> entryDetails) {
+	private void removeDetails(ArrayList<Parameter> entryDetails) {
 		for (int i = 0; i < entryDetails.size(); i++) {
 			if ((entryDetails.get(i).getParameterType() != ParameterType.NAME)
 					&& (entryDetails.get(i).getParameterType() != ParameterType.INDEX)
