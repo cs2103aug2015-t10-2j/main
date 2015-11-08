@@ -25,9 +25,9 @@ public class TempStorageManipulator {
 	private ArrayList<Entry> _lastTempStorage;
 	private ArrayList<Entry> _lastTempArchive;
 	private ArrayList<String> _tempPreference;
-	StorageHandler _storageHandler;
-	ArchiveHandler _archiveHandler;
-	PreferenceHandler _preferenceHandler;
+	private StorageHandler _storageHandler;
+	private ArchiveHandler _archiveHandler;
+	private PreferenceHandler _preferenceHandler;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	// constructor
