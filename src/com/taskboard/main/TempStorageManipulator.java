@@ -16,6 +16,11 @@ import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 
+/* This class involves manipulating the temporary storage.
+ * The temp storage will hold the state of the storage, archive, and the preference of a scheduler
+ * when the user create a new scheduler or open an existing one.
+ * 
+ */
 public class TempStorageManipulator {
 
 	// attributes
@@ -96,7 +101,8 @@ public class TempStorageManipulator {
 		_tempPreference.set(1, String.valueOf(numOfHours));
 		setTempPreferenceToFile(_tempPreference);
 	}
-
+	
+	// Initialise the temp storage when creating a new scheduler
 	public void initialise(String fileName) throws IllegalArgumentException, IOException {
 		_tempStorage = _storageHandler.createNewFile(fileName);
 		_tempArchive = _archiveHandler.createNewFile(fileName);
@@ -104,6 +110,7 @@ public class TempStorageManipulator {
 		_logger.log(Level.INFO, "Initialise a new temporary storage.");
 	}
 
+	// Repopulate the temp storage with contents from an existing scheduler
 	public void repopulate(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		_tempStorage = _storageHandler.openExistingFile(fileName);
 		_tempArchive = _archiveHandler.openExistingFile(fileName);

@@ -15,6 +15,11 @@ import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 
+/* This class will handle the storage file for entries.
+ * The methods used are: creating new file, opening existing file, copy the existing content
+ * in the file to the temporary storage for manipulation, and write the content of the temp storage
+ * into the file after manipulation.
+ */
 
 public class StorageHandler {
 
@@ -82,6 +87,8 @@ public class StorageHandler {
 		return false;
 	}
 
+	// This method will add the existing content of the file into an ArrayList of Entries
+	// which will be used by the TempStorageManipulator class.
 	private ArrayList<Entry> copyExistingEntriesFromFile(Scanner scanFileToCopy) {
 		ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -116,6 +123,7 @@ public class StorageHandler {
 		return entries;
 	}
 
+	// This method will write the elements of the temporary storage into the storage file
 	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_storageFile);
 		copyAllEntriesToFile(fileToAdd, entries);

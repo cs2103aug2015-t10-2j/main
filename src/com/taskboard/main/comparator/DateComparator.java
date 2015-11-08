@@ -7,6 +7,7 @@ import java.util.Date;
 import com.taskboard.main.DateTimeValidator;
 import com.taskboard.main.util.Entry;
 
+// This class will be used to compare two entry based on date.
 public class DateComparator implements Comparator<Entry>{
 	private DateTimeValidator dateTimeValidator = new DateTimeValidator();
 

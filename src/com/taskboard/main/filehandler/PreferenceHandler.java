@@ -13,6 +13,12 @@ import java.util.logging.Logger;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.userinterface.UserInterface;
 
+/* This class will handle the preference file for the scheduler.
+ * The methods used are: creating new file, opening existing file, copy the existing content
+ * in the file to the temporary storage for manipulation, and write the content of the temp storage
+ * into the file after manipulation.
+ */
+
 public class PreferenceHandler {
 
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
@@ -81,7 +87,9 @@ public class PreferenceHandler {
 		_logger.log(Level.INFO, "Check whether if a file already exists.");
 		return false;
 	}
-
+	
+	// This method will add the existing content of the file into an ArrayList of Strings
+	// which will be used by the TempStorageManipulator class.
 	private ArrayList<String> copyExistingContentsFromFile(Scanner scanFileToCopy) {
 		ArrayList<String> contents = new ArrayList<String>();
 
@@ -90,29 +98,7 @@ public class PreferenceHandler {
 		while (scanFileToCopy.hasNext()) {
 			content = scanFileToCopy.nextLine();
 			contents.add(content);
-
-//			if (formattedDetail.contains(MARKER_FOR_NEXT_ENTRY_IN_FILE)) {
-//				entries.add(entry);
-//				entry = new Entry();
-//			}
-//
-//			if (!formattedDetail.isEmpty()) {
-//				String[] splitFormattedDetail = formattedDetail.split(": ");
-//				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE].trim();
-//				String detail = splitFormattedDetail[INDEX_OF_DETAIL].trim();
-//
-//				Parameter parameter = new Parameter();
-//				parameter.setParameterType(ParameterType.valueOf(detailType));
-//				parameter.setParameterValue(detail);
-//				entry.addToParameters(parameter);
-//			}
 		}
-//
-//		if (!entries.isEmpty()) {
-//			// to add the final entry once end of file is reached
-//			entries.add(entry);
-//			entries.remove(INDEX_OF_EMPTY_ENTRY);
-//		}
 		_logger.log(Level.INFO, "Copy data from file to temp storage.");
 		return contents;
 	}
@@ -129,6 +115,7 @@ public class PreferenceHandler {
 		fileToAdd.flush();
 	}
 	
+	// This method will write the elements of the temporary storage into the archive file
 	public void updateTempPreferenceToFile(ArrayList<String> contents) throws IOException {
 		FileWriter fileToAdd = new FileWriter(_preferenceFile);
 		copyAllEntriesToFile(fileToAdd, contents);
