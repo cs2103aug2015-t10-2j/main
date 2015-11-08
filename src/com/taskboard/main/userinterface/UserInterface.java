@@ -411,16 +411,7 @@ public class UserInterface extends JFrame {
 							
 							if (currentEntry.getCategoryParameter() != null) {
 								JTextArea categoryText = new JTextArea();
-								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
-								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
-								categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-								categoryText.setLineWrap(true);
-								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
-								categoryText.setBounds(320, 27, 160, 37);
-								categoryText.setPreferredSize(new Dimension(160, 37));
-								categoryText.setBackground(new Color(255, 162, 173, LABEL_RELATIVE_TRANSPARENCY));
-								categoryText.setOpaque(true);
+								categoryText = createCategoryText(currentEntry, "deadline");
 								deadlineLabel.add(categoryText);
 							}
 							
@@ -485,16 +476,7 @@ public class UserInterface extends JFrame {
 							
 							if (currentEntry.getCategoryParameter() != null) {
 								JTextArea categoryText = new JTextArea();
-								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
-								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
-								categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-								categoryText.setLineWrap(true);
-								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
-								categoryText.setBounds(320, 27, 160, 37);
-								categoryText.setPreferredSize(new Dimension(160, 37));
-								categoryText.setBackground(new Color(135, 255, 123, LABEL_RELATIVE_TRANSPARENCY));
-								categoryText.setOpaque(true);
+								categoryText = createCategoryText(currentEntry, "event");
 								eventLabel.add(categoryText);
 							}
 							
@@ -531,16 +513,7 @@ public class UserInterface extends JFrame {
 							
 							if (currentEntry.getCategoryParameter() != null) {
 								JTextArea categoryText = new JTextArea();
-								DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
-								categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-								categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
-								categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-								categoryText.setLineWrap(true);
-								categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
-								categoryText.setBounds(320, 27, 160, 37);
-								categoryText.setPreferredSize(new Dimension(160, 37));
-								categoryText.setBackground(new Color(168, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
-								categoryText.setOpaque(true);
+								categoryText = createCategoryText(currentEntry, "float");
 								floatLabel.add(categoryText);
 							}
 							
@@ -776,6 +749,32 @@ public class UserInterface extends JFrame {
 		constraints.insets = new Insets(insetsTop, insetsLeft, insetsBottom, insetsRight);
 	
 		return constraints;
+	}
+	
+	private static JTextArea createCategoryText(Entry currentEntry, String typeToken) {
+		JTextArea categoryText = new JTextArea();
+		
+		DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
+		categoryCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+		categoryText.setText(currentEntry.getCategoryParameter().getParameterValue());
+		categoryText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
+		categoryText.setLineWrap(true);
+		categoryText.setBorder(new EmptyBorder(5, 5, 5, 5));
+		categoryText.setBounds(320, 27, 160, 37);
+		categoryText.setPreferredSize(new Dimension(160, 37));
+		
+		// Determining the color of the label according to the type of tasks
+		if (typeToken.equalsIgnoreCase("deadline")) {
+			categoryText.setBackground(new Color(255, 162, 173, LABEL_RELATIVE_TRANSPARENCY));
+		} else if (typeToken.equalsIgnoreCase("event")) {
+			categoryText.setBackground(new Color(135, 255, 123, LABEL_RELATIVE_TRANSPARENCY));
+		} else if (typeToken.equalsIgnoreCase("float")) {
+			categoryText.setBackground(new Color(168, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
+		}
+		
+		categoryText.setOpaque(true);
+		
+		return categoryText;
 	}
 	
 }
