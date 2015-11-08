@@ -27,6 +27,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
 
+/**
+ * This UserInterface class uses Javax.Swing for its Graphical User Interface(GUI).
+ * The main method is located in this class.
+ * 
+ * @author Chris Raynaldo
+ *
+ */
 public class UserInterface extends JFrame {
 	
 	private static final String DEFAULT_TITLE = "TaskBoard: Your Revolutionary Task Manager";
@@ -165,6 +172,12 @@ public class UserInterface extends JFrame {
 		_reminderHour = newReminderHour;
 	}
 	
+	/**
+	 * This method retrieves the location of the specified image location (local or online)
+	 * and update the background of TaskBoard accordingly.
+	 * 
+	 * @throws IOException
+	 */
 	public void updateBackgroundImageIcon() throws IOException {
 		try {
 			ImageIcon sourceIcon = new ImageIcon(ImageIO.read(new File(_backgroundPath)));
@@ -737,7 +750,7 @@ public class UserInterface extends JFrame {
 		}
 	}
 	
-	private static GridBagConstraints setConstraints(int fill, double weightx, double weighty, int gridx, int gridy,
+	private GridBagConstraints setConstraints(int fill, double weightx, double weighty, int gridx, int gridy,
 									   int insetsTop, int insetsLeft, int insetsBottom, int insetsRight){
 		GridBagConstraints constraints = new GridBagConstraints();
 		
@@ -751,7 +764,7 @@ public class UserInterface extends JFrame {
 		return constraints;
 	}
 	
-	private static JTextArea createCategoryText (Entry currentEntry, String typeToken) {
+	private JTextArea createCategoryText (Entry currentEntry, String typeToken) {
 		JTextArea categoryText = new JTextArea();
 		
 		DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
@@ -763,7 +776,7 @@ public class UserInterface extends JFrame {
 		categoryText.setBounds(320, 27, 160, 37);
 		categoryText.setPreferredSize(new Dimension(160, 37));
 		
-		// Determining the color of the label according to the type of tasks
+		// Determining the color of the label according to the type of the task
 		if (typeToken.equalsIgnoreCase("deadline")) {
 			categoryText.setBackground(new Color(255, 162, 173, LABEL_RELATIVE_TRANSPARENCY));
 		} else if (typeToken.equalsIgnoreCase("event")) {
@@ -777,11 +790,12 @@ public class UserInterface extends JFrame {
 		return categoryText;
 	}
 	
-	private static TransparentTextArea setTextArea (Entry currentEntry, String typeToken) {
+	private TransparentTextArea setTextArea (Entry currentEntry, String typeToken) {
 		TransparentTextArea text = new TransparentTextArea(1.0f);
 		DefaultCaret textCaret = (DefaultCaret) text.getCaret();
 		textCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		
+		// Determining the text to be set according to the type of the task
 		if (typeToken.equals("deadline")) {
 			text.setText(getDeadlineTaskDisplayString(currentEntry));
 		} else if (typeToken.equals("event")) {
