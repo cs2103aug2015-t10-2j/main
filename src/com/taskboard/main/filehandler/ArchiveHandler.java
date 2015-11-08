@@ -96,7 +96,7 @@ public class ArchiveHandler {
 			}
 
 			if (!formattedDetail.isEmpty()) {
-				String[] splitFormattedDetail = formattedDetail.split(":");
+				String[] splitFormattedDetail = formattedDetail.split(": ");
 				String detailType = splitFormattedDetail[INDEX_OF_DETAIL_TYPE].trim();
 				String detail = splitFormattedDetail[INDEX_OF_DETAIL].trim();
 
