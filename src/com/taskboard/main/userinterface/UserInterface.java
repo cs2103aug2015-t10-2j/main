@@ -336,14 +336,7 @@ public class UserInterface extends JFrame {
 						}
 						
 						if (!lastDate.equals(pivotDate)) {
-							constraints.gridwidth = 2;
-							JLabel dateLabel = new JLabel();
-							dateLabel.setText(pivotDate);
-							dateLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-							dateLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							dateLabel.setBackground(Color.WHITE);
-							dateLabel.setOpaque(true);
-							_displayArea.add(dateLabel, constraints);
+							initDateLabel(constraints, pivotDate);
 							lastDate = pivotDate;
 							constraints.gridx = 0;
 							constraints.gridy = ++curGridY;
@@ -355,14 +348,7 @@ public class UserInterface extends JFrame {
 						}
 						
 						JLabel indexLabel = new JLabel();
-						if (currentEntry.getIndexParameter() != null) {
-							indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
-							indexLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-						}
-						indexLabel.setVerticalAlignment(JLabel.TOP);
-						indexLabel.setPreferredSize(new Dimension(30, 30));
-						indexLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-						indexLabel.setOpaque(true);
+						initIndexLabel(currentEntry, indexLabel);
 						
 						if (currentEntry.getDateParameter() != null) {
 							indexLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
@@ -420,6 +406,28 @@ public class UserInterface extends JFrame {
 		_commandField.setText("");
 	}
 
+	private void initIndexLabel(Entry currentEntry, JLabel indexLabel) {
+		if (currentEntry.getIndexParameter() != null) {
+			indexLabel.setText(currentEntry.getIndexParameter().getParameterValue() + '.');
+			indexLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
+		}
+		indexLabel.setVerticalAlignment(JLabel.TOP);
+		indexLabel.setPreferredSize(new Dimension(30, 30));
+		indexLabel.setBorder(new EmptyBorder(6, 10, 5, 5));
+		indexLabel.setOpaque(true);
+	}
+
+	private void initDateLabel(GridBagConstraints constraints, String pivotDate) {
+		constraints.gridwidth = 2;
+		JLabel dateLabel = new JLabel();
+		dateLabel.setText(pivotDate);
+		dateLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
+		dateLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		dateLabel.setBackground(Color.WHITE);
+		dateLabel.setOpaque(true);
+		_displayArea.add(dateLabel, constraints);
+	}
+	
 	private void initHelpLabel(GridBagConstraints constraints, Entry currentEntry) {
 		constraints.gridwidth = 1;
 		JTextPane helpLabel = new JTextPane();
