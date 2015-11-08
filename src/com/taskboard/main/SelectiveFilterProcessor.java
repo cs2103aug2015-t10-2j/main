@@ -49,7 +49,7 @@ public class SelectiveFilterProcessor {
 	
 	/**
 	 * This method determines the type of filtering required and processes it accordingly.
-	 * It returns a corresponding Response.  
+	 * It returns a corresponding Response upon verification.  
 	 * 
 	 * @param entries    ArrayList of entry objects which represents the current entries registered.
 	 * @param parameters ArrayList of parameter objects which determine the type of filter
@@ -114,7 +114,7 @@ public class SelectiveFilterProcessor {
 		
 		return responseForFiltering;
 	}
-	
+		
 	private boolean isFilterByName(ArrayList<Parameter> parameters) {
 		Parameter nameParameter = getNameParameter(parameters);
 		if (nameParameter != null) {
@@ -276,9 +276,11 @@ public class SelectiveFilterProcessor {
 			                                  ArrayList<Parameter> parameters) { 
 		String date = getDetailFromParameter(getDateParameter(parameters));
 		String time = getDetailFromParameter(getTimeParameter(parameters));	
+		
 		DateTimeProcessor deadlineDateTimeProcessor = new DateTimeProcessor();
 		_logger.log(Level.INFO, "Start processing date time details");
 		Response responseForDateTime = deadlineDateTimeProcessor.processDeadlineDateTimeDetails(date, time);
+		
 		if (responseForDateTime.isSuccess()) {
 			_logger.log(Level.INFO, "Start validating date time details");
 			responseForDateTime = dateTimeValidator.validateDateTimeDetails(date, time, null);

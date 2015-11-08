@@ -2,6 +2,7 @@
 package com.taskboard.main.command;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -9,12 +10,20 @@ import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.IndexProcessor;
 import com.taskboard.main.SelectiveFilterProcessor;
 import com.taskboard.main.TempStorageManipulator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class inherits from the Command class and executes the Delete command.
+ * It returns a corresponding Response that denotes the success of the operation.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class DeleteCommand extends Command {
 	
+	// These are the feedback messages to be displayed to the user
 	private static final String MESSAGE_AFTER_DELETE = "Entry successfully deleted:";
 	private static final String MESSAGE_ERROR_FOR_DELETE = "The deletion was unsuccessful.";
 	
@@ -30,14 +39,19 @@ public class DeleteCommand extends Command {
 	}
 	
 	public Response executeCommand() {
+		/* _parameters must minimally have the index of entry to be deleted 
+		 * or a filter constraint for the Delete command to be valid
+		 */
 		assert _parameters.size() > 0;
-		_logger.log(Level.INFO, "Commenced execution of DeleteCommand");
+		_logger.log(Level.INFO, "Commence execution of DeleteCommand");
 		
+		// facilitates the Undo command 
 		ArrayList<Entry> initialTempStorage = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempStorage()) {
 			initialTempStorage.add(new Entry(entry));
 		}
 		
+		// facilitates the Undo command 
 		ArrayList<Entry> initialTempArchive = new ArrayList<Entry>();
 		for (Entry entry: _tempStorageManipulator.getTempArchive()) {
 			initialTempArchive.add(new Entry(entry));
@@ -48,6 +62,7 @@ public class DeleteCommand extends Command {
 			IndexProcessor indexProcessorForDelete = new IndexProcessor();
 			ArrayList<Entry> entries = _tempStorageManipulator.getTempStorage();
 			responseForDelete = indexProcessorForDelete.processInputIndex(_parameters, entries);
+			
 			if (!responseForDelete.isSuccess()) {
 				return responseForDelete;
 			}
@@ -59,6 +74,7 @@ public class DeleteCommand extends Command {
 			responseForDelete = processDeleteByFiltering();
 		}
 		
+		// facilitates the Undo command 
 		if (responseForDelete.isSuccess()) {
 			_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 			_tempStorageManipulator.setLastTempArchive(initialTempArchive);
@@ -143,6 +159,7 @@ public class DeleteCommand extends Command {
 			Entry entry = filteredEntries.get(i);
 			userFeedback = userFeedback.concat("<br>").concat(entry.toHTMLString());
 		}
+		
 		response.setFeedback(userFeedback);
 		response.setEntries(_tempStorageManipulator.getTempStorage());
 	}

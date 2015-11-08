@@ -42,8 +42,9 @@ public class EditCommand extends Command {
 	}
 	
 	public Response executeCommand() {
-		// _parameters should minimally have the index of the entry to be edited 
-		//  and a edited detail for the Edit command to be valid
+		/* _parameters should minimally have the index of the entry to be edited 
+		 *  and a edited detail for the Edit command to be valid
+		 */
 		assert _parameters.size() > 1;
 		_logger.log(Level.INFO, "Commence execution of EditCommand");
 		
