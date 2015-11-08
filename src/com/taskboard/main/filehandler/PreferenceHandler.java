@@ -18,7 +18,7 @@ public class PreferenceHandler {
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
 	private static final String MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE = "The file does not exists.";
 
-	private File _original;
+	private File _preferenceFile;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 
@@ -27,14 +27,14 @@ public class PreferenceHandler {
 	
 	public ArrayList<String> createNewFile(String fileName) throws IllegalArgumentException, IOException {
 		String newFileName = fileName + ".pref";
-		_original = new File(newFileName);
-		boolean doesFileExist = doesFileExist(_original);
+		_preferenceFile = new File(newFileName);
+		boolean doesFileExist = doesFileExist(_preferenceFile);
 
 		ArrayList<String> contents;
 
 		// assert doesFileExist: false;
 		if (!doesFileExist) {
-			_original.createNewFile();
+			_preferenceFile.createNewFile();
 			contents = new ArrayList<String>();
 			contents.add(UserInterface.getInstance().getDefaultBackgroundFilePath());
 			contents.add(Integer.toString(UserInterface.getInstance().getDefaultReminderHour()));
@@ -48,13 +48,13 @@ public class PreferenceHandler {
 
 	public ArrayList<String> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		String newFileName = fileName + ".pref";
-		_original = new File(newFileName);
-		boolean doesFileExist = doesFileExist(_original);
+		_preferenceFile = new File(newFileName);
+		boolean doesFileExist = doesFileExist(_preferenceFile);
 
 		ArrayList<String> contents;
 
 		if (doesFileExist) {
-			Scanner scanFileToCopy = new Scanner(_original);
+			Scanner scanFileToCopy = new Scanner(_preferenceFile);
 			contents = copyExistingContentsFromFile(scanFileToCopy);
 			if (contents.isEmpty()) {
 				contents.add(UserInterface.getInstance().getDefaultBackgroundFilePath());
@@ -130,7 +130,7 @@ public class PreferenceHandler {
 	}
 	
 	public void updateTempStorageToFile(ArrayList<String> contents) throws IOException {
-		FileWriter fileToAdd = new FileWriter(_original);
+		FileWriter fileToAdd = new FileWriter(_preferenceFile);
 		copyAllEntriesToFile(fileToAdd, contents);
 		fileToAdd.close();
 		_logger.log(Level.INFO, "Copy data from temp storage to file.");

@@ -28,7 +28,7 @@ public class StorageHandler {
 
 	// attributes
 
-	private File _original;
+	private File _storageFile;
 
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 
@@ -40,14 +40,14 @@ public class StorageHandler {
 
 	public ArrayList<Entry> createNewFile(String fileName) throws IllegalArgumentException, IOException {
 		String newFileName = fileName + ".str";
-		_original = new File(newFileName);
-		boolean doesFileExist = doesFileExist(_original);
+		_storageFile = new File(newFileName);
+		boolean doesFileExist = doesFileExist(_storageFile);
 
 		ArrayList<Entry> entries;
 
 		// assert doesFileExist: false;
 		if (!doesFileExist) {
-			_original.createNewFile();
+			_storageFile.createNewFile();
 			entries = new ArrayList<Entry>();
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
@@ -58,13 +58,13 @@ public class StorageHandler {
 
 	public ArrayList<Entry> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		String newFileName = fileName + ".str";
-		_original = new File(newFileName);
-		boolean doesFileExist = doesFileExist(_original);
+		_storageFile = new File(newFileName);
+		boolean doesFileExist = doesFileExist(_storageFile);
 
 		ArrayList<Entry> entries;
 
 		if (doesFileExist) {
-			Scanner scanFileToCopy = new Scanner(_original);
+			Scanner scanFileToCopy = new Scanner(_storageFile);
 			entries = copyExistingEntriesFromFile(scanFileToCopy);
 			scanFileToCopy.close();
 		} else {
@@ -117,7 +117,7 @@ public class StorageHandler {
 	}
 
 	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
-		FileWriter fileToAdd = new FileWriter(_original);
+		FileWriter fileToAdd = new FileWriter(_storageFile);
 		copyAllEntriesToFile(fileToAdd, entries);
 		fileToAdd.close();
 		_logger.log(Level.INFO, "Copy data from temp storage to file.");

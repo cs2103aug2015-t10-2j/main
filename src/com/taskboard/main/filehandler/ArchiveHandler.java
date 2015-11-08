@@ -17,7 +17,6 @@ import com.taskboard.main.util.ParameterType;
 
 public class ArchiveHandler {
 	
-
 	private static final String MARKER_FOR_NEXT_ENTRY_IN_FILE = "INDEX:";
 	private static final int INDEX_OF_EMPTY_ENTRY = 0;
 	private static final String MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE = "The file already exists.";
@@ -26,7 +25,7 @@ public class ArchiveHandler {
 	private static final int INDEX_OF_DETAIL = 1;
 	
 	// attributes
-	private File _archive;
+	private File _archiveFile;
 //	private ArrayList<Entry> _completedEntries;
 	private static Logger _logger = GlobalLogger.getInstance().getLogger();
 	
@@ -36,18 +35,18 @@ public class ArchiveHandler {
 	
 	// accessor
 	public File getArchive() {
-		return _archive;
+		return _archiveFile;
 	}
 	
 	public ArrayList<Entry> createNewFile(String fileName) throws IllegalArgumentException,IOException {
 		String archiveFileName = fileName + ".arc";
-		_archive = new File(archiveFileName);
+		_archiveFile = new File(archiveFileName);
 		
-		boolean doesFileExist = doesFileExist(_archive);
+		boolean doesFileExist = doesFileExist(_archiveFile);
 		ArrayList<Entry> completedEntries;
 //		assert doesFileExist: false;
 		if (!doesFileExist) {
-			_archive.createNewFile();
+			_archiveFile.createNewFile();
 			completedEntries = new ArrayList<Entry>();
 		} else {
 			throw new IllegalArgumentException(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
@@ -58,13 +57,13 @@ public class ArchiveHandler {
 	
 	public ArrayList<Entry> openExistingFile(String fileName) throws IllegalArgumentException, FileNotFoundException {
 		String archiveFileName = fileName + ".arc";
-		_archive = new File(archiveFileName);
-		boolean doesFileExist = doesFileExist(_archive);
+		_archiveFile = new File(archiveFileName);
+		boolean doesFileExist = doesFileExist(_archiveFile);
 		
 		ArrayList<Entry> completedEntries;
 		
 		if (doesFileExist) {
-			Scanner scanFileToCopy = new Scanner(_archive);
+			Scanner scanFileToCopy = new Scanner(_archiveFile);
 			completedEntries = copyExistingEntriesFromFile(scanFileToCopy);
 			scanFileToCopy.close();	
 		} else {
@@ -117,7 +116,7 @@ public class ArchiveHandler {
 	}
 	
 	public void updateTempStorageToFile(ArrayList<Entry> entries) throws IOException {
-		FileWriter fileToAdd = new FileWriter(_archive);
+		FileWriter fileToAdd = new FileWriter(_archiveFile);
 		copyAllEntriesToFile(fileToAdd, entries);
 		fileToAdd.close();
 		_logger.log(Level.INFO, "Copy temp storage to archive.");
