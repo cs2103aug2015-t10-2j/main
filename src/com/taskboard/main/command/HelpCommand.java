@@ -22,7 +22,7 @@ public class HelpCommand extends Command {
 		Response responseForHelp = new Response();
 		ArrayList<Entry> helpList = new ArrayList<Entry>();
 		
-		for (int i = 0; i < 42; i++) {
+		for (int i = 0; i < 46; i++) {
 			helpList.add(new Entry());
 		}
 		helpList.get(0).addToParameters(new Parameter(null, "<center><b>COMMAND</b></center>"));
@@ -77,16 +77,22 @@ public class HelpCommand extends Command {
 		helpList.get(33).addToParameters(new Parameter(null, ""));
 		
 		helpList.get(34).addToParameters(new Parameter(null, "<center><b>SPECIFICATIONS</b></center>"));
-		helpList.get(35).addToParameters(new Parameter(null, "<center><b>DESCRIPTION</b></center>"));
+		helpList.get(35).addToParameters(new Parameter(null, "<center><b>Delete, View, or Edit entries...</b></center>"));
 		
 		helpList.get(36).addToParameters(new Parameter(null, "<b>name</b>"));
-		helpList.get(37).addToParameters(new Parameter(null, "Delete or View tasks that include the name"));
+		helpList.get(37).addToParameters(new Parameter(null, "which include the name"));
 		
 		helpList.get(38).addToParameters(new Parameter(null, "<b>by</b> DATE"));
-		helpList.get(39).addToParameters(new Parameter(null, "Delete or View tasks up to the specified date"));
+		helpList.get(39).addToParameters(new Parameter(null, "of the specified date"));
 		
 		helpList.get(40).addToParameters(new Parameter(null, "<b>from</b> DATE <b>to</b> DATE"));
-		helpList.get(41).addToParameters(new Parameter(null, "Delete or View tasks from and up to a specified date"));
+		helpList.get(41).addToParameters(new Parameter(null, "from and up to a specified date"));
+		
+		helpList.get(42).addToParameters(new Parameter(null, "<b>pri</b> PRIORITY_LEVEL"));
+		helpList.get(43).addToParameters(new Parameter(null, "with the specified priority level"));
+		
+		helpList.get(44).addToParameters(new Parameter(null, "<b>cat</b> CATEGORY"));
+		helpList.get(45).addToParameters(new Parameter(null, "with the specified category name"));
 		
 		responseForHelp.setIsSuccess(true);
 		responseForHelp.setFeedback("Successfully displayed all entries in command list.");
