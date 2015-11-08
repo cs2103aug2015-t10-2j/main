@@ -211,23 +211,14 @@ public class UserInterface extends JFrame {
 		
 		ImageIcon titleImage = new ImageIcon(TITLE_IMAGE_FILE_PATH);
 		_titleLabel = new JLabel(titleImage);
-		constraints.anchor = GridBagConstraints.PAGE_START;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.1;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
+		constraints = setConstraints(2, 0.0, 0.1, 0, 0, 0, 0, 0, 0);
 		pane.add(_titleLabel, constraints);
 		
 		_displayArea = new TransparentPanel(DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_displayArea.setBackground(Color.WHITE);
 		_displayArea.setLayout(new GridBagLayout());
 		_displayArea.setAutoscrolls(true);
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.5;
-		constraints.insets = new Insets(2, 2, 2, 2);
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints = setConstraints(2, 0.0, 0.5, 0, 1, 0, 0, 0, 0);
 		pane.add(_displayArea, constraints);
 
 		_displayScroll = new TransparentScrollPane(_displayArea, DISPLAY_AREA_RELATIVE_TRANSPARENCY);
@@ -248,11 +239,7 @@ public class UserInterface extends JFrame {
 		_feedbackArea.setEditable(false);
 		_feedbackArea.setAutoscrolls(false);
 		_feedbackArea.setContentType("text/html");
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.gridx = 0;
-		constraints.gridy = 2;
+		constraints = setConstraints(2, 0.0, 0.1, 0, 2, 0, 0, 0, 0);
 		pane.add(_feedbackArea, constraints);
 		
 		_feedbackScroll = new JScrollPane(_feedbackArea);
@@ -271,11 +258,7 @@ public class UserInterface extends JFrame {
 		_commandArea = new TransparentPanel(DISPLAY_AREA_RELATIVE_TRANSPARENCY);
 		_commandArea.setLayout(new GridBagLayout());
 		_commandArea.setPreferredSize(new Dimension(640, 50));
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.2;
-		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints = setConstraints(2, 0.0, 0.2, 0, 3, 0, 0, 0, 0);
 		pane.add(_commandArea, constraints);
 		
 		constraints = new GridBagConstraints();
@@ -288,20 +271,13 @@ public class UserInterface extends JFrame {
 		_commandLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
 		_commandLabel.setForeground(Color.WHITE);
 		_commandLabel.setBackground(new Color(0, 0, 0, 216));
-		_commandLabel.setOpaque(true);
-		constraints.weightx = 0.1;
-		constraints.weighty = 0.1;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
+		constraints = setConstraints(2, 0.1, 0.1, 0, 0, 0, 0, 0, 0);
 		_commandArea.add(_commandLabel, constraints);
 
 		_commandField = new JTextField();
 		_commandField.setEditable(true);
 		_commandField.addKeyListener(new ShortcutListener());
-		constraints.weightx = 0.1;
-		constraints.weighty = 0.1;
-		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints = setConstraints(2, 0.1, 0.1, 0, 1, 0, 0, 0, 0);
 		_commandArea.add(_commandField, constraints);
 
 		setLocationRelativeTo(null);
@@ -786,6 +762,20 @@ public class UserInterface extends JFrame {
 		} else {
 			return false;
 		}
+	}
+	
+	private static GridBagConstraints setConstraints(int fill, double weightx, double weighty, int gridx, int gridy,
+									   int insetsTop, int insetsLeft, int insetsBottom, int insetsRight){
+		GridBagConstraints constraints = new GridBagConstraints();
+		
+		constraints.fill = fill;
+		constraints.weightx = weightx;
+		constraints.weighty = weighty;
+		constraints.gridx = gridx;
+		constraints.gridy = gridy;
+		constraints.insets = new Insets(insetsTop, insetsLeft, insetsBottom, insetsRight);
+	
+		return constraints;
 	}
 	
 }
