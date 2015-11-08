@@ -367,141 +367,15 @@ public class UserInterface extends JFrame {
 						if (currentEntry.getDateParameter() != null) {
 							indexLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
 							_displayArea.add(indexLabel, constraints);
-							
-							constraints.gridx = 1;
-							constraints.gridy = curGridY++;
-							JTextPane deadlineLabel = new JTextPane();
-							deadlineLabel.setEditable(false);
-							
-							JLabel deadlineIcon = new JLabel();
-							deadlineIcon.setBounds(368, 0, 112, 27);
-							assignPriorityIcon(currentEntry, deadlineIcon);
-							deadlineLabel.add(deadlineIcon);
-							
-							TransparentTextArea deadlineText = new TransparentTextArea(1.0f);
-							String dateString = currentEntry.getDateParameter().getParameterValue();
-							Parameter timeParameter = currentEntry.getTimeParameter();
-							String timeString;
-							if (timeParameter != null) {
-								timeString = timeParameter.getParameterValue();
-							} else {
-								timeString = STRING_NONE;
-							}
-							if (isPastDateTime(dateString, timeString)) {
-								JLabel pastIcon = new JLabel();
-								pastIcon.setBounds(320, 0, 48, 27);
-								pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
-								deadlineLabel.add(pastIcon);
-							} else if (isInReminderPeriod(dateString, timeString)) {
-								BlinkingLabel reminderIcon = new BlinkingLabel();
-								reminderIcon.setBounds(320, 0, 48, 27);
-								reminderIcon.setIcon(new ImageIcon(REMINDER_FILE_PATH));
-								deadlineLabel.add(reminderIcon);
-							}
-							
-							deadlineText = setTextArea(currentEntry, "deadline");
-							deadlineLabel.add(deadlineText);
-							
-							if (currentEntry.getCategoryParameter() != null) {
-								JTextArea categoryText = new JTextArea();
-								categoryText = createCategoryText(currentEntry, "deadline");
-								deadlineLabel.add(categoryText);
-							}
-							
-							deadlineLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
-							deadlineLabel.setOpaque(true);
-							deadlineLabel.setPreferredSize(new Dimension(480, 64));
-							deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							
-							_displayArea.add(deadlineLabel, constraints);
+							initDeadlineLabel(constraints, curGridY++, currentEntry);
 						} else if (currentEntry.getStartDateParameter() != null) {
 							indexLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
 							_displayArea.add(indexLabel, constraints);
-							
-							constraints.gridx = 1;
-							constraints.gridy = curGridY++;
-							JTextPane eventLabel = new JTextPane();
-							eventLabel.setEditable(false);
-							
-							JLabel eventIcon = new JLabel();
-							eventIcon.setBounds(368, 0, 112, 27);
-							assignPriorityIcon(currentEntry, eventIcon);
-							eventLabel.add(eventIcon);
-							
-							TransparentTextArea eventText = new TransparentTextArea(1.0f);
-							String startDateString = currentEntry.getStartDateParameter().getParameterValue();
-							String endDateString = currentEntry.getEndDateParameter().getParameterValue();
-							Parameter startTimeParameter = currentEntry.getStartTimeParameter();
-							Parameter endTimeParameter = currentEntry.getEndTimeParameter();
-							String startTimeString;
-							String endTimeString;
-							if (startTimeParameter != null) {
-								startTimeString = startTimeParameter.getParameterValue();
-							} else {
-								startTimeString = STRING_NONE;
-							}
-							if (endTimeParameter != null) {
-								endTimeString = endTimeParameter.getParameterValue();
-							} else {
-								endTimeString = END_OF_DAY_TIME;
-							}
-							if (isPastDateTime(endDateString, endTimeString)) {
-								JLabel pastIcon = new JLabel();
-								pastIcon.setBounds(320, 0, 48, 27);
-								pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
-								eventLabel.add(pastIcon);
-							} else if (isInReminderPeriod(startDateString, startTimeString)) {
-								BlinkingLabel reminderIcon = new BlinkingLabel();
-								reminderIcon.setBounds(320, 0, 48, 27);
-								reminderIcon.setIcon(new ImageIcon(REMINDER_FILE_PATH));
-								eventLabel.add(reminderIcon);
-							}
-							
-							eventText = setTextArea(currentEntry, "event");
-							eventLabel.add(eventText);
-							
-							if (currentEntry.getCategoryParameter() != null) {
-								JTextArea categoryText = new JTextArea();
-								categoryText = createCategoryText(currentEntry, "event");
-								eventLabel.add(categoryText);
-							}
-							
-							eventLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
-							eventLabel.setOpaque(true);
-							eventLabel.setPreferredSize(new Dimension(480, 64));
-							eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							
-							_displayArea.add(eventLabel, constraints);
+							initEventLabel(constraints, curGridY++, currentEntry);
 						} else if (currentEntry.getNameParameter() != null) {
 							indexLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
 							_displayArea.add(indexLabel, constraints);
-							
-							constraints.gridx = 1;
-							constraints.gridy = curGridY++;
-							JTextPane floatLabel = new JTextPane();
-							floatLabel.setEditable(false);
-							
-							JLabel floatIcon = new JLabel();
-							floatIcon.setBounds(368, 0, 112, 27);
-							assignPriorityIcon(currentEntry, floatIcon);
-							floatLabel.add(floatIcon);
-							
-							TransparentTextArea floatText = new TransparentTextArea(1.0f);
-							floatText = setTextArea(currentEntry, "float");
-							floatLabel.add(floatText);
-							
-							if (currentEntry.getCategoryParameter() != null) {
-								JTextArea categoryText = new JTextArea();
-								categoryText = createCategoryText(currentEntry, "float");
-								floatLabel.add(categoryText);
-							}
-							
-							floatLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
-							floatLabel.setOpaque(true);
-							floatLabel.setPreferredSize(new Dimension(480, 64));
-							floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							
-							_displayArea.add(floatLabel, constraints);
+							initFloatLabel(constraints, curGridY++, currentEntry);
 						} else {
 							if (lastHelpX == 1) {
 								constraints.gridx = 0;
@@ -512,19 +386,7 @@ public class UserInterface extends JFrame {
 								constraints.gridy = curGridY++;
 								lastHelpX = 1;
 							}
-							constraints.gridwidth = 1;
-							JTextPane helpLabel = new JTextPane();
-							helpLabel.setContentType("text/html");
-							helpLabel.setEditable(false);
-							DefaultCaret helpCaret = (DefaultCaret) helpLabel.getCaret();
-							helpCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-							helpLabel.setText(currentEntry.toUIString());
-							helpLabel.setBounds(0, 0, 310, 32);
-							helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-							helpLabel.setBackground(new Color(255, 255, 153, LABEL_RELATIVE_TRANSPARENCY));
-							helpLabel.setOpaque(true);
-							helpLabel.setPreferredSize(new Dimension(310, 32));
-							_displayArea.add(helpLabel, constraints);
+							initHelpLabel(constraints, currentEntry);
 						}
 					}
 					
@@ -556,6 +418,157 @@ public class UserInterface extends JFrame {
 		}
 
 		_commandField.setText("");
+	}
+
+	private void initHelpLabel(GridBagConstraints constraints, Entry currentEntry) {
+		constraints.gridwidth = 1;
+		JTextPane helpLabel = new JTextPane();
+		helpLabel.setContentType("text/html");
+		helpLabel.setEditable(false);
+		DefaultCaret helpCaret = (DefaultCaret) helpLabel.getCaret();
+		helpCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+		helpLabel.setText(currentEntry.toUIString());
+		helpLabel.setBounds(0, 0, 310, 32);
+		helpLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		helpLabel.setBackground(new Color(255, 255, 153, LABEL_RELATIVE_TRANSPARENCY));
+		helpLabel.setOpaque(true);
+		helpLabel.setPreferredSize(new Dimension(310, 32));
+		_displayArea.add(helpLabel, constraints);
+	}
+
+	private void initFloatLabel(GridBagConstraints constraints, int curGridY, Entry currentEntry) {
+		constraints.gridx = 1;
+		constraints.gridy = curGridY++;
+		JTextPane floatLabel = new JTextPane();
+		floatLabel.setEditable(false);
+		
+		JLabel floatIcon = new JLabel();
+		floatIcon.setBounds(368, 0, 112, 27);
+		assignPriorityIcon(currentEntry, floatIcon);
+		floatLabel.add(floatIcon);
+		
+		TransparentTextArea floatText = new TransparentTextArea(1.0f);
+		floatText = setTextArea(currentEntry, "float");
+		floatLabel.add(floatText);
+		
+		if (currentEntry.getCategoryParameter() != null) {
+			JTextArea categoryText = new JTextArea();
+			categoryText = createCategoryText(currentEntry, "float");
+			floatLabel.add(categoryText);
+		}
+		
+		floatLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
+		floatLabel.setOpaque(true);
+		floatLabel.setPreferredSize(new Dimension(480, 64));
+		floatLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		_displayArea.add(floatLabel, constraints);
+	}
+
+	private void initEventLabel(GridBagConstraints constraints, int curGridY, Entry currentEntry) {
+		constraints.gridx = 1;
+		constraints.gridy = curGridY++;
+		JTextPane eventLabel = new JTextPane();
+		eventLabel.setEditable(false);
+		
+		JLabel eventIcon = new JLabel();
+		eventIcon.setBounds(368, 0, 112, 27);
+		assignPriorityIcon(currentEntry, eventIcon);
+		eventLabel.add(eventIcon);
+		
+		TransparentTextArea eventText = new TransparentTextArea(1.0f);
+		String startDateString = currentEntry.getStartDateParameter().getParameterValue();
+		String endDateString = currentEntry.getEndDateParameter().getParameterValue();
+		Parameter startTimeParameter = currentEntry.getStartTimeParameter();
+		Parameter endTimeParameter = currentEntry.getEndTimeParameter();
+		String startTimeString;
+		String endTimeString;
+		if (startTimeParameter != null) {
+			startTimeString = startTimeParameter.getParameterValue();
+		} else {
+			startTimeString = STRING_NONE;
+		}
+		if (endTimeParameter != null) {
+			endTimeString = endTimeParameter.getParameterValue();
+		} else {
+			endTimeString = END_OF_DAY_TIME;
+		}
+		if (isPastDateTime(endDateString, endTimeString)) {
+			JLabel pastIcon = new JLabel();
+			pastIcon.setBounds(320, 0, 48, 27);
+			pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
+			eventLabel.add(pastIcon);
+		} else if (isInReminderPeriod(startDateString, startTimeString)) {
+			BlinkingLabel reminderIcon = new BlinkingLabel();
+			reminderIcon.setBounds(320, 0, 48, 27);
+			reminderIcon.setIcon(new ImageIcon(REMINDER_FILE_PATH));
+			eventLabel.add(reminderIcon);
+		}
+		
+		eventText = setTextArea(currentEntry, "event");
+		eventLabel.add(eventText);
+		
+		if (currentEntry.getCategoryParameter() != null) {
+			JTextArea categoryText = new JTextArea();
+			categoryText = createCategoryText(currentEntry, "event");
+			eventLabel.add(categoryText);
+		}
+		
+		eventLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
+		eventLabel.setOpaque(true);
+		eventLabel.setPreferredSize(new Dimension(480, 64));
+		eventLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		_displayArea.add(eventLabel, constraints);
+	}
+
+	private void initDeadlineLabel(GridBagConstraints constraints, int curGridY, Entry currentEntry) {
+		constraints.gridx = 1;
+		constraints.gridy = curGridY++;
+		JTextPane deadlineLabel = new JTextPane();
+		deadlineLabel.setEditable(false);
+		
+		JLabel deadlineIcon = new JLabel();
+		deadlineIcon.setBounds(368, 0, 112, 27);
+		assignPriorityIcon(currentEntry, deadlineIcon);
+		deadlineLabel.add(deadlineIcon);
+		
+		TransparentTextArea deadlineText = new TransparentTextArea(1.0f);
+		String dateString = currentEntry.getDateParameter().getParameterValue();
+		Parameter timeParameter = currentEntry.getTimeParameter();
+		String timeString;
+		if (timeParameter != null) {
+			timeString = timeParameter.getParameterValue();
+		} else {
+			timeString = STRING_NONE;
+		}
+		if (isPastDateTime(dateString, timeString)) {
+			JLabel pastIcon = new JLabel();
+			pastIcon.setBounds(320, 0, 48, 27);
+			pastIcon.setIcon(new ImageIcon(PAST_ENTRY_FILE_PATH));
+			deadlineLabel.add(pastIcon);
+		} else if (isInReminderPeriod(dateString, timeString)) {
+			BlinkingLabel reminderIcon = new BlinkingLabel();
+			reminderIcon.setBounds(320, 0, 48, 27);
+			reminderIcon.setIcon(new ImageIcon(REMINDER_FILE_PATH));
+			deadlineLabel.add(reminderIcon);
+		}
+		
+		deadlineText = setTextArea(currentEntry, "deadline");
+		deadlineLabel.add(deadlineText);
+		
+		if (currentEntry.getCategoryParameter() != null) {
+			JTextArea categoryText = new JTextArea();
+			categoryText = createCategoryText(currentEntry, "deadline");
+			deadlineLabel.add(categoryText);
+		}
+		
+		deadlineLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
+		deadlineLabel.setOpaque(true);
+		deadlineLabel.setPreferredSize(new Dimension(480, 64));
+		deadlineLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		_displayArea.add(deadlineLabel, constraints);
 	}
 	
 	private static void assignPriorityIcon(Entry currentEntry, JLabel currentLabel) {
