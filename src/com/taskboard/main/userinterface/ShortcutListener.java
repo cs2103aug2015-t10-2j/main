@@ -36,12 +36,15 @@ public class ShortcutListener implements KeyListener {
 			if (arg0.getKeyCode() == KeyEvent.VK_Z) {
 				UserInterface.getInstance().getCommandField().setText(UNDO_COMMAND_STRING);
 				UserInterface.getInstance().executeInputCommand();
+				pressed.remove(new Integer(KeyEvent.VK_CONTROL));
 			} else if (arg0.getKeyCode() == KeyEvent.VK_Q) {
 				UserInterface.getInstance().getCommandField().setText(EXIT_COMMAND_STRING);
 				UserInterface.getInstance().executeInputCommand();
+				pressed.remove(new Integer(KeyEvent.VK_CONTROL));
 			} else if (arg0.getKeyCode() == KeyEvent.VK_H) {
 				UserInterface.getInstance().getCommandField().setText(HELP_COMMAND_STRING);
 				UserInterface.getInstance().executeInputCommand();
+				pressed.remove(new Integer(KeyEvent.VK_CONTROL));
 			}
 		}
 	}
