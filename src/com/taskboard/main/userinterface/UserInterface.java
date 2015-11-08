@@ -399,14 +399,7 @@ public class UserInterface extends JFrame {
 								deadlineLabel.add(reminderIcon);
 							}
 							
-							DefaultCaret deadlineCaret = (DefaultCaret) deadlineText.getCaret();
-							deadlineCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-							deadlineText.setText(getDeadlineTaskDisplayString(currentEntry));
-							deadlineText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-							deadlineText.setLineWrap(true);
-							deadlineText.setBorder(new EmptyBorder(5, 5, 5, 5));
-							deadlineText.setBounds(0, 0, 320, 64);
-							deadlineText.setPreferredSize(new Dimension(320, 64));
+							deadlineText = setTextArea(currentEntry, "deadline");
 							deadlineLabel.add(deadlineText);
 							
 							if (currentEntry.getCategoryParameter() != null) {
@@ -464,14 +457,7 @@ public class UserInterface extends JFrame {
 								eventLabel.add(reminderIcon);
 							}
 							
-							DefaultCaret eventCaret = (DefaultCaret) eventText.getCaret();
-							eventCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-							eventText.setText(getEventDisplayString(currentEntry));
-							eventText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-							eventText.setLineWrap(true);
-							eventText.setBorder(new EmptyBorder(5, 5, 5, 5));
-							eventText.setBounds(0, 0, 320, 64);
-							eventText.setPreferredSize(new Dimension(320, 64));
+							eventText = setTextArea(currentEntry, "event");
 							eventLabel.add(eventText);
 							
 							if (currentEntry.getCategoryParameter() != null) {
@@ -501,14 +487,7 @@ public class UserInterface extends JFrame {
 							floatLabel.add(floatIcon);
 							
 							TransparentTextArea floatText = new TransparentTextArea(1.0f);
-							DefaultCaret floatCaret = (DefaultCaret) floatText.getCaret();
-							floatCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-							floatText.setText(getFloatingTaskDisplayString(currentEntry));
-							floatText.setFont(new Font("Sans-Serif", Font.BOLD, 14));
-							floatText.setLineWrap(true);
-							floatText.setBorder(new EmptyBorder(5, 5, 5, 5));
-							floatText.setBounds(0, 0, 320, 64);
-							floatText.setPreferredSize(new Dimension(320, 64));
+							floatText = setTextArea(currentEntry, "float");
 							floatLabel.add(floatText);
 							
 							if (currentEntry.getCategoryParameter() != null) {
@@ -751,7 +730,7 @@ public class UserInterface extends JFrame {
 		return constraints;
 	}
 	
-	private static JTextArea createCategoryText(Entry currentEntry, String typeToken) {
+	private static JTextArea createCategoryText (Entry currentEntry, String typeToken) {
 		JTextArea categoryText = new JTextArea();
 		
 		DefaultCaret categoryCaret = (DefaultCaret) categoryText.getCaret();
@@ -775,6 +754,28 @@ public class UserInterface extends JFrame {
 		categoryText.setOpaque(true);
 		
 		return categoryText;
+	}
+	
+	private static TransparentTextArea setTextArea (Entry currentEntry, String typeToken) {
+		TransparentTextArea text = new TransparentTextArea(1.0f);
+		DefaultCaret textCaret = (DefaultCaret) text.getCaret();
+		textCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+		
+		if (typeToken.equals("deadline")) {
+			text.setText(getDeadlineTaskDisplayString(currentEntry));
+		} else if (typeToken.equals("event")) {
+			text.setText(getEventDisplayString(currentEntry));
+		} else if (typeToken.equals("float")) {
+			text.setText(getFloatingTaskDisplayString(currentEntry));
+		}
+		
+		text.setFont(new Font("Sans-Serif", Font.BOLD, 14));
+		text.setLineWrap(true);
+		text.setBorder(new EmptyBorder(5, 5, 5, 5));
+		text.setBounds(0, 0, 320, 64);
+		text.setPreferredSize(new Dimension(320, 64));
+		
+		return text;
 	}
 	
 }
