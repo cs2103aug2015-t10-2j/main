@@ -3,6 +3,11 @@ package com.taskboard.main.util;
 
 import java.util.ArrayList;
 
+/** 
+ * This class
+ * @author USER
+ *
+ */
 public class Response {
 	
 	// attributes

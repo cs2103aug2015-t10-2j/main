@@ -43,6 +43,14 @@ public abstract class Command {
 		return _tempStorageManipulator;
 	}
 	
+	// mutators
+	
+	public void setParameters(ArrayList<Parameter> newParameters) {
+		_parameters = newParameters;
+	}
+	
+	// other functionalities
+	
 	public Parameter getIndexParameter() {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.INDEX) {
@@ -152,13 +160,7 @@ public abstract class Command {
 		
 		return null;
 	}
-	
-	// mutators
-	
-	public void setParameters(ArrayList<Parameter> newParameters) {
-		_parameters = newParameters;
-	}
-	
+		
 	public void setIndexParameter(Parameter newIndexParameter) {
 		for (int i = 0; i < _parameters.size(); i++) {
 			if (_parameters.get(i).getParameterType() == ParameterType.INDEX) {
@@ -246,8 +248,6 @@ public abstract class Command {
 			}
 		}
 	}
-	
-	// other functionalities
 	
 	public String getDetailFromParameter(Parameter parameter) {
 		String detail = "";

@@ -32,7 +32,7 @@ import com.taskboard.main.util.Response;
  * @author Amarparkash Singh Mavi
  *
  */
-public class LogicTest {
+public class LogicIntegrationTest {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
 	private static final String MESSAGE_FOR_FILENAME = "Scheduler \"%1$s\" is ready for use.";
