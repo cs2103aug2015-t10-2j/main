@@ -1,6 +1,11 @@
 //@@author A0126536E
 package com.taskboard.main.util;
 
+/**
+ * This class is used as a container class comprising of ParameterType and a 
+ * String denoting the value carried by the Parameter.
+ * @author Alvian Prasetya
+ */
 public class Parameter {
 	
 	// attributes

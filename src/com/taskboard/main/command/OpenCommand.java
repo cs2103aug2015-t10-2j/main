@@ -9,8 +9,6 @@ import java.util.logging.Level;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.TempStorageManipulator;
 import com.taskboard.main.userinterface.UserInterface;
-
-import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
@@ -49,12 +47,6 @@ public class OpenCommand extends Command{
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		Response responseForOpen =  getResponseForLaunch(fileName);
-		
-		// facilitates the Undo command 
-		if (responseForOpen.isSuccess()) {
-			_tempStorageManipulator.setLastTempStorage(new ArrayList<Entry>());
-			_tempStorageManipulator.setLastTempArchive(new ArrayList<Entry>());
-		}
 		
 		return responseForOpen;
 	}

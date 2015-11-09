@@ -10,6 +10,11 @@ import com.taskboard.main.userinterface.UserInterface;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class changes the value of the reminder hour that affects how many hours 
+ * before UI displays the "SOON" label on an entry.
+ * @author Alvian Prasetya
+ */
 public class ReminderCommand extends Command {
 	
 	private static final String MESSAGE_SET_REMINDER_SUCCESS = "Reminder succesfully set to %1$s hour(s).";

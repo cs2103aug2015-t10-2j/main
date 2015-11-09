@@ -7,6 +7,11 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * This class validates a String if it's a valid date format 
+ * and converts it to the default date format dd/MM/yyyy.
+ * @author Alvian Prasetya
+ */
 public class DateFormatValidator implements FormatValidator {
 	
 	// constants
@@ -20,6 +25,7 @@ public class DateFormatValidator implements FormatValidator {
 	private static final int DAY_INDEX_SATURDAY = 6;
 	private static final int DAY_INDEX_SUNDAY = 7;
 	private static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
+	// The list of supported date formats.
 	private static final String[] DATE_FORMATS = {"d/MM/yyyy", 
 												 "d/M/yyyy", 
 												 "dd/MM/yyyy", 
@@ -56,26 +62,43 @@ public class DateFormatValidator implements FormatValidator {
 	public boolean isValidFormat(String token) {
 		token = token.toLowerCase();
 		switch (token) {
-			case "tda":
-			case "today":
-			case "tomo":
-			case "tomorrow":
-			case "mon":
-			case "monday":
-			case "tue":
-			case "tuesday":
-			case "wed":
-			case "wednesday":
-			case "thu":
-			case "thursday":
-			case "fri":
-			case "friday":
-			case "sat":
-			case "saturday":
-			case "sun":
-			case "sunday":
+			case "tda" :
+				// Fallthrough.
+			case "today" :
+				// Fallthrough.
+			case "tomo" :
+				// Fallthrough.
+			case "tomorrow" :
+				// Fallthrough.
+			case "mon" :
+				// Fallthrough.
+			case "monday" :
+				// Fallthrough.
+			case "tue" :
+				// Fallthrough.
+			case "tuesday" :
+				// Fallthrough.
+			case "wed" :
+				// Fallthrough.
+			case "wednesday" :
+				// Fallthrough.
+			case "thu" :
+				// Fallthrough.
+			case "thursday" :
+				// Fallthrough.
+			case "fri" :
+				// Fallthrough.
+			case "friday" :
+				// Fallthrough.
+			case "sat" :
+				// Fallthrough.
+			case "saturday" :
+				// Fallthrough.
+			case "sun" :
+				// Fallthrough.
+			case "sunday" :
 				return true;
-			default:
+			default :
 				for (String currentDateFormat: DATE_FORMATS) {
 					if (isMatchingDateFormat(new SimpleDateFormat(currentDateFormat), token)) {
 						return true;
@@ -92,35 +115,44 @@ public class DateFormatValidator implements FormatValidator {
 		
 		token = token.toLowerCase();
 		switch (token) {
-			case "tda":
-			case "today":
+			case "tda" :
+				// Fallthrough.
+			case "today" :
 				return defaultDateFormat.format(today);
-			case "tomo":
-			case "tomorrow":
+			case "tomo" :
+				// Fallthrough.
+			case "tomorrow" :
 				Date tomorrow = new Date(today.getTime() + MILLISECONDS_PER_DAY);
 				return defaultDateFormat.format(tomorrow);
-			case "mon":
-			case "monday":
+			case "mon" :
+				// Fallthrough.
+			case "monday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_MONDAY));
-			case "tue":
-			case "tuesday":
+			case "tue" :
+				// Fallthrough.
+			case "tuesday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_TUESDAY));
-			case "wed":
-			case "wednesday":
+			case "wed" :
+				// Fallthrough.
+			case "wednesday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_WEDNESDAY));
-			case "thu":
-			case "thursday":
+			case "thu" :
+				// Fallthrough.
+			case "thursday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_THURSDAY));
-			case "fri":
-			case "friday":
+			case "fri" :
+				// Fallthrough.
+			case "friday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_FRIDAY));
-			case "sat":
-			case "saturday":
+			case "sat" :
+				// Fallthrough.
+			case "saturday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SATURDAY));
-			case "sun":
-			case "sunday":
+			case "sun" :
+				// Fallthrough.
+			case "sunday" :
 				return defaultDateFormat.format(getNextOccurenceDate(DAY_INDEX_SUNDAY));
-			default:
+			default :
 				for (String currentDateFormat: DATE_FORMATS) {
 					if (isMatchingDateFormat(new SimpleDateFormat(currentDateFormat), token)) {
 						return toStandardDateFormat(new SimpleDateFormat(currentDateFormat), token);

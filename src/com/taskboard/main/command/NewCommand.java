@@ -9,10 +9,8 @@ import java.util.logging.Level;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.TempStorageManipulator;
 import com.taskboard.main.userinterface.UserInterface;
-
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
-import com.taskboard.main.util.Entry;
 
 /**
  * This class inherits from the Command class and executes the New command.
@@ -49,12 +47,6 @@ public class NewCommand extends Command {
 		assert fileName != null;
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		Response responseForNew = getResponseForLaunch(fileName);
-		
-		// facilitates the Undo command 
-		if (responseForNew.isSuccess()) {
-			_tempStorageManipulator.setLastTempStorage(new ArrayList<Entry>());
-			_tempStorageManipulator.setLastTempArchive(new ArrayList<Entry>());
-		}
 		
 		return responseForNew;
 	}

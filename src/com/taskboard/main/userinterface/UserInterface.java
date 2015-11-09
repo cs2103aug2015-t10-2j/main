@@ -69,6 +69,7 @@ public class UserInterface extends JFrame {
 	private static final long serialVersionUID = 1;
 	
 	private static UserInterface _instance;
+	private static int _numberOfRepaint = 0;
 	private Logic _logic;
 	private JFrame _frame;
 	private String _title;
@@ -117,6 +118,8 @@ public class UserInterface extends JFrame {
 		_frame.pack();
 		
 		_commandField.requestFocus();
+		
+		_numberOfRepaint++;
 	}
 
 	public static UserInterface getInstance() {
@@ -124,6 +127,10 @@ public class UserInterface extends JFrame {
 			_instance = new UserInterface();
 		}
 		return _instance;
+	}
+	
+	public int getNumberOfRepaint() {
+		return _numberOfRepaint;
 	}
 	
 	public Logic getLogic() {
@@ -301,6 +308,12 @@ public class UserInterface extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				UserInterface.getInstance();
+				if (UserInterface.getInstance().getNumberOfRepaint() == 1) {
+					UserInterface.getInstance().getCommandField().setText("new default");
+					UserInterface.getInstance().executeInputCommand();
+					UserInterface.getInstance().getCommandField().setText("open default");
+					UserInterface.getInstance().executeInputCommand();
+				}
 			}
 		});
 	}
@@ -321,73 +334,92 @@ public class UserInterface extends JFrame {
 				if (entries != null) {
 					_displayArea.removeAll();
 					
-					GridBagConstraints constraints = new GridBagConstraints();
-					constraints.anchor = GridBagConstraints.PAGE_START;
-					constraints.insets = new Insets(2, 2, 2, 2);
-					constraints.fill = GridBagConstraints.NONE;
-					
-					String lastDate = "";
-					
-					int curGridY = 0;
-					int lastHelpX = 1;
-					for (int i = 0; i < entries.size(); i++) {
-						Entry currentEntry = entries.get(i);
-						constraints.gridx = 0;
-						constraints.gridy = curGridY;
+					if (entries.isEmpty()) {
+						JLabel emptyLabel = new JLabel();
+						emptyLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
+						emptyLabel.setText("No entries to display.");
+						_displayArea.add(emptyLabel);
+					} else {
+						GridBagConstraints constraints = new GridBagConstraints();
+						constraints.anchor = GridBagConstraints.PAGE_START;
+						constraints.insets = new Insets(2, 2, 2, 2);
+						constraints.fill = GridBagConstraints.NONE;
 						
-						String pivotDate = "";
-						if (currentEntry.getDateParameter() != null) {
-							pivotDate = currentEntry.getDateParameter().getParameterValue();
-							pivotDate = toDisplayDateFormat(pivotDate);
-						} else if (currentEntry.getStartDateParameter() != null) {
-							pivotDate = currentEntry.getStartDateParameter().getParameterValue();
-							pivotDate = toDisplayDateFormat(pivotDate);
-						} else if (currentEntry.getNameParameter() != null) {
-							pivotDate = "Side Tasks";
-						} else {
-							pivotDate = "";
-						}
+						String lastDate = "";
 						
-						if (!lastDate.equals(pivotDate)) {
-							initDateLabel(constraints, pivotDate);
-							lastDate = pivotDate;
+						int curGridY = 0;
+						int lastHelpX = 1;
+						for (int i = 0; i < entries.size(); i++) {
+							Entry currentEntry = entries.get(i);
 							constraints.gridx = 0;
-							constraints.gridy = ++curGridY;
-							constraints.gridwidth = 1;
-						}
-						
-						if (i == entries.size() - 1) {
-							constraints.weighty = 1;
-						}
-						
-						JLabel indexLabel = new JLabel();
-						initIndexLabel(currentEntry, indexLabel);
-						
-						if (currentEntry.getDateParameter() != null) {
-							indexLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
-							_displayArea.add(indexLabel, constraints);
-							initDeadlineLabel(constraints, curGridY++, currentEntry);
-						} else if (currentEntry.getStartDateParameter() != null) {
-							indexLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
-							_displayArea.add(indexLabel, constraints);
-							initEventLabel(constraints, curGridY++, currentEntry);
-						} else if (currentEntry.getNameParameter() != null) {
-							indexLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
-							_displayArea.add(indexLabel, constraints);
-							initFloatLabel(constraints, curGridY++, currentEntry);
-						} else {
-							if (lastHelpX == 1) {
-								constraints.gridx = 0;
-								constraints.gridy = curGridY;
-								lastHelpX = 0;
+							constraints.gridy = curGridY;
+							
+							String pivotDate = "";
+							if (currentEntry.getDateParameter() != null) {
+								pivotDate = currentEntry.getDateParameter().getParameterValue();
+								pivotDate = toDisplayDateFormat(pivotDate);
+							} else if (currentEntry.getStartDateParameter() != null) {
+								pivotDate = currentEntry.getStartDateParameter().getParameterValue();
+								pivotDate = toDisplayDateFormat(pivotDate);
+							} else if (currentEntry.getNameParameter() != null) {
+								pivotDate = "Side Tasks";
 							} else {
-								constraints.gridx = 1;
-								constraints.gridy = curGridY++;
-								lastHelpX = 1;
+								pivotDate = "";
 							}
-							initHelpLabel(constraints, currentEntry);
+							
+							if (!lastDate.equals(pivotDate)) {
+								initDateLabel(constraints, pivotDate);
+								lastDate = pivotDate;
+								constraints.gridx = 0;
+								constraints.gridy = ++curGridY;
+								constraints.gridwidth = 1;
+							}
+							
+							if (i == entries.size() - 1) {
+								constraints.weighty = 1;
+							}
+							
+							JLabel indexLabel = new JLabel();
+							initIndexLabel(currentEntry, indexLabel);
+							
+							if (currentEntry.getDateParameter() != null) {
+								indexLabel.setBackground(new Color(255, 192, 203, LABEL_RELATIVE_TRANSPARENCY));
+								_displayArea.add(indexLabel, constraints);
+								initDeadlineLabel(constraints, curGridY++, currentEntry);
+							} else if (currentEntry.getStartDateParameter() != null) {
+								indexLabel.setBackground(new Color (175, 255, 163, LABEL_RELATIVE_TRANSPARENCY));
+								_displayArea.add(indexLabel, constraints);
+								initEventLabel(constraints, curGridY++, currentEntry);
+							} else if (currentEntry.getNameParameter() != null) {
+								indexLabel.setBackground(new Color (198, 255, 250, LABEL_RELATIVE_TRANSPARENCY));
+								_displayArea.add(indexLabel, constraints);
+								initFloatLabel(constraints, curGridY++, currentEntry);
+							} else {
+								if (lastHelpX == 1) {
+									constraints.gridx = 0;
+									constraints.gridy = curGridY;
+									lastHelpX = 0;
+								} else {
+									constraints.gridx = 1;
+									constraints.gridy = curGridY++;
+									lastHelpX = 1;
+								}
+								initHelpLabel(constraints, currentEntry);
+							}
 						}
 					}
+					
+					_displayArea.revalidate();
+					_displayArea.repaint();
+					_displayScroll.revalidate();
+					_displayScroll.repaint();
+				} else {
+					_displayArea.removeAll();
+					
+					JLabel emptyLabel = new JLabel();
+					emptyLabel.setFont(new Font("Sans-Serif", Font.BOLD, 14));
+					emptyLabel.setText("No entries to display.");
+					_displayArea.add(emptyLabel);
 					
 					_displayArea.revalidate();
 					_displayArea.repaint();

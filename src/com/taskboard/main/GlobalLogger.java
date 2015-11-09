@@ -10,6 +10,11 @@ import java.util.Date;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * This is a class used as a global logger singleton to write logs into file based on time 
+ * of execution.
+ * @author Alvian Prasetya
+ */
 public class GlobalLogger {
 	
 	private static final String logDirectory = "logs/";

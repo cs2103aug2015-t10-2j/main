@@ -8,13 +8,13 @@ import com.taskboard.main.DateTimeValidator;
 import com.taskboard.main.util.Entry;
 
 // This class will be used to compare two entry based on date.
-public class DateComparator implements Comparator<Entry>{
+public class DateComparatorForArchive implements Comparator<Entry>{
 	private DateTimeValidator dateTimeValidator = new DateTimeValidator();
 
 	public int compare(Entry entry1, Entry entry2) {
 		Date date1 = getDateObject(entry1);
 		Date date2 = getDateObject(entry2);
-		return date1.compareTo(date2);
+		return date2.compareTo(date1);
 	}
 
 	private Date getDateObject(Entry entry) {
@@ -39,7 +39,7 @@ public class DateComparator implements Comparator<Entry>{
 			dateTimeValidator.validateDateTimeDetails(date, time, null);
 			return dateTimeValidator.getDate();
 		} else {
-			String date = "31/12/2099";
+			String date = "31/12/1990";
 			String time = "23:59";
 			dateTimeValidator.validateDateTimeDetails(date, time, null);
 			return dateTimeValidator.getDate();

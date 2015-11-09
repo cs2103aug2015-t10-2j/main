@@ -8,6 +8,10 @@ import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class is responsible for forming the help message to be displayed to the user.
+ * @author Alvian Prasetya
+ */
 public class HelpCommand extends Command {
 
 	public HelpCommand(ArrayList<Parameter> parameters) {
@@ -95,7 +99,7 @@ public class HelpCommand extends Command {
 		helpList.get(45).addToParameters(new Parameter(null, "with the specified category name"));
 		
 		responseForHelp.setIsSuccess(true);
-		responseForHelp.setFeedback("Successfully displayed all entries in command list.");
+		responseForHelp.setFeedback("Successfully displayed the list of commands.");
 		responseForHelp.setEntries(helpList);
 		
 		return responseForHelp;

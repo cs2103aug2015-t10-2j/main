@@ -1,6 +1,10 @@
 //@@author A0126536E
 package com.taskboard.main.formatvalidator;
 
+/**
+ * This class validates a String if it is a valid number (integer).
+ * @author ASUS
+ */
 public class NumberFormatValidator implements FormatValidator {
 	
 	public NumberFormatValidator() {

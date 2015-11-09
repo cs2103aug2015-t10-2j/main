@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.logging.*;
 
 import com.taskboard.main.comparator.DateComparator;
+import com.taskboard.main.comparator.DateComparatorForArchive;
 import com.taskboard.main.comparator.ParameterComparator;
 import com.taskboard.main.filehandler.ArchiveHandler;
 import com.taskboard.main.filehandler.PreferenceHandler;
@@ -79,7 +80,7 @@ public class TempStorageManipulator {
 
 	public void setTempArchive(ArrayList<Entry> newTempArchive) throws IOException {
 		_tempArchive = newTempArchive;
-		Collections.sort(_tempArchive, new DateComparator());
+		Collections.sort(_tempArchive, new DateComparatorForArchive());
 		setIndexForAllEntries();
 		setTempArchiveToFile(_tempArchive);
 	}
@@ -250,7 +251,7 @@ public class TempStorageManipulator {
 		_tempArchive.add(entry);
 		_logger.log(Level.INFO, "Completed entry removed from storage and placed in archive.");
 		Collections.sort(_tempStorage, new DateComparator());
-		Collections.sort(_tempArchive, new DateComparator());
+		Collections.sort(_tempArchive, new DateComparatorForArchive());
 		setIndexForAllEntries();
 		setTempStorageToFile(_tempStorage);
 		setTempArchiveToFile(_tempArchive);
