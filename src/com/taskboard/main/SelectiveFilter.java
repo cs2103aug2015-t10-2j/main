@@ -9,8 +9,15 @@ import java.util.logging.Logger;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 
+/**
+ * This class contains the different filters and executes each of them when invoked. 
+ * It returns the filtered entries as a result.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class SelectiveFilter {
 	
+	// These are the time formats assigned for the respective entries to facilitate filtering by date only
 	private static final String FORMAT_DEADLINE_TASK_DEFAULT_TIME_FOR_FILTER_BY_DATE = "00:00";
 	private static final String FORMAT_EVENT_DEFAULT_START_TIME_FOR_FILTER_BY_DATE = "00:00";
 	private static final String FORMAT_EVENT_DEFAULT_END_TIME_FOR_FILTER_BY_DATE = "23:59";
@@ -25,11 +32,20 @@ public class SelectiveFilter {
 		_logger = GlobalLogger.getInstance().getLogger();
 	}
 	
+	/** 
+	 * This method executes filtering of entries by entry name and returns the filtered entries.
+	 * 
+	 * @param entries   Entries used for the filtering
+	 * @param searchKey Substring used to filter entries by entry name
+	 * @return			Filtered entries 
+	 */
 	public ArrayList<Entry> filterByName(ArrayList<Entry> entries, String searchKey) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			String entryName = entry.getNameParameter().getParameterValue();
+			
+			// performing case-insensitive search
 			if (entryName.toLowerCase().contains(searchKey.toLowerCase())) {
 				filteredEntries.add(entry);
 				_logger.log(Level.INFO, "Successfully filtered entry by name: " + entryName);
@@ -39,11 +55,19 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
+	/**
+	 * This method executes filtering of entries by priority and returns the filtered entries.
+	 * 
+	 * @param entries		 Entries used for the filtering
+	 * @param searchPriority Priority level used to filter entries by priority
+	 * @return               Filtered Entries
+	 */
 	public ArrayList<Entry> filterByPriority(ArrayList<Entry> entries, String searchPriority) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			Parameter priorityParameter = entry.getPriorityParameter();
+			
 			if (priorityParameter != null) {
 				String priority = priorityParameter.getParameterValue();
 				if (priority.equals(searchPriority)) {
@@ -57,13 +81,22 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
+	/**
+	 * This method executes filtering of entries by category and returns the filtered entries.
+	 * 
+	 * @param entries        Entries used for the filtering
+	 * @param searchCategory Category name used to filter entries by category
+	 * @return				 Filtered Entries
+	 */
 	public ArrayList<Entry> filterByCategory(ArrayList<Entry> entries, String searchCategory) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		for (int i = 0; i < entries.size(); i++) {
 			Entry entry = entries.get(i);
 			Parameter categoryParameter = entry.getCategoryParameter();
+			
 			if (categoryParameter != null) {
 				String category = categoryParameter.getParameterValue();
+				// performing case-insensitive search
 				if (category.equalsIgnoreCase(searchCategory)) {
 					filteredEntries.add(entry);
 					_logger.log(Level.INFO, "Successfully filtered entry by category: " 
@@ -75,6 +108,13 @@ public class SelectiveFilter {
 		return filteredEntries;
 	}
 	
+	/**
+	 * This method executes filtering of entries by date only and returns the filtered entries.
+	 *  
+	 * @param entries   Entries used for the filtering
+	 * @param inputDate Date used to filter entries by date
+	 * @return			Filtered entries
+	 */
 	public ArrayList<Entry> filterByDate(ArrayList<Entry> entries, Date inputDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		for (int i = 0; i < entries.size(); i++) {
@@ -146,6 +186,13 @@ public class SelectiveFilter {
 		
 	}
 	
+	/**
+	 * This method executes filtering of entries by date time and returns the filtered entries.
+	 * 
+	 * @param entries   Entries used for the filtering
+	 * @param inputDate Date used to filter entries by date time
+	 * @return			Filtered entries
+	 */
 	public ArrayList<Entry> filterByDateTime(ArrayList<Entry> entries, Date inputDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
 		for (int i = 0; i < entries.size(); i++) {
@@ -207,6 +254,7 @@ public class SelectiveFilter {
 		if (startTimeParameter != null) {
 			startTime = startTimeParameter.getParameterValue();
 		}
+		
 		String endDate = endDateParameter.getParameterValue();
 		String endTime = "";
 		if (endTimeParameter != null) {
@@ -225,6 +273,14 @@ public class SelectiveFilter {
 		return false;
 	}
 	
+	/**
+	 * This method executes filtering of entries by date time range and returns the filtered entries.
+	 * 
+	 * @param entries        Entries used for the filtering
+	 * @param inputStartDate Start date of date time range
+	 * @param inputEndDate   End date of date time range
+	 * @return				 Filtered entries
+	 */
 	public ArrayList<Entry> filterByDateTimeRange(ArrayList<Entry> entries, Date inputStartDate, 
 			                                      Date inputEndDate) {
 		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
@@ -289,6 +345,7 @@ public class SelectiveFilter {
 		if (startTimeParameter != null) {
 			startTime = startTimeParameter.getParameterValue();
 		}
+		
 		String endDate = endDateParameter.getParameterValue();
 		String endTime = "";
 		if (endTimeParameter != null) {
