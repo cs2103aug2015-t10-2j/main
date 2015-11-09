@@ -1,14 +1,14 @@
 //@@author A0123935E
-package com.taskboard.main;
+package com.taskboard.main.validator;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.taskboard.main.logger.GlobalLogger;
 import com.taskboard.main.util.Response;
 
 /**

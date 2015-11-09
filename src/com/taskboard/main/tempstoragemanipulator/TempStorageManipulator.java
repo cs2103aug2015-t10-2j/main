@@ -1,5 +1,5 @@
 //@@author A0129889A 
-package com.taskboard.main;
+package com.taskboard.main.tempstoragemanipulator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import com.taskboard.main.comparator.ParameterComparator;
 import com.taskboard.main.filehandler.ArchiveHandler;
 import com.taskboard.main.filehandler.PreferenceHandler;
 import com.taskboard.main.filehandler.StorageHandler;
+import com.taskboard.main.logger.GlobalLogger;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;

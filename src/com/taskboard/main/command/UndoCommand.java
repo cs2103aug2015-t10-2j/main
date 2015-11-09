@@ -4,7 +4,7 @@ package com.taskboard.main.command;
 import java.util.ArrayList;
 import java.io.IOException;
 
-import com.taskboard.main.TempStorageManipulator;
+import com.taskboard.main.tempstoragemanipulator.TempStorageManipulator;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;

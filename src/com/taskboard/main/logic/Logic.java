@@ -1,5 +1,5 @@
 //@@author A0123935E
-package com.taskboard.main;
+package com.taskboard.main.logic;
 
 import com.taskboard.main.command.Command;
 

@@ -2,18 +2,16 @@
 package com.taskboard.main.command;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import com.taskboard.main.DateTimeProcessor;
-import com.taskboard.main.GlobalLogger;
-import com.taskboard.main.TempStorageManipulator;
-
+import com.taskboard.main.logger.GlobalLogger;
+import com.taskboard.main.tempstoragemanipulator.TempStorageManipulator;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
+import com.taskboard.main.validator.DateTimeProcessor;
 
 /**
  * This class inherits from the Command class and executes the Add command.

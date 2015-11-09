@@ -1,5 +1,5 @@
 //@@author A0126536E
-package com.taskboard.main;
+package com.taskboard.main.logger;
 
 import java.io.IOException;
 

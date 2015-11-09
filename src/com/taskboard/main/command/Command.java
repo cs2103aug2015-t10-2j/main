@@ -4,8 +4,7 @@ package com.taskboard.main.command;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import com.taskboard.main.TempStorageManipulator;
-
+import com.taskboard.main.tempstoragemanipulator.TempStorageManipulator;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;

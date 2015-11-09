@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.taskboard.main.GlobalLogger;
+import com.taskboard.main.logger.GlobalLogger;
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;

@@ -4,8 +4,8 @@ package com.taskboard.main.comparator;
 import java.util.Comparator;
 import java.util.Date;
 
-import com.taskboard.main.DateTimeValidator;
 import com.taskboard.main.util.Entry;
+import com.taskboard.main.validator.DateTimeValidator;
 
 // This class will be used to compare two entry based on date.
 public class DateComparator implements Comparator<Entry>{
