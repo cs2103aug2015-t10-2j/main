@@ -99,7 +99,7 @@ public class HelpCommand extends Command {
 		helpList.get(45).addToParameters(new Parameter(null, "with the specified category name"));
 		
 		responseForHelp.setIsSuccess(true);
-		responseForHelp.setFeedback("Successfully displayed all entries in command list.");
+		responseForHelp.setFeedback("Successfully displayed the list of commands.");
 		responseForHelp.setEntries(helpList);
 		
 		return responseForHelp;
