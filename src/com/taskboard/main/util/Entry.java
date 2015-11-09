@@ -262,6 +262,25 @@ public class Entry {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		String entryDetails = "";
+		
+		for (int i = 0; i < _parameters.size(); i++) {
+			Parameter detailParameter = _parameters.get(i);
+			String detailType;
+			if (detailParameter.getParameterType() != null) {
+				detailType = detailParameter.getParameterType().name();
+			} else {
+				detailType = "";
+			}
+			String detail = detailParameter.getParameterValue();
+			entryDetails = entryDetails.concat(detailType).concat(": ").concat(detail).concat("\n");
+		}
+		
+		return entryDetails;
+	}
+	
 	public String toHTMLString() {
 		String entryDetails = "";
 		
