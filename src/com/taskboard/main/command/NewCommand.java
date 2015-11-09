@@ -50,12 +50,6 @@ public class NewCommand extends Command {
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		Response responseForNew = getResponseForLaunch(fileName);
 		
-		// facilitates the Undo command 
-		if (responseForNew.isSuccess()) {
-			_tempStorageManipulator.setLastTempStorage(new ArrayList<Entry>());
-			_tempStorageManipulator.setLastTempArchive(new ArrayList<Entry>());
-		}
-		
 		return responseForNew;
 	}
 	

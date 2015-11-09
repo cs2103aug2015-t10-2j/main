@@ -50,12 +50,6 @@ public class OpenCommand extends Command{
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		Response responseForOpen =  getResponseForLaunch(fileName);
 		
-		// facilitates the Undo command 
-		if (responseForOpen.isSuccess()) {
-			_tempStorageManipulator.setLastTempStorage(new ArrayList<Entry>());
-			_tempStorageManipulator.setLastTempArchive(new ArrayList<Entry>());
-		}
-		
 		return responseForOpen;
 	}
 	

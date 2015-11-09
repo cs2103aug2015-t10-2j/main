@@ -9,6 +9,12 @@ import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class is responsible for executing the undo command. It swaps 
+ * last checkpoint's TempStorage with the current TempStorage to simulate the undo 
+ * effect. p.s.: Undo twice is equivalent to Redo.
+ * @author Alvian Prasetya
+ */
 public class UndoCommand extends Command {
 	
 	private static final String MESSAGE_UNDO_SUCCESS = "Succesfully undo last operation.";
@@ -34,27 +40,41 @@ public class UndoCommand extends Command {
 			initialTempArchive.add(new Entry(entry));
 		}
 		
-		ArrayList<Entry> lastTempStorage = new ArrayList<Entry>();
-		ArrayList<Entry> lastTempArchive = new ArrayList<Entry>();
-		for (Entry entry: _tempStorageManipulator.getLastTempStorage()) {
-			lastTempStorage.add(new Entry(entry));
-		}
-		for (Entry entry: _tempStorageManipulator.getLastTempArchive()) {
-			lastTempArchive.add(new Entry(entry));
+		ArrayList<Entry> lastTempStorage;
+		if (_tempStorageManipulator.getLastTempStorage() != null) {
+			System.out.println("INNNNN");
+			lastTempStorage = new ArrayList<Entry>();
+			for (Entry entry: _tempStorageManipulator.getLastTempStorage()) {
+				lastTempStorage.add(new Entry(entry));
+			}
+		} else {
+			lastTempStorage = null;
 		}
 		
-		if (!lastTempStorage.isEmpty() || !lastTempArchive.isEmpty()) {
-			responseForUndo.setIsSuccess(true);
-			responseForUndo.setFeedback(MESSAGE_UNDO_SUCCESS);
-			responseForUndo.setEntries(lastTempStorage);
+		ArrayList<Entry> lastTempArchive;
+		if (_tempStorageManipulator.getLastTempArchive() != null) {
+			System.out.println("INNNNN");
+			lastTempArchive = new ArrayList<Entry>();
+			for (Entry entry: _tempStorageManipulator.getLastTempArchive()) {
+				lastTempArchive.add(new Entry(entry));
+			}
+		} else {
+			lastTempArchive = null;
+		}
+		
+		if (lastTempStorage != null && lastTempArchive != null) {
 			// Only updates the lastTempStorage & lastTempArchive upon successful execution.
 			try {
 				_tempStorageManipulator.setTempStorage(lastTempStorage);
 				_tempStorageManipulator.setLastTempStorage(initialTempStorage);
 				_tempStorageManipulator.setTempArchive(lastTempArchive);
 				_tempStorageManipulator.setLastTempArchive(initialTempArchive);
+				responseForUndo.setIsSuccess(true);
+				responseForUndo.setFeedback(MESSAGE_UNDO_SUCCESS);
+				responseForUndo.setEntries(lastTempStorage);
 			} catch (IOException e) {
-				// Handle exceptions here
+				responseForUndo.setIsSuccess(false);
+				responseForUndo.setFeedback(MESSAGE_UNDO_FAILURE);
 			}
 		} else {
 			responseForUndo.setIsSuccess(false);
