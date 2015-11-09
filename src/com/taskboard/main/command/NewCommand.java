@@ -47,6 +47,11 @@ public class NewCommand extends Command {
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		Response responseForNew = getResponseForLaunch(fileName);
 		
+		if (responseForNew.isSuccess()) {
+			_tempStorageManipulator.setLastTempStorage(null);
+			_tempStorageManipulator.setLastTempArchive(null);
+		}
+		
 		return responseForNew;
 	}
 	

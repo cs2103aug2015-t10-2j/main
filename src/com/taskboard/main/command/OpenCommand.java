@@ -47,6 +47,11 @@ public class OpenCommand extends Command{
 		_logger.log(Level.INFO, "Successfully retrieved filename: " + fileName);
 		Response responseForOpen =  getResponseForLaunch(fileName);
 		
+		if (responseForOpen.isSuccess()) {
+			_tempStorageManipulator.setLastTempStorage(null);
+			_tempStorageManipulator.setLastTempArchive(null);
+		}
+		
 		return responseForOpen;
 	}
 	
@@ -65,7 +70,7 @@ public class OpenCommand extends Command{
 			setFailureResponseForLaunchOpen(responseForOpen);
 			_logger.log(Level.INFO, "Generated failure response for opening existing file");
 		}
-	
+		
 		return responseForOpen;
 	}
 	
