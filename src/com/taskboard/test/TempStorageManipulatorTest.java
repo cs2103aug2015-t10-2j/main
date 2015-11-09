@@ -109,6 +109,7 @@ public class TempStorageManipulatorTest {
 		createTestFile();
 		File newFile = new File("testFileOpen.str");
 		File newArchive = new File("testFileOpen.arc");
+		File newPref = new File("testFileOpen.pref");
 		
 		tempStorageManipulator.repopulate(fileNameOpen);
 		
@@ -121,8 +122,10 @@ public class TempStorageManipulatorTest {
 		
 		newFile.delete();
 		newArchive.delete();
+		newPref.delete();
 		assert newFile.delete(): true;
 		assert newArchive.delete(): true;
+		assert newPref.delete(): true;
 	}
 
 	@Test
