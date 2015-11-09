@@ -10,17 +10,28 @@ import org.junit.After;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 import com.taskboard.main.Logic;
+
 import com.taskboard.main.comparator.DateComparator;
 import com.taskboard.main.comparator.ParameterComparator;
+
 import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
+/** This is an integration test class to test the integration of Logic with CommandParser
+ * and the storage handler classes. It tests for the different types of responses returned
+ * to UserInterface. Therefore, the test cases have been designed using Equivalence Partitioning
+ * where each partition corresponds to a response for a specific scenario. The intent is to achieve
+ * maximum decision/branch coverage.
+ * @author Amarparkash Singh Mavi
+ *
+ */
 public class LogicTest {
 	
 	private static final String MESSAGE_WELCOME = "Welcome to TASKBOARD!";
@@ -48,6 +59,7 @@ public class LogicTest {
 	private static final String MESSAGE_ERROR_FOR_NO_VALID_END_DATE_TIME = "No valid end date time provided.";
 	private static final String MESSAGE_ERROR_FOR_PAST_DATE_TIME = "Past date time provided.";
 	private static final String MESSAGE_ERROR_FOR_NO_EDITED_DETAILS = "No edited details provided.";
+	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX_FORMAT = "Invalid numeric format provided for index.";
 	private static final String MESSAGE_ERROR_FOR_INVALID_INDEX = "Invalid index provided.";
 	
 	private File testStorageFileForNew;
@@ -132,14 +144,15 @@ public class LogicTest {
 	public void testResponsesForNew() {
 		Response actualResponse = logic.processCommand("new testNew");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_CREATING_EXISTNG_FILE);
-		testResponseEquality("test failure Response for creating file that already exists", expectedResponse,
-				             actualResponse);
+		testResponseEquality("failure Response partition for creating file that already exists", 
+				              expectedResponse, actualResponse);
 			
 		actualResponse = logic.processCommand("new AcademicManager");		
 		ArrayList<Entry> expectedEntriesForNew = new ArrayList<Entry>();
 		String feedback = getFeedbackForSuccessfulLaunch("AcademicManager");
 		expectedResponse = createSuccessResponse(feedback, expectedEntriesForNew);
-		testResponseEquality("test success response for creating new file", expectedResponse, actualResponse);
+		testResponseEquality("success response partition for creating new file", expectedResponse, 
+				              actualResponse);
 		File storageFile = new File("AcademicManager" + ".str");
 		storageFile.delete();
 		File archiveFile = new File("AcademicManager" + ".arc");
@@ -161,26 +174,27 @@ public class LogicTest {
 	public void testResponsesForOpen() {
 		Response actualResponse = logic.processCommand("open TaskManager");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_OPENING_NON_EXISTING_FILE);
-		testResponseEquality("test failure response for opening file that does not exists", expectedResponse,
-				             actualResponse);
+		testResponseEquality("failure response partition for opening file that does not exists", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("open testOpen");
 		String feedback = getFeedbackForSuccessfulLaunch("testOpen");
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for opening existing file", expectedResponse, actualResponse);
+		testResponseEquality("success response partition for opening existing file", expectedResponse, 
+				              actualResponse);
 	}
 	
 	@Test
 	public void testResponsesForAdd() { 
 		Response actualResponse = logic.processCommand("add ");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
-		testResponseEquality("test failure response for not providing parameters after add command", 
+		testResponseEquality("failure response partition for not providing parameters after add command", 
 				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("a Prepare for EE2020 Final Quiz pri ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_PRI_PARAMETER);
-		testResponseEquality("test failure response for providing empty pri parameter", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing empty pri parameter", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("a Prepare for EE2020 Final Quiz pri H");
 		Entry floatingTask = new Entry();
@@ -191,27 +205,29 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		String feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_ADD, floatingTask);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for adding floating task with priority", expectedResponse, 
-				             actualResponse);
+		// testing multiple inputs
+		testResponseEquality("success response partition for adding floating task with priority", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_BY_PARAMETER);
-		testResponseEquality("test failure response for providing empty by parameter", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing empty by parameter", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_VALID_DATE);
-		testResponseEquality("test failure response for not providing date", expectedResponse, actualResponse);
+		testResponseEquality("failure response partition for not providing date", expectedResponse, 
+				              actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by 03/11/2015 10am");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
-		testResponseEquality("test failure response for providing past date time", 
+		testResponseEquality("failure response partition for providing past date time", 
 				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit MA3264 by fri 10am cat ");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_CAT_PARAMETER);
-		testResponseEquality("test failure response for providing empty cat parameter", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing empty cat parameter", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Submit HW2 by 3 Sep 2016 10am cat MA3264");
 		Entry deadlineTask = new Entry();
@@ -224,33 +240,34 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_ADD, deadlineTask);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for adding deadline task with category", expectedResponse, 
-				             actualResponse);
+		// testing multiple inputs
+		testResponseEquality("success response partition for adding deadline task with category", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_FROM_PARAMETER);
-		testResponseEquality("test failure response for providing empty from parameter", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing empty from parameter", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_VALID_END_DATE_TIME);
-		testResponseEquality("test failure response for not providing end date time", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for not providing end date time", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_EMPTY_TO_PARAMETER);
-		testResponseEquality("test failure response for providing empty to parameter", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing empty to parameter", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 1pm to 3pm");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_VALID_START_DATE);
-		testResponseEquality("test failure response for not providing start date", expectedResponse, 
+		testResponseEquality("failure response partition for not providing start date", expectedResponse, 
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27/11/2015 1pm to 12pm");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_PAST_DATE_TIME);
-		testResponseEquality("test failure response for providing end date time earlier than start date time", 
-				             expectedResponse, actualResponse);
+		testResponseEquality("failure response partition for providing end date time earlier than "
+				              + "start date time", expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("add Final Exam from 27 Nov 2016 1pm to 3pm pri H cat MA3264");
 		Entry event = new Entry();
@@ -266,7 +283,8 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_ADD, event);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for adding event with priority and category", 
+		// testing multiple inputs
+		testResponseEquality("success response partition for adding event with priority and category", 
 			                 expectedResponse, actualResponse);
 	}
 	
@@ -289,18 +307,23 @@ public class LogicTest {
 	public void testResponsesForEdit() {
 		Response actualResponse = logic.processCommand("edit ");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
-		testResponseEquality("test failure response for not providing parameters after edit command", 
+		testResponseEquality("failure response partition for not providing parameters after edit command", 
 				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("edit Annual company dinner at Marina Mandarin");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX_FORMAT);
+		testResponseEquality("failure response partition for providing invalid index format with edit", 
+	                         expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("edit 4");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_EDITED_DETAILS);
-		testResponseEquality("test failure response for not providing edited details", 
+		testResponseEquality("failure response partition for not providing edited details", 
 	                         expectedResponse, actualResponse);
 	
 		actualResponse = logic.processCommand("edit 14 Annual company dinner at Marina Mandarin");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
-		testResponseEquality("test failure response for providing invalid index with edit", expectedResponse, 
-				             actualResponse);	
+		testResponseEquality("failure response partition for providing invalid index with edit", 
+				              expectedResponse, actualResponse);	
 	
 		actualResponse = logic.processCommand("edit 4 Annual company dinner at Marina Mandarin");
 		Entry entryToBeEdited1 = expectedEntries.get(3);
@@ -317,7 +340,7 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		String feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate1, entryAfterUpdate1);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for editing entry name", expectedResponse, actualResponse);
+		testResponseEquality("success response partition for editing entry name", expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("edit 3 cat Administrative pri m by 4pm");
 		Entry entryToBeEdited2 = expectedEntries.get(2);
@@ -340,8 +363,9 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate2, entryAfterUpdate2);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for editing multiple parameters of entry", expectedResponse, 
-				             actualResponse);
+		// testing multiple inputs
+		testResponseEquality("success response partition for editing multiple parameters of entry", 
+			 	              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("edit 4 from 2 May 2016 6pm to 9pm");
 		Entry entryToBeEdited3 = expectedEntries.get(3);
@@ -372,7 +396,7 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate3, entryAfterUpdate3);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for changing entry type from deadline task to event", 
+		testResponseEquality("success response partition for changing entry type from deadline task to event", 
 				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("edit 1 at 10:30 4 Mar 2016");
@@ -406,7 +430,7 @@ public class LogicTest {
 		updateSortingOfEntries(expectedEntries);
 		feedback = getFeedbackForSuccessfulEdit(entryBeforeUpdate4, entryAfterUpdate4);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for changing entry type from event to deadline task", 
+		testResponseEquality("success response partition for changing entry type from event to deadline task", 
 				             expectedResponse, actualResponse);
 	}
 	
@@ -423,25 +447,30 @@ public class LogicTest {
 	public void testResponsesForCompletionAndArchive() {
 		Response actualResponse = logic.processCommand("complete ");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
-		testResponseEquality("test failure response for not providing parameters after complete command", 
+		testResponseEquality("failure response partition for not providing parameters after complete command", 
 				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("archive");
 		ArrayList<Entry> completedEntries = new ArrayList<Entry>();
 		expectedResponse = createSuccessResponse(MESSAGE_EMPTY_ARCHIVE, completedEntries);
-		testResponseEquality("test success response for empty archive", expectedResponse, actualResponse);
+		testResponseEquality("success response partition for empty archive", expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("complete Annual Meeting");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX_FORMAT);
+		testResponseEquality("failure response partition for providing invalid index format with complete", 
+	                         expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("complete 12");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
-		testResponseEquality("test failure response for providing invalid index with complete", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing invalid index with complete", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("complete 2");
 		Entry entryCompleted = expectedEntries.remove(1);
 		updateSortingOfEntries(expectedEntries);
 		String feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_COMPLETE, entryCompleted);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for completing entry", expectedResponse, actualResponse);
+		testResponseEquality("success response partition for completing entry", expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("archive");		
 		ArrayList<Parameter> entryDetails = entryCompleted.getParameters();
@@ -453,13 +482,18 @@ public class LogicTest {
 		entryCompleted.setParameters(entryDetails);
 		completedEntries.add(entryCompleted);
 		expectedResponse = createSuccessResponse(MESSAGE_RETRIEVE_ARCHIVE_SUCCESS, completedEntries);
-		testResponseEquality("test success response for retrieving completed entries", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("success response partition for retrieving completed entries from archive", 
+				              expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("restore Annual Meeting");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX_FORMAT);
+		testResponseEquality("failure response partition for providing invalid index format with restore", 
+	                         expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("restore 2");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
-		testResponseEquality("test failure response for providing invalid index with restore", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing invalid index with restore", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("restore 1");
 		Entry entryRestored = new Entry(entryCompleted);
@@ -468,8 +502,8 @@ public class LogicTest {
 		feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_RESTORE, entryRestored);
 		completedEntries.clear();
 		expectedResponse = createSuccessResponse(feedback, completedEntries);
-		testResponseEquality("test success response for restoring completed entry", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("success response partition for restoring completed entry", expectedResponse, 
+				              actualResponse);
 	}
 	
 	@Test
@@ -480,7 +514,7 @@ public class LogicTest {
 		filteredEntries.add(expectedEntries.get(1));
 		String feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
 		Response expectedResponse = createSuccessResponse(feedback, filteredEntries);
-		testResponseEquality("test success response for filtering entries based on substring of entry names", 
+		testResponseEquality("success response partition for filtering entries based on substring of entry names", 
 				             expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("view pri low");
@@ -489,7 +523,7 @@ public class LogicTest {
 		feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
 		feedback = feedback.replace("entries", "entry");
 		expectedResponse = createSuccessResponse(feedback, filteredEntries);
-		testResponseEquality("test success response for filter results with only 1 entry", expectedResponse, 
+		testResponseEquality("success response partition for filter results with only 1 entry", expectedResponse, 
 				             actualResponse);
 		
 		actualResponse = logic.processCommand("view from 3 Mar 2016 to 14 Apr 2016 pri H cat marketing");
@@ -498,7 +532,8 @@ public class LogicTest {
 		feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
 		feedback = feedback.replace("entries", "entry");
 		expectedResponse = createSuccessResponse(feedback, filteredEntries);
-		testResponseEquality("test success response for filtering entries using multiple filters", 
+		// testing multiple inputs
+		testResponseEquality("success response partition for filtering entries using multiple filters", 
 				             expectedResponse, actualResponse);
 	}
 	
@@ -506,21 +541,52 @@ public class LogicTest {
 	public void testResponsesForDelete() {
 		Response actualResponse = logic.processCommand("delete ");
 		Response expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_NO_PARAMETERS_AFTER_COMMAND);
-		testResponseEquality("test failure response for not providing parameters after delete command", 
+		testResponseEquality("failure response partition for not providing parameters after delete command", 
 				             expectedResponse, actualResponse);
+		
+		actualResponse = logic.processCommand("delete Annual company dinner");
+		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX_FORMAT);
+		testResponseEquality("failure response partition for providing invalid index format with delete", 
+	                         expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("delete 10");
 		expectedResponse = createFailureResponse(MESSAGE_ERROR_FOR_INVALID_INDEX);
-		testResponseEquality("test failure response for providing invalid index with delete", expectedResponse, 
-				             actualResponse);
+		testResponseEquality("failure response partition for providing invalid index with delete", 
+				              expectedResponse, actualResponse);
 		
 		actualResponse = logic.processCommand("delete 4");
 		Entry entryDeleted = expectedEntries.remove(3);
 		updateSortingOfEntries(expectedEntries);
 		String feedback = getSuccessFeedbackForSingleEntryDetails(MESSAGE_AFTER_DELETE, entryDeleted);
 		expectedResponse = createSuccessResponse(feedback, expectedEntries);
-		testResponseEquality("test success response for deleting entry by index", expectedResponse, 
+		testResponseEquality("success response partition for deleting entry by index", expectedResponse, 
 				             actualResponse);
+		
+		
+		actualResponse = logic.processCommand("delete pri H");
+		ArrayList<Entry> filteredEntries = new ArrayList<Entry>();
+		filteredEntries.add(expectedEntries.get(0));
+		filteredEntries.add(expectedEntries.get(1));
+		expectedEntries.remove(1);
+		expectedEntries.remove(0);
+		updateSortingOfEntries(expectedEntries);
+		feedback = getFeedbackForSuccessfulDeleteByFiltering(filteredEntries); 
+		expectedResponse = createSuccessResponse(feedback, expectedEntries);
+		testResponseEquality("success response partition for deleting multiple entries using filter", 
+				             expectedResponse, actualResponse);
+	}
+	
+	private String getFeedbackForSuccessfulDeleteByFiltering(ArrayList<Entry> filteredEntries) {
+		String feedback = String.format(MESSAGE_FILTER_RESULTS, filteredEntries.size());
+		feedback = feedback.replace("found", "deleted");
+		feedback = feedback.replace(".", ":");
+		feedback = feedback.concat("<br>");
+		for (int i = 0; i < filteredEntries.size(); i++) {
+			Entry entry = filteredEntries.get(i);
+			feedback = feedback.concat("<br>").concat(entry.toHTMLString());
+		}
+		
+		return feedback;
 	}
 	
 	private Response createSuccessResponse(String feedback, ArrayList<Entry> entries) {
