@@ -3,7 +3,19 @@ package com.taskboard.main.util;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used as a container class comprising of parameters in an entry.
+ * @author Alvian Prasetya
+ */
 public class Entry {
+	
+	private static final String STRING_NAME = "NAME";
+	private static final String STRING_DATE = "DATE";
+	private static final String STRING_TIME = "TIME";
+	private static final String STRING_START_DATE = "START_DATE";
+	private static final String STRING_START_TIME = "START_TIME";
+	private static final String STRING_END_DATE = "END_DATE";
+	private static final String STRING_END_TIME = "END_TIME";
 	
 	// attribute
 	
@@ -250,25 +262,6 @@ public class Entry {
 		}
 	}
 	
-	@Override
-	public String toString() {
-		String entryDetails = "";
-		
-		for (int i = 0; i < _parameters.size(); i++) {
-			Parameter detailParameter = _parameters.get(i);
-			String detailType;
-			if (detailParameter.getParameterType() != null) {
-				detailType = detailParameter.getParameterType().name();
-			} else {
-				detailType = "";
-			}
-			String detail = detailParameter.getParameterValue();
-			entryDetails = entryDetails.concat(detailType).concat(": ").concat(detail).concat("\n");
-		}
-		
-		return entryDetails;
-	}
-	
 	public String toHTMLString() {
 		String entryDetails = "";
 		
@@ -301,37 +294,37 @@ public class Entry {
 			String detail = detailParameter.getParameterValue();
 			if (!detailType.equals("INDEX") && !detailType.equals("CATEGORY") && !detailType.equals("PRIORITY")) {
 				switch (detailType) {
-					case "NAME":
+					case STRING_NAME :
 						entryDetails += detail + "\n";
 						break;
-					case "DATE":
+					case STRING_DATE :
 						if (getTimeParameter() != null) {
 							entryDetails += "On " + detail + " ";
 						} else {
 							entryDetails += "On " + detail + "\n";
 						}
 						break;
-					case "TIME":
+					case STRING_TIME :
 						entryDetails += detail + "\n";
 						break;
-					case "START_DATE":
+					case STRING_START_DATE :
 						if (getStartTimeParameter() != null) {
 							entryDetails += "From " + detail + " ";
 						} else {
 							entryDetails += "From " + detail + " To ";
 						}
 						break;
-					case "START_TIME":
+					case STRING_START_TIME :
 						entryDetails += detail + " To ";
 						break;
-					case "END_DATE":
+					case STRING_END_DATE:
 						if (getEndTimeParameter() != null) {
 							entryDetails += detail + " ";
 						} else {
 							entryDetails += detail + "\n";
 						}
 						break;
-					case "END_TIME":
+					case STRING_END_TIME :
 						entryDetails += detail + "\n";
 						break;
 					default:

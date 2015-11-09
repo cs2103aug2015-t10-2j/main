@@ -9,10 +9,8 @@ import java.util.logging.Level;
 import com.taskboard.main.GlobalLogger;
 import com.taskboard.main.TempStorageManipulator;
 import com.taskboard.main.userinterface.UserInterface;
-
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
-import com.taskboard.main.util.Entry;
 
 /**
  * This class inherits from the Command class and executes the New command.

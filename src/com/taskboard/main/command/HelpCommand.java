@@ -8,6 +8,10 @@ import com.taskboard.main.util.Entry;
 import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.Response;
 
+/**
+ * This class is responsible for forming the help message to be displayed to the user.
+ * @author Alvian Prasetya
+ */
 public class HelpCommand extends Command {
 
 	public HelpCommand(ArrayList<Parameter> parameters) {

@@ -19,54 +19,76 @@ public class CommandTypeParser {
 		String commandTypeString = extractCommandTypeString(commandString).toLowerCase();
 		
 		switch (commandTypeString) {
-			case "a":
-			case "add":
+			case "a" :
+				// Fallthrough.
+			case "add" :
 				return CommandType.ADD;
-			case "e":
-			case "edit":
+			case "e" :
+				// Fallthrough.
+			case "edit" :
 				return CommandType.EDIT;
-			case "d":
-			case "delete":
+			case "d" :
+				// Fallthrough.
+			case "delete" :
 				return CommandType.DELETE;
-			case "v":
-			case "view":
+			case "v" :
+				// Fallthrough.
+			case "view" :
 				return CommandType.VIEW;
-			case "o":
-			case "open":
+			case "o" :
+				// Fallthrough.
+			case "open" :
 				return CommandType.OPEN;
-			case "n":
-			case "new":
+			case "n" :
+				// Fallthrough.
+			case "new" :
 				return CommandType.NEW;
-			case "done":
-			case "c":
-			case "check":
-			case "complete":
+			case "done" :
+				// Fallthrough.
+			case "c" :
+				// Fallthrough.
+			case "check" :
+				// Fallthrough.
+			case "complete" :
 				return CommandType.COMPLETE;
-			case "r":
-			case "restore":
-			case "revert":
+			case "r" :
+				// Fallthrough.
+			case "restore" :
+				// Fallthrough.
+			case "revert" :
 				return CommandType.RESTORE;
-			case "arc":
-			case "arch":
-			case "archive":
+			case "arc" :
+				// Fallthrough.
+			case "arch" :
+				// Fallthrough.
+			case "archive" :
 				return CommandType.ARCHIVE;
-			case "undo":
-			case "un":
-			case "u":
+			case "undo" :
+				// Fallthrough.
+			case "un" :
+				// Fallthrough.
+			case "u" :
 				return CommandType.UNDO;
-			case "background":
-			case "bg":
+			case "background" :
+				// Fallthrough.
+			case "bg" :
 				return CommandType.BACKGROUND;
-			case "reminder":
-			case "remind":
+			case "reminder" :
+				// Fallthrough.
+			case "remind" :
 				return CommandType.REMINDER;
-			case "h":
-			case "help":
-			case "cmd":
-			case "command":
+			case "h" :
+				// Fallthrough.
+			case "help" :
+				// Fallthrough.
+			case "cmd" :
+				// Fallthrough.
+			case "command" :
+				// Fallthrough.
 			case "commands":
 				return CommandType.HELP;
-			case "esc":
+			case "esc" :
+				// Fallthrough.
 			case "exit":
 				return CommandType.EXIT;
 			default:
