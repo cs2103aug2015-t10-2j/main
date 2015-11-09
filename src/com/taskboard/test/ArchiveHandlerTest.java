@@ -16,8 +16,6 @@ import com.taskboard.main.util.ParameterType;
 
 public class ArchiveHandlerTest {
 	
-
-	
 	ArchiveHandler archiveHandler = new ArchiveHandler();
 
 	private boolean doesFileExist(File fileToCheck) {
