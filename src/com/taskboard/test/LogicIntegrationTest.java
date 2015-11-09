@@ -24,11 +24,12 @@ import com.taskboard.main.util.Parameter;
 import com.taskboard.main.util.ParameterType;
 import com.taskboard.main.util.Response;
 
-/** This is an integration test class to test the integration of Logic with CommandParser
- * and the storage handler classes. It tests for the different types of responses returned
- * to UserInterface. Therefore, the test cases have been designed using Equivalence Partitioning
- * where each partition corresponds to a response for a specific scenario. The intent is to achieve
- * maximum decision/branch coverage.
+/**
+ * This is an integration test class to test the integration of Logic with CommandParser,
+ * TempStorageManipulator and the File handler classes. It tests for the different types 
+ * of responses returned to UserInterface. Therefore, the test cases have been designed 
+ * using Equivalence Partitioning where each partition corresponds to a response for a 
+ * specific scenario. The intent is to achieve maximum decision/branch coverage.
  * @author Amarparkash Singh Mavi
  *
  */

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * This class is used as a container class comprising of a boolean denoting 
  * whether the operation is successful, a feedback String of the operation, and 
  * a collection of entries denoting the entries after the operation is done.
- * @author Alvian Prasetya
+ * @author Amarparkash Singh Mavi
  */
 public class Response {
 	
